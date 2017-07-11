@@ -1,0 +1,11 @@
+
+name = Taxonomy Tree Select
+description = "Taxonomy Tree Select acts in node forms replacing the select boxes of taxonomy to simple and intuitive expansable trees."
+core = 6.x
+dependencies[] = taxonomy
+; Information added by drupal.org packaging script on 2011-03-16
+version = "6.x-1.1"
+core = "6.x"
+project = "taxonomy_tree_select"
+datestamp = "1300239069"
+

@@ -1,0 +1,5 @@
+; $Id: scpo_on_the_web.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Sciences Po on the web
+description = "Permet d'ajouter Sciences Po on the web"
+package = Sciences-Po
+core = 6.x

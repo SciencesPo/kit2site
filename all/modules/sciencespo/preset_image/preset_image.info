@@ -1,0 +1,6 @@
+﻿; $Id: preset_image.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Preset Image
+description = "Permet de générer des images selon des présets définis"
+package = Sciences-Po
+core = 6.x
+dependencies[] = imagecache

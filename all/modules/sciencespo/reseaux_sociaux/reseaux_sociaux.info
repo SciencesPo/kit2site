@@ -1,0 +1,5 @@
+; $Id: reseaux_sociaux.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Réseaux sociaux
+description = "Permet d'ajouter des réseaux sociaux"
+package = Sciences-Po
+core = 6.x

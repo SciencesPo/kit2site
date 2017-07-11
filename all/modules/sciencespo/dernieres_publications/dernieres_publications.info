@@ -1,0 +1,5 @@
+; $Id: dernieres_publications.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Dernières publications
+description = "Permet d'ajouter les dernières publications"
+package = Sciences-Po
+core = 6.x

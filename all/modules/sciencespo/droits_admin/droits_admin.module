@@ -1,0 +1,189 @@
+<?php
+// ; $Id: droits_admin.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute la droits_admin
+ */
+
+
+
+/**
+ * Implementation of hook_init().
+ */
+function droits_admin_init()
+{
+	
+	$items = array('taxonomy', 'menu', 'path', 'print', 'revision_information', 'author', 'weight_form');
+	variable_set('items', $items);
+	drupal_add_css(drupal_get_path('module', 'droits_admin').'/tables.css');
+}
+ 
+/**
+ * Implementation of hook_perm().
+ */
+function droits_admin_perm()
+{
+  return array('administer droits_admin');
+}
+
+/*
+ * Implementation of hook_menu
+ */
+function droits_admin_menu()
+{
+	$items = array();
+
+	$items['admin/user/droits_admin'] = array(
+		'title' => t('Refine permissions'),
+		//appelle :
+		'page callback' => 'drupal_get_form',
+		//avec l'argument : 
+		'page arguments' => array('droits_admin_settings'),
+		//avec les droits :
+		'access arguments'  => array('administer droits_admin'),
+	);
+
+	return $items;
+}
+
+
+
+/*
+ * Implementation of hook_form_alter
+ */
+function droits_admin_settings()
+{
+	$items = variable_get('items', array());
+	$types = node_get_types($op = 'types', $node = NULL, $reset = FALSE);
+	
+	$form = array();
+	
+	$roles = user_roles();
+	unset($roles[1]);
+	unset($roles[2]);
+	
+	$topTable = '<table class="droits-admin-table"><tr><td>&nbsp;</td>';
+	foreach ($roles as $role) {
+		$topTable .= '<th>'.$role.'</th>';
+	}
+	$topTable .= '</tr>';
+	
+	$droits_admin = variable_get('droits_admin', array());
+	
+	foreach ($types as $type => $obj) {
+		$form[$obj->type] = array(
+			'#type' => 'fieldset',
+			'#title' => $obj->name,
+			'#collapsible' => true,
+			'#collapsed' => true,
+		);
+		
+		$form[$obj->type][] = array (
+			'#value' => $topTable,
+		);
+		
+		foreach ($items as $item) {
+			$form[$obj->type][] = array (
+				'#value' => '<tr><td class="item">'.$item.'</td>',
+			);
+			foreach ($roles as $key => $role) {
+				$form[$obj->type][$obj->type.'-'.$item.'-'.$key] = array(
+					'#prefix' => '<td>',
+					'#title' => '',
+					'#type' => 'checkbox',
+					'#suffix' => '</td>',
+					'#default_value' => $droits_admin[$obj->type][$item][$key],
+				);
+			}
+			$form[$obj->type][] = array (
+				'#value' => '</tr>',
+			);
+		}
+		
+		$form[$obj->type][] = array (
+			'#value' => '</table>',
+		);
+	 }
+	
+	$form['submit'] = array(
+		'#type'  => 'submit',
+		'#value' => t('Save configuration'),
+	);
+	
+	//return system_settings_form($form);
+	return $form;
+}
+
+
+function droits_admin_settings_submit($form, &$form_state)
+{
+	$items = variable_get('items', array());
+	$types = node_get_types($op = 'types', $node = NULL, $reset = FALSE);
+
+	$roles = user_roles();
+	unset($roles[1]);
+	unset($roles[2]);
+	
+	$values = $form_state['values'];
+	$droits_admin = array();
+	
+	foreach ($types as $type) {
+		foreach ($items  as $item) {
+			foreach ($roles as $key => $role) {
+				$droits_admin[$type->type][$item][$key] = $values[$type->type.'-'.$item.'-'.$key];
+			}
+		}
+	}
+
+	variable_set('droits_admin', $droits_admin);
+	drupal_set_message(t('The configuration options have been saved.'));
+}
+
+
+
+function droits_admin_form_alter(&$form, &$form_state, $form_id)
+{
+	global $user;
+
+// //debug start *************************************
+// 	print '<pre>$form =';
+// 	// var_dump($form);
+// 	print_r($form);
+// 	print '</pre>';
+// 	exit;
+// //debug end ***************************************
+
+	$items = variable_get('items', array());
+	$droits_admin = variable_get('droits_admin', array());
+	$type = $form['type']['#value'];
+	$roles = $user->roles;
+
+	if($type) {
+		foreach ($items as $item) {
+			if(is_array($droits_admin[$type][$item])) {
+				foreach ($droits_admin[$type][$item] as $role => $v) {
+					if (array_key_exists($role, $roles)) {
+						if ($droits_admin[$type][$item][$role] == 0) {
+							unset($form[$item]);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	$form['#after_build'][] = '_droits_admin_ordonnancement_after_build';
+}
+
+
+
+function _droits_admin_ordonnancement_after_build($form, &$form_state)
+{
+	$poids = array('menu', 'weight_form', 'taxonomy', 'field_disposition', 'title', 'body_field', 'field_sous_titre', 'field_image', 'field_video', 'field_graphique', 'field_zone_de_droite', 'field_image_de_fond', 'field_code_map', 'field_commentaire_communique', 'field_pied_de_page_communique', 'field_date_communique', 'field_titre', 'field_email', 'field_tel1', 'field_tel2', 'field_address', 'field_question_faq', 'field_reponse_faq', 'field_commentaire_pdf', 'field_pied_de_page_pdf', 'field_icone_reseaux_sociaux', 'field_lien_reseaux_sociaux', 'field_bloc_reseaux_sociaux', 'field_oblig_reseaux_sociaux', 'field_lien_outil_num', 'field_nouvel_onglet_outil_num', 'field_pied_de_page_outil_num', 'links_related', 'attachments', 'path', 'revision_information', 'author', 'print', 'buttons');
+
+	// foreach ($poids as $i => $p) {
+		// $form[$p]['#weight'] = $i * 10; 
+	// }
+	return $form;
+}

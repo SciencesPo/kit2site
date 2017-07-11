@@ -1,0 +1,243 @@
+/*BARRE DE MENUS PRINCIPALE*/
+
+/*commun tous niveaux*/
+/*supprime le logo des liens externes pour le menu principal*/
+#block-nice_menus-1 span.ext {
+   display:none;
+}
+
+.block-nice_menus {
+	margin-top:13px;
+	padding:0;  
+}
+
+#block-nice_menus-1 ul {
+ padding:0;
+ margin:0; 
+}
+
+
+
+.hasjs ul.nice-menu,
+.hasjs ul.nice-menu ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+/*niveau 1*/
+.hasjs ul.nice-menu li.niveau1 {
+	border-top: 0;
+	float: left;
+	background-color: transparent;
+	border-left:1px solid white;
+	margin:0;
+	height:40px;
+}
+
+.hasjs ul.nice-menu li.first {
+	border-left:0;
+}
+
+.hasjs ul.nice-menu li.niveau1 a:link, ul.nice-menu li.niveau1 a:visited{
+	color:none;
+	padding:9px 5px 0 5px;
+	font-size:11px;
+	text-transform:uppercase;
+	font-weight: 600;
+	text-decoration:none;
+	line-height:12px;
+	margin:0;
+	height:31px;
+}
+.hasjs ul.nice-menu li.niveau1 a:hover, ul.nice-menu li.niveau1 a:active {
+	background-color:white;
+	color:#595959;
+}
+
+.hasjs li.fixed-width {
+	width:114px;
+}
+.hasjs a.fixed-width {
+	width:104px;
+}
+.hasjs ul.nice-menu li.niveau1.active-menu  {
+	background-color:white;	
+}
+.hasjs ul.nice-menu li.niveau1.active-menu  a{
+	color:#595959;
+}
+	
+.hasjs ul.nice-menu li.active-trail a:hover, ul.nice-menu li.active-trail a:active, ul.nice-menu li.active-trail a:focus{
+	background-color:white;
+	color:#595959;
+}
+
+/*niveau 2*/
+.hasjs ul.nice-menu li.niveau1 ul {
+   min-width:104px;
+	padding:11px;
+	white-space:nowrap;
+	background-color:white;
+}
+
+.hasjs ul.nice-menu li.niveau2 {
+	border-top: 0;
+	float: none;
+	background-color:white;
+	border-left:0;
+	margin:0;
+	line-height:20px;
+	white-space:nowrap;
+}
+
+.hasjs ul.nice-menu ul {
+	border: 0;
+	padding: 5px 11px 10px 0 !important;
+	margin-right: 0;
+	background-color:white;
+/*	-moz-box-shadow:    0 0 65px black outset, 0 0 20px black outset;  */
+    box-shadow: -2px 6px 5px rgba(0, 0, 0, 0.25);
+/*	-moz-box-shadow: black -2px 6px 5px;
+*/	-webkit-box-shadow: -2px 6px 5px rgba(0, 0, 0, 0.25);
+	white-space:nowrap;
+}
+.hasjs ul.nice-menu ul ul {
+    box-shadow: none;
+	-webkit-box-shadow: none;
+}
+
+.hasjs ul.nice-menu li.niveau2 a:link, ul.nice-menu li.niveau2 a:visited {
+	padding:0;
+	margin:0 1em;
+	font-size:11px;
+	text-transform:uppercase;
+	font-weight:bold;
+	text-decoration:underline;
+	line-height:20px;
+	height:20px;	
+	white-space:nowrap;
+	background-color:white;
+	display:block;
+}
+
+.hasjs ul.nice-menu li.niveau2 a:hover, ul.nice-menu li.niveau2 a:active, ul.nice-menu li.niveau2 a:focus {
+	color:#595959;
+}
+
+/*niveau3*/
+
+ul.nice-menu li.niveau3 {
+	line-height:12px;
+	height:15px;
+	white-space:nowrap;
+	background-color:white;
+	display:block;
+	list-style-type: disc;
+	list-style-position:inside;
+	color:red;
+}
+
+.hasjs ul.nice-menu li.niveau3 a:link, ul.nice-menu li.niveau3 a:visited {
+	color:#595959;
+	padding:0 15px 0 10px;
+	margin:0;
+	font-size:11px;
+	text-transform:none;
+	font-weight: normal;
+	text-decoration:underline;
+	line-height:12px;
+	height:15px;
+	white-space:nowrap;
+	background-color:white;
+	display:block;
+}
+
+.hasjs ul.nice-menu li.niveau3 a:hover, ul.nice-menu li.niveau3 a:active, ul.nice-menu li.niveau3 a:focus {
+	color:#595959;
+}
+
+.hasjs ul.nice-menu ul ul {
+	list-style-type: disc;
+	list-style-position:inside;
+	position: relative;
+	margin: 0 !important;
+	padding: 5px 0 10px 11px !important;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	
+}
+
+
+
+
+/* Show submenus when over their parents. */
+.hasjs ul.nice-menu li:hover ul,
+.hasjs ul.nice-menu li.menuparent li:hover ul,
+.hasjs ul.nice-menu li.menuparent li.menuparent li:hover ul,
+.hasjs ul.nice-menu li.menuparent li.menuparent li.menuparent li:hover ul,
+.hasjs ul.nice-menu li:focus ul,
+.hasjs ul.nice-menu li.menuparent li:focus ul,
+.hasjs ul.nice-menu li.menuparent li.menuparent li:focus ul,
+.hasjs ul.nice-menu li.menuparent li.menuparent li.menuparent li:focus ul,
+.hasjs ul.nice-menu li.over ul,
+.hasjs ul.nice-menu li.menuparent li.over ul,
+.hasjs ul.nice-menu li.menuparent li.menuparent li.over ul,
+.hasjs ul.nice-menu li.menuparent li.menuparent li.menuparent li.over ul,
+.hasjs ul.nice-menu li.hover ul,
+.hasjs ul.nice-menu li.menuparent li.hover ul,
+.hasjs ul.nice-menu li.menuparent li.menuparent li.hover ul,
+.hasjs ul.nice-menu li.menuparent li.menuparent li.menuparent li.hover ul,
+.hasjs #header-region ul.nice-menu li:hover ul,
+.hasjs #header-region ul.nice-menu li.menuparent li:hover ul,
+.hasjs #header-region ul.nice-menu li.menuparent li.menuparent li:hover ul,
+.hasjs #header-region ul.nice-menu li:focus ul,
+.hasjs #header-region ul.nice-menu li.menuparent li:focus ul,
+.hasjs #header-region ul.nice-menu li.menuparent li.menuparent li:focus ul,
+.hasjs #header-region ul.nice-menu li.over ul,
+.hasjs #header-region ul.nice-menu li.menuparent li.over ul,
+.hasjs #header-region ul.nice-menu li.menuparent li.menuparent li.over ul,
+.hasjs #header-region ul.nice-menu li.hover ul,
+.hasjs #header-region ul.nice-menu li.menuparent li.hover ul,
+.hasjs #header-region ul.nice-menu li.menuparent li.menuparent li.hover ul {
+/*  visibility: visible;*/
+  left:0;
+/*height:100%;*/
+}
+
+/* Hide sub-menus initially. */
+.hasjs ul.nice-menu li:hover ul ul ul,
+.hasjs ul.nice-menu li:hover li:hover ul ul,
+.hasjs ul.nice-menu li:hover li:hover ul ul ul,
+.hasjs ul.nice-menu li:hover li:hover li:hover ul ul,
+.hasjs ul.nice-menu li:hover li:hover li:hover ul ul ul,
+.hasjs ul.nice-menu li.over ul ul ul,
+.hasjs ul.nice-menu li.over li.over ul ul,
+.hasjs ul.nice-menu li.over li.over ul ul ul,
+.hasjs ul.nice-menu li.over li.over li.over ul ul,
+.hasjs ul.nice-menu li.over li.over li.over ul ul ul,
+.hasjs ul.nice-menu li.hover ul ul ul,
+.hasjs ul.nice-menu li.hover li.hover ul ul,
+.hasjs ul.nice-menu li.hover li.hover ul ul ul,
+.hasjs ul.nice-menu li.hover li.hover li.hover ul ul,
+.hasjs ul.nice-menu li.hover li.hover li.hover ul ul ul,
+.hasjs #header-region ul.nice-menu li:hover ul ul ul,
+.hasjs #header-region ul.nice-menu li:hover li:hover ul ul,
+.hasjs #header-region ul.nice-menu li:hover li:hover ul ul ul,
+.hasjs #header-region ul.nice-menu li:hover li:hover li:hover ul ul,
+.hasjs #header-region ul.nice-menu li:hover li:hover li:hover ul ul ul,
+.hasjs #header-region ul.nice-menu li.over ul ul ul,
+.hasjs #header-region ul.nice-menu li.over li.over ul ul,
+.hasjs #header-region ul.nice-menu li.over li.over ul ul ul,
+.hasjs #header-region ul.nice-menu li.over li.over li.over ul ul,
+.hasjs #header-region ul.nice-menu li.over li.over li.over ul ul ul,
+.hasjs #header-region ul.nice-menu li.hover ul ul ul,
+.hasjs #header-region ul.nice-menu li.hover li.hover ul ul,
+.hasjs #header-region ul.nice-menu li.hover li.hover ul ul ul,
+.hasjs #header-region ul.nice-menu li.hover li.hover li.hover ul ul,
+.hasjs #header-region ul.nice-menu li.hover li.hover li.hover ul ul ul {
+  visibility: hidden;
+  left:-5000px;
+  height:0;
+}

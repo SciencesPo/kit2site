@@ -1,0 +1,23 @@
+/* CSS du carousel, ne pas changer ! */
+.scpoeditocarousel ul.ul-scpoeditocarousel, .scpoeditocarousel ul.ul-scpoeditocarousel li.li-scpoeditocarousel {
+    margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.scpoeditocarousel ul.ul-scpoeditocarousel li.li-scpoeditocarousel img {
+	width: 100%;
+	height: 100%;
+}
+
+/*.scpoeditocarousel .nav-arrow {
+   float: right;
+   padding-top: 11px;
+   padding-right: 10px;
+}
+
+.scpoeditocarousel .nav-item {
+   float: right;
+   padding-top: 16px;
+}
+*/

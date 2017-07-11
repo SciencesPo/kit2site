@@ -1,0 +1,317 @@
+
+<?php
+// ; $Id: faq.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute la FAQ
+ */
+
+/**
+ * Implementation of hook_perm().
+ */
+function faq_perm() {
+  return array('access faq');
+}
+
+/*
+ * Implementation of hook_menu
+ */
+function faq_menu() {
+	global $language;
+  $items = array();
+	$faq = variable_get('faq_titre', array('fr' => 'FAQ', 'en' => 'FAQ'));
+	
+  $items['faq'] = array(
+		'title' => $faq[$language->language],
+    'page callback' => 'faq_liste_des_questions',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/*
+ * Implementation of hook_form_alter
+ * Cache le titre des blocs faq (remplacé par le champ $form['faq'])
+ */
+function faq_form_alter(&$form, &$form_state, $form_id) {
+	switch ($form_id) {
+		case 'block_admin_configure':
+			if($form['delta']['#value'] == 'faq') {
+				unset($form['block_settings']['title']);				
+			}
+		break;
+		
+		/*
+		case 'faq_node_form':
+			$form['title']['#default_value'] = 'FAQ';
+			unset($form['title']);			
+		break;
+		*/
+	}
+}
+
+/*
+ * Implementation of hook_block
+ */
+function faq_block($op = 'list', $delta = 0, $edit = array()) {
+
+	global $language;
+
+    switch ($op) {
+		case 'list':
+			$blocks['faq'] = array(
+				'info' => t('FAQ'),
+				'status' => 1,
+				'region' => 'footer',
+			);
+			return $blocks;
+		break;
+		
+		case 'configure':
+			$faq = variable_get('faq_titre', array());
+			$form['faq_fr'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in french'),
+				'#default_value' => $faq['fr'],
+			);
+			$form['faq_en'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in english'),
+				'#default_value' => $faq['en'],
+			);
+			return $form;
+			
+		break;
+		
+		case 'save':
+			$faq = array();
+			$faq['fr'] = $edit['faq_fr'];
+			$faq['en'] = $edit['faq_en'];
+			variable_set('faq_titre', $faq);
+		break;
+		
+		case 'view':
+			switch ($delta) {
+				case 'faq':
+					
+					$faq = variable_get('faq_titre', array('fr' => 'FAQ', 'en' => 'FAQ'));
+					
+					$subject = l($faq[$language->language], 'faq');
+					$content = '&nbsp;';
+					
+					$block['subject'] = $subject;
+					$block['content'] =	$content;
+ 
+				break;
+			}
+			return $block;
+
+		break;
+	}
+}
+
+/**
+* Construit l'arbre de taxonomie
+*/
+function faq_constructTax($tree = array(), $parent = 0, $tree_temp = array()) 
+{
+	global $language;
+	global $user;
+	global $base_url;
+	$editlink = 0;
+	$authorized = array('admin', 'expert', 'redacteur', 'validateur');
+	if($user->uid == 1){
+		$editlink = 1;
+	}
+	foreach($user->roles as $i => $role){
+		if(in_array($role, $authorized)){
+			$editlink = 1;
+			break;
+		}
+	}
+	
+	
+	if ($language->language == 'fr') {
+		$id_taxo = 6;
+	} else {
+		$id_taxo = 14;
+	}
+
+	if (!$tree) {
+		$tree = taxonomy_get_tree($id_taxo, $parent = 0, $depth = -1, $max_depth = NULL);
+	}
+	
+	$terms = array();
+
+	foreach ($tree as $term) {
+		if ($term->parents[0] == $parent) {
+		
+			$terms[$term->tid] = array(
+				'name' => $term->name,
+				'questions' => array(),
+				'list' => '',
+				'count' => 0
+			);
+			
+			$q = ' SELECT N.nid 
+					FROM {term_node} AS TN, {node} AS N
+					WHERE N.nid = TN.nid
+						AND N.status = %d
+						AND TN.tid = %d 
+						ORDER BY N.sticky DESC ';
+			$r = db_query($q, 1, $term->tid);
+			
+			while($row = db_fetch_array($r)){
+				$terms[$term->tid]['questions'][] = $row['nid'];
+			}
+			
+			/* On intègre les thèmes directement ici */
+			if(count($terms[$term->tid]['questions']) > 0) {
+				$items = array();
+				$count = 0;
+				foreach ($terms[$term->tid]['questions'] as $nid) {
+					$c  = node_load(array('nid' => $nid));
+					
+					if($editlink == 1){
+						$q = '['.l('edit', 'node/'.$c->nid.'/edit').'] <a href="#" class="faq-question couleur-principale"><span class="puce"></span>'.$c->field_question_faq[0]['value'].'</a>';
+					}else{
+						$q = '<a href="#" class="faq-question couleur-principale"><span class="puce"></span>'.$c->field_question_faq[0]['value'].'</a>';
+					}
+					$r = '<div class="faq-reponse"><a href="'.$base_url.'/'.$c->language.'/'.$c->path.'" style="cursor:default;color:black;text-decoration:none">'.$c->field_reponse_faq[0]['value'].'</a>';
+					if(!empty($c->field_link_more)){
+						$r .= '<ul>';
+						foreach ($c->field_link_more as $id => $link) {
+							$r .= '<li>'.l($link['title'], $link['url']).'</li>';
+							
+						}
+						$r .= '</ul>';
+					}
+					
+					$r .= '</div>';
+					
+					if($count%2 == 0){
+						$items[] = array( 'data' => $q.$r, 'class' => 'even faq' );
+					}else{
+						$items[] = array( 'data' => $q.$r, 'class' => 'odd faq' );
+					}
+					$count++;
+				}
+				
+				$list = theme_item_list($items, $title = NULL, $type = 'ul');
+				$terms[$term->tid]['list'] = $list;
+				$terms[$term->tid]['count'] = $count;
+			}
+			
+		} else {
+			$tree_temp[$term->parents[0]][$term->tid] = $term;
+		}
+	}
+	
+	if (is_array($terms)) {
+		foreach ($terms as $tid => &$term) {
+			if (isset($tree_temp[$tid])) {
+				$term['children'] = faq_constructTax($tree_temp[$tid], $tid, $tree_temp);
+			}
+		}
+	}
+	
+	if ($parent) {
+		return $terms;
+	}
+	
+	return $terms;
+}
+
+/**
+* Construit la FAQ
+*/
+function faq_liste_des_questions()
+{
+   $faqterm = null;
+   $url = explode('?', request_uri());
+   $p = explode('=', $url[1]);
+   if($p[1]){
+      $faqterm = urldecode($p[1]);
+   }
+	global $language;
+	menu_cache_clear('primary');
+	drupal_add_js("misc/collapse.js", 'core');
+	drupal_add_js(drupal_get_path('module', 'faq') . '/faq.js');
+	
+	$taxContent = faq_constructTax();
+// Master
+// Collège
+	foreach($taxContent as $value) {
+      if($faqterm && cleanAccents(strtolower($faqterm)) != cleanAccents(strtolower($value['name']))){
+         continue;
+      }
+		$inter = theme_liste_question($value);
+		$content .= $inter['content'];
+	}
+	
+	$faq = variable_get('faq_titre', array('fr' => 'FAQ', 'en' => 'FAQ'));
+	$title = $faq[$language->language].' - '.$faqterm;
+	drupal_set_title($title);
+	
+   $page_content = theme('liste_des_questions', $content, $title);
+   
+	
+	return $page_content;	
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function faq_theme($existing, $type, $theme, $path) {
+	return array(
+		'liste_des_questions' => array(
+			'template' => 'liste-des-questions',
+			'arguments' => array('content' => NULL, 'title' => NULL)
+		)
+	);
+}
+
+/**
+*Génère le thème pour  "faq" 
+*/
+function theme_liste_question($value, $niv = 1)
+{
+	//fieldset Value
+	if(count($value['children'])) {
+		foreach($value['children'] as $children) {
+			$inter = theme_liste_question($children, $niv + 1);
+			$theme .= $inter['content'];
+			$value['count'] += $inter['count'];
+		}
+		$fieldsetValue = $value['list'].$theme;
+	} else {
+		$fieldsetValue = $value['list'];
+	}
+
+	//fieldset Name
+	if($value['count'] > 0) {
+		$number = '&nbsp;('.$value['count'].' ';
+		$value['count'] > 1 ? $number .= t('questions').')' : $number .= t('question').')';
+		$fieldsetTitle = $value['name'].$number;
+	} else {
+		$fieldsetTitle = $value['name'];
+		return;
+	}
+	
+	$h = $niv + 1;
+	$content = '<div class="niveau'.$niv.' listesp collapsible collapsed clearfix">';
+   $content .= '<h'.$h.'>'.$value['name'].$number.'</h'.$h.'>';
+	$content .= $fieldsetValue;
+	$content .= '</div>';
+	
+	return array('content' => $content, 'count' => $value['count']);
+}
+
+function cleanAccents($str) {
+   $a = array('é', 'è', 'ç', 'à', 'â', 'ê', 'î', 'ô', 'û', 'ä', 'ë', 'ï', 'ö', 'ü', 'ù');
+   $b = array('e', 'e', 'c', 'a', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'u');
+   return str_replace($a, $b, $str);
+}

@@ -1,0 +1,121 @@
+<?php
+// ; $Id: stats_edito.install,v 1 2011/10/14 09:00:00 sun Exp $
+
+/*
+ * Implementation of hook_install
+ */
+function stats_edito_install()
+{
+	$result = drupal_install_schema('stats_edito');  
+	return $result;
+}
+
+/*
+ * Implementation of hook_schema
+ */
+function stats_edito_schema()
+{
+	$schema = array();
+  
+	$schema['stats_edito_reporting'] = array(
+		'description' => '',
+		'fields' => array(
+			'sid' => array(
+				'description' => t('Stat ID'),
+				'type' => 'serial',
+				'not null' => TRUE,
+				'disp-width' => '255',
+			),
+			'nid' => array(
+				'description' => t('Node ID'),
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'date' => array(
+				'description' => '',
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'display' => array(
+				'description' => '',
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'p1' => array(
+				'description' => '',
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'p2' => array(
+				'description' => '',
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'p3' => array(
+				'description' => '',
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'click_p1' => array(
+				'description' => '',
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'click_p2' => array(
+				'description' => '',
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'click_p3' => array(
+				'description' => '',
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'video' => array(
+				'description' => '',
+				'type' => 'int',
+				'length' => '10',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'section' => array(
+				'description' => '',
+				'type' => 'varchar',
+				'length' => '255',
+				'not null' => TRUE,
+				'default' => '',
+			)
+		),
+		'primary key' => array('sid'),
+	);
+
+  return $schema;
+}
+
+/*
+ * Implementation of hook_uninstall
+ */
+function stats_edito_uninstall()
+{
+	$result = drupal_uninstall_schema('stats_edito');
+	return $result;
+}
+

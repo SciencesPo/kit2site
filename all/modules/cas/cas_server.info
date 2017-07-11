@@ -1,0 +1,10 @@
+; $Id $
+name = CAS Server
+core = 6.x
+description = "Provides protocol compliant CAS Server"
+; Information added by drupal.org packaging script on 2011-04-13
+version = "6.x-2.3"
+core = "6.x"
+project = "cas"
+datestamp = "1302715014"
+

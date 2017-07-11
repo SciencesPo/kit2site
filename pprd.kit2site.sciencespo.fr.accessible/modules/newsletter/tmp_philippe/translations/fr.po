@@ -1,0 +1,122 @@
+# $Id: fr.po,v 1.0.0.0 2012/06/15 02:24:03 8ctambules Exp $
+#
+# French Translation of Drupal (newsletter)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: newsletter.module\n"
+"POT-Creation-Date: 2012-06-15 23:52+0100\n"
+"PO-Revision-Date: 2012-06-15 23:52+0100\n"
+"Last-Translator: 8ctambules <8ctambules at gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: newsletter.block.inc:28
+msgid "Manage all newsletters"
+msgstr "Gérer toutes les newsletters"
+
+#: newsletter.forms.inc:51
+msgid "Save"
+msgstr "Enregistrer"
+
+#: newsletter.forms.inc:139
+msgid "Subscribe"
+msgstr "S'abonner"
+
+#: newsletter.forms.inc:150
+msgid "The email must be a valid email address"
+msgstr "L'adresse email doit être valide"
+
+#: newsletter.forms.inc:181
+msgid "You already subscribed to this newsletter"
+msgstr "Vous êtes déjà abonné à cette newsletter"
+
+#: newsletter.forms.inc:184
+msgid "You have been subscribed to the newsletter %newsletter. Thanks for your input."
+msgstr "Vous êtes maintenant abonné à la newsletter %newsletter. Merci pour votre participation."
+
+#: newsletter.forms.inc:198
+msgid "Go to newsletter subscribing list"
+msgstr "Gérer vos newsletters"
+
+#: newsletter.forms.inc:240
+msgid "(You requested to unsubscribe from this newsletter)"
+msgstr "(Vous avez demandé à être désabonné de cette newsletter)"
+
+
+#: newsletter.forms.inc:244
+msgid "Save subscribing"
+msgstr "Enregistrer vos abonnements"
+
+
+#: newsletter.forms.inc:273
+msgid "Your new subscribing list has been saved. Thanks for your input."
+msgstr "Vos nouveaux paramètres d'abonnements ont été enregistrés. Merci pour votre participation."
+
+#: newsletter.module:82
+msgid "Subscribe to website newsletters"
+msgstr "S'abonner aux newsletters du site"
+
+#: newsletter.forms.inc:127
+msgid "One click subscribing to"
+msgstr "S'abonner en 1 click à"
+
+
+msgid "You requested to unsubscribe your email %email to the newsletter "%newsletter". Please confirm by saving the form below."
+msgstr "Vous avez demandé à désabonner l'email %email de la newsletter %newsletter. Confirmez le formulaire ci-dessous."
+
+
+msgid "The email %email is subscribed to the checked newsletters below. Please check or uncheck as desired and save."
+msgstr "L'email %email est abonné aux newsletters listées ci-dessous. Gérez vos abonnements à l'aide des cases à cocher et enregistrez."
+
+
+msgid "In order to manage your newsletter subscribing list, we need your email."
+msgstr "Pour afficher vos abonnements, nous avons besoin de votre email."
+
+msgid "Newsletters subscription"
+msgstr "Abonnement aux newsletters"
+
+
+msgid "Your email"
+msgstr "Votre email"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

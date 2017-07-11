@@ -1,0 +1,94 @@
+/*tous les blocks*/
+.block.block-topboxes {
+   position:absolute;
+   z-index:90;
+   background-color:white;
+   margin:0;
+   padding:0;
+   left:50%;
+   top:17px;
+   width:100px;
+   background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_language_selector.png) repeat-x scroll left top white;
+}
+.block.block-topboxes a:link, .block.block-topboxes a:visited {
+   text-decoration:none;
+}
+.block.block-topboxes a:hover, .block.block-topboxes a:active {
+   text-decoration:underline;
+}
+
+.block.block-topboxes ul {
+   list-style:none;
+   margin:5px 0 0 5px;
+   padding:5px;
+}
+.block.block-topboxes ul ul {
+   list-style:none;
+   margin:0;
+   padding:0;
+}
+.block.block-topboxes li {
+   list-style:none;
+   margin:0;
+   padding:0;
+}
+.block.block-topboxes li li {
+   list-style:none;
+   margin:0;
+   padding:0;
+}
+
+.block.block-topboxes .ferme {
+   line-height:0;
+   height:0;
+   overflow:hidden;
+}
+.block.block-topboxes .ouvert, .block.block-topboxes .first {
+   min-height:20px;
+   line-height:20px;
+}
+.menu-fleche {
+   margin-left:2px;
+}
+.triangle {
+   position:absolute;
+   z-index:12;
+   left:50%;
+   top:17px;
+   margin:0;
+}
+
+/*langues*/
+#block-topboxes-langues {
+   margin-left:100px;
+}
+.arr-langues {
+   margin-left:87px;
+}
+/*SPlogin*/
+#block-topboxes-SPlogin {
+   margin-left:225px;
+}
+.arr-login{
+   margin-left:212px;
+}
+#block-topboxes-SPlogin  a:link {
+   color:black;
+   text-decoration:none;
+}
+#block-topboxes-SPlogin span.puce, ul.nice-menu span.puce {
+   float:left;
+   background: url(/sous_site_master/sites/all/themes/sciencespo/images/cercle_puce.png) #CCC no-repeat;
+   width:8px;
+   height:8px;
+   margin:3px 3px 3px -3px;
+}
+
+/*custom*/
+#block-topboxes-custom {
+   margin-left:350px;
+}
+.arr-custom{
+   margin-left:337px;
+}
+

@@ -1,0 +1,246 @@
+<?php
+// ; $Id: stats_edito.module,v 1 2011/10/14 09:00:00 sun Exp $
+
+/*
+ * Implementation of hook_perm
+ */
+function stats_edito_perm()
+{
+	return array('administer stats edito');
+}
+
+/*
+ * Implementation of hook_menu
+ */
+function stats_edito_menu()
+{
+	$items = array();
+
+	$items['admin/settings/stats-edito'] = array(
+		'title' => t('Stats edito'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('stats_edito_admin_settings'),
+		'access arguments' => array('administer stats edito'),
+	);
+	
+	$items['ze_reporting_click'] = array(
+		'title' => t('Stats edito reporting'),
+		'page callback' => 'stats_edito_reporting_click',
+		'page arguments' => array(),
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['ze_reporting_affichage'] = array(
+		'title' => t('Stats edito affichage'),
+		'page callback' => 'stats_edito_reporting_affichage',
+		'page arguments' => array(),
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	return $items;
+}
+
+/**
+ * Submit hook for the settings form.
+ */
+function stats_edito_admin_settings()
+{
+	//Date
+	$form['stats_edito']['field_date'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('By date'),
+	);
+	
+	$form['stats_edito']['field_date']['date_start'] = array(
+		'#type' => 'date_popup',
+		'#title' => 'Date de début',
+		'#size' => 13,
+		'#date_format' => 'd/m/Y',
+	);
+	
+	$form['stats_edito']['field_date']['date_end'] = array(
+		'#type' => 'date_popup',
+		'#title' => 'Date de fin',
+		'#size' => 13,
+		'#date_format' => 'd/m/Y',
+	);
+	
+	//Section	
+	$form['stats_edito']['field_section'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('By section'),
+	);
+	
+	$sql = 'SELECT section FROM {stats_edito_reporting} 
+						GROUP BY section';
+							
+	$res = db_query($sql);
+	
+	$sections = array();
+	while($elem = db_fetch_array($res)){
+		$sections[$elem['section']] = $elem['section'];
+	}
+	
+	$form['stats_edito']['field_section']['section'] = array(
+		'#type' => 'select',
+		'#title' => 'Section',
+		'#options' => $sections,
+	);
+
+	$form['submit'] = array(
+		'#type'  => 'submit',
+		'#value' => t('Export in CSV format'),
+	);
+	
+	return $form;
+}
+
+/*
+ * Export CSV des statistiques.
+ */
+function stats_edito_admin_settings_submit($form, &$form_state)
+{
+	$values = $form_state['values'];
+	$section = $values['section'];
+
+	if ($values['date_start'] == NULL) {
+		$date_start = false;
+	} else {
+		$date_start_tab1 = explode(' ', $values['date_start']);
+		$date_start_tab2 = explode('-', $date_start_tab1[0]);
+		$date_start = mktime(0, 0 ,0 , $date_start_tab2[1], $date_start_tab2[2], $date_start_tab2[0]);
+	}
+	
+	if ($values['date_end'] == NULL) {
+		$date_end = false;
+	} else {
+		$date_end_tab1 = explode('/', $values['date_end']);
+		$date_end_tab2 = explode('-', $date_end_tab1[0]);
+		$date_end = mktime(0, 0 ,0 , $date_end_tab2[1], $date_end_tab2[2], $date_end_tab2[0]);
+	}
+	
+	if ($date_end) {
+		//On prend tout dans l'intervalle entre les deux date.
+		if ($date_start) {
+			$sql_date = ' AND t.date >= %d AND t.date <= %d';
+			$options = array($section, $date_start, $date_end);
+		//Si la date de début n'est pas définie, on prendra tout jusqu'a la date de fin.
+		} else {
+			$sql_date = ' AND t.date <= %d';
+			$options = array($section, $date_end);
+		}
+	} else {
+		//Si la date de fin n'est pas définie, on prend tout depuis la date de départ.
+		if ($date_start) {
+			$sql_date = ' AND t.date >= %d';
+			$options = array($section, $date_start);
+		//Si aucune date n'est définie, on prend tout.
+		} else {
+			$sql_date = '';
+			$options = array($section);
+		}
+	}
+	
+	$query = 'SELECT n.title, t.display, t.p1, t.p2, t.p3, t.click_p1, t.click_p2, t.click_p3, t.video, t.date, t.section
+				FROM {node} n, {stats_edito_reporting} t
+					WHERE n.nid = t.nid
+						AND t.section = "%s"
+							'.$sql_date.'
+							ORDER BY t.section, t.date DESC';
+	
+	$q = db_query($query, $options);
+
+	header("Content-Type: application/csv-tab-delimited-table");
+	header("Content-disposition: filename=statistiques-zone-editoriale.csv");
+
+	if (db_affected_rows()) {
+		//Titre des colonnes
+		print 'Titre;Affichage;Priorite 1;Priorite 2;Priorite 3;Clic en priorite 1;Clic en priorite 2;Clic en priorite 3;Clic sur video;Date;Section';
+		print "\r\n";
+
+		//Données de la table
+		while ($arr_select = db_fetch_array($q)) {
+			foreach ($arr_select as $row => $elem) {
+				if ($row == 'title') {
+					print utf8_decode($elem).';';
+				} else {
+					print ($row == 'date') ? date('d/m/Y', $elem).';' : "$elem;";
+				}
+			}
+			print "\r\n";
+		}
+	}
+	
+	exit;
+}
+
+/*
+ * Enregistrement des statistiques.
+ */
+function stats_edito_reporting_click($nid, $priority = 1, $section, $video = 0)
+{
+	$date_now = mktime(0, 0 ,0 , date('m'), date('d'), date('Y'));
+	
+	if ($video == 1) {
+		$field_click = 'video';
+	} else {
+		$field_click = 'click_p'.$priority;
+	}
+	
+	$query_exist = 'SELECT * FROM {stats_edito_reporting} 
+						WHERE nid = %d
+							AND date = %d
+								AND section = "%s"';
+							
+	$exist = db_fetch_array(db_query($query_exist, array($nid, $date_now, $section)));
+
+	if ($exist['nid']) {
+	
+		$query = 'UPDATE {stats_edito_reporting} 
+					SET '.$field_click.' = %d
+						WHERE nid = %d
+							AND date = %d
+								AND section = "%s"';
+	
+		db_query($query, array($exist[$field_click] + 1, $nid, $date_now, $section));
+	
+	} else {
+	
+		$query = 'INSERT INTO {stats_edito_reporting} (nid, date, '.$field_click.', section) VALUES (%d, %d, %d, "%s")';
+		db_query($query, array($nid, $date_now, 1, $section));
+		
+	}	
+}
+
+function stats_edito_reporting_affichage($nid, $priority = 1, $section)
+{
+	$date_now = mktime(0, 0 ,0 , date('m'), date('d'), date('Y'));
+	$field_priority = 'p'.$priority;
+	
+	$query_exist = 'SELECT * FROM {stats_edito_reporting} 
+						WHERE nid = %d
+							AND date = %d
+								AND section = "%s"';
+							
+	$exist = db_fetch_array(db_query($query_exist, array($nid, $date_now, $section)));
+	
+	if ($exist['nid']) {
+		
+		$query = 'UPDATE {stats_edito_reporting} 
+					SET display = %d, '.$field_priority.' = %d
+						WHERE nid = %d
+							AND date = %d
+								AND section = "%s"';
+	
+		db_query($query, array($exist['display'] + 1, $exist[$field_priority] + 1, $nid, $date_now, $section));
+		
+	} else {
+		
+		$query = 'INSERT INTO {stats_edito_reporting} (nid, date, display, '.$field_priority.', section) VALUES (%d, %d, %d, %d, "%s")';
+		db_query($query, array($nid, $date_now, 1, 1, $section));
+		
+	}
+}
+

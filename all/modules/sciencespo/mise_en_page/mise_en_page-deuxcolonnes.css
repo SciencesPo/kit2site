@@ -1,0 +1,45 @@
+.node-type-page-interne {
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+/*	width:720px;*/
+}
+
+/*Images & videos : 680 x 383 + 40 pour les boutons*/
+.imagefield {
+	width:432px;
+	/*max-height:243px;*/
+}
+.field-field-image {
+	float:left;
+	width:432px;
+	clear:none;
+}
+
+.node-type-page-interne .body p {
+	float:right;
+	display:block;
+	text-align:justify;
+	clear:right;
+	width:216px;
+	margin:15px 24px 15px 0;
+	padding:0;
+}
+
+.border, .border-bottom {
+	width:672px;
+	margin:0 24px 0 24px;
+}
+
+.field-field-sous-titre,
+.node-type-page-interne ul.links,
+.node-type-page-interne .field-field-image,
+.node-type-page-interne .field-field-video,
+.node-type-page-interne .field-field-graphique {
+	margin:15px 24px 15px 24px;
+}
+
+/* Pour le carousel */
+.node-type-page-interne .field-field-image .item-list ul {
+	margin: 0;
+	padding: 0;
+}
+

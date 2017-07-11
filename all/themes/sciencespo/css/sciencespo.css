@@ -1,0 +1,1219 @@
+#cmf-filter-form #edit-title-wrapper #title-max-length,
+#cmf-filter-form #edit-title-wrapper label {
+   display:none;
+}
+
+/*TABLES*/
+.page table {
+	border:1px solid black;
+	width:100%;
+	margin-left:24px;
+}
+.page th, .page thead th, .page tbody th, td, .page thead td, .page tbody td {
+	padding:6px;
+	border:1px solid black;
+}
+.page th, .page thead th, .page tbody th {
+	text-align:center;
+	border:1px solid black;
+}
+.page table caption {
+	text-align: center; 
+	font-weight: bold;
+	margin-top: 15px;
+	margin-bottom: 6px;
+}
+#attachments, #attachments tr, #attachments td, #attachments th, #attachments thead, #attachments tbody {
+   border:0 none transparent;
+}
+
+/*GENERAL*/
+.content ul, .content ol {
+	margin-left:24px;
+}
+.collapse-processed a {
+	background-image: url("/sous_site_master/misc/menu-collapsed.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    width: 100%;
+    display: inline-block;
+}
+div.div-wrapper {
+	display:none;
+}
+/*ACCESSIBILITE*/
+.outscreen{
+   position:absolute;
+   top:-5000px;
+   left:-5000px;
+   overflow:hidden;
+   width:1px;
+   height:1px ;
+}
+
+.accordion.niveau2 {
+   display:none;
+}
+.field-field-desc-text-video {
+   margin-top:20px;
+   border: 1px solid gray;
+   clear:left;
+}
+
+
+   
+.section-news-fr h1.title-article, .section-news-en h1.title-article {
+   margin:15px 24px;
+   padding-top:15px;
+   display:block;
+   font-size:20px;
+}
+/*LISTES ALIGNEES SUR PARGRAPHES*/
+.node-type-page-interne ul {
+   margin-left:16px;
+}
+/*PAGE DE MAINTENANCE*/
+.in-maintenance #content {
+	margin-top:40px;
+	background: url("/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg") repeat-x top center white;
+	
+}
+.in-maintenance #content .section {
+	padding:20px;
+}
+
+
+/*//PAGE DE MAINTENANCE*/
+
+fieldset.collapsible .fieldset-wrapper {
+	overflow:visible;
+}
+
+.view-liste-contenu table td {
+	padding:10px;
+}
+
+/*FOND DE PAGE BLANC (obligatoire)*/
+#page {
+	background-color:white;
+}
+
+/*select des videos dans le formulaire actus et article*/
+#edit-field-selected-video-actualite-value {
+   width:100%;
+}
+
+
+/*BLOC RECHERCHE*/
+#block-search-0 input[type="text"] {
+	background: none repeat scroll 0 0 transparent;
+	border: medium none;
+	font-size: 11px;
+	height: 25px;
+	padding: 0 0 0 25px;
+	width: 116px; /* 117px */
+	float: left; /* vide */
+}
+	
+#block-search-0 input[type="submit"] {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    color: #FFFFFF;
+    font-size: 9px;
+    font-weight: bold;
+    height: 25px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    text-align: center;
+    width: 29px; /*  22px */
+	cursor:pointer;
+	float: left; /* vide */
+}
+
+#header #block-search-0 {
+   position:absolute;
+   background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_recherche.png) no-repeat scroll transparent; 
+   left:50%;
+   margin-left:280px;
+   top:80px;
+   -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+   -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+   z-index:5;
+}
+
+.region-sidebar-second #block-search-0 {
+	position:relative;
+	margin-left: 20px;
+	left: 0;
+	top: 0;
+	height: 25px;
+	padding: 0;
+   background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_recherche.png) no-repeat scroll transparent; 
+   -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+   -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+/*MENU REDACTEUR*/
+#block-menu-menu-redacteur {
+	position:fixed;
+	top:100px;
+	left:-180px;
+	width:200px;
+	z-index:80;
+	padding:5px;
+	background-color:white;
+}
+#block-menu-menu-redacteur:hover {
+	left:0;
+
+}
+#block-menu-menu-redacteur h2 {
+	display:inline;
+	float:right;
+	width:200px;
+	height:200px;
+	margin-right:-180px;
+	left:0;
+	top:0;
+	text-align:right;
+	-webkit-transform: rotate(-90deg);	
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+}
+
+
+/*PIED DE PAGE*/
+#back_top {
+	text-align:right;
+	padding:10px;
+}
+
+#footer{
+	background:#F4F4F5 url(/sous_site_master/sites/all/themes/sciencespo/images/fond_pied.png) repeat-x left top;
+	padding: 24px 10px;
+	color:#707070;
+}
+
+#footer strong {
+	display:block;
+	clear:both;
+}
+
+#footer p {
+	color: #707070;
+	margin:0;
+	display:inline;
+	clear:none;
+	float:none;
+	
+	
+}
+#footer a {
+	color: #707070;
+	font-size: 13px;
+	text-transform: uppercase;
+}
+
+.region-footer #block-reseaux_sociaux-reseaux_sociaux {
+	float:left;
+}
+
+.region-footer .block {
+	border-left: 1px solid #D9D9D9;
+	margin: 0 2px;
+	padding-left:4px;
+	width:156px;
+	float: left;
+/*	padding-bottom: 30px;*/
+	min-height:160px;
+}
+.region-footer #block-faq-faq,
+.region-footer #block-acces_direct-acces_direct {
+	min-height:80px;
+}
+.region-footer #block-faq-faq,
+.region-footer #block-block-9  {
+	width:70px;
+	min-height:80px;
+}
+
+
+.region-footer #block-mise_en_page-SPcontact { /*CONTACTS*/
+	border-left: none;
+}
+.region-footer .logo-adresse {
+	width:140px;
+} 
+#block-mise_en_page-SPcontact .content p {
+/*	line-height:5px;*/
+}
+#block-mise_en_page-SPcontact .content p strong {
+	line-height:20px;
+}
+#block-mise_en_page-SPcontact .content h2:last-child {
+	margin-top:20px;
+}
+
+#footer .block h2 {
+	font-size: 1.23em;
+    font-style: italic;
+    font-weight: normal;
+    line-height: 1.3em;
+    margin-bottom: 0.667em;
+    margin-top: 0;
+}
+
+.region-footer ul,
+.region-footer ul li {	
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+#footer ul li a {
+	text-transform: none;
+}
+
+
+#block-acces_direct-acces_direct .selectable {
+	color: #000000;
+}
+
+#block-acces_direct-acces_direct select {
+	width: 140px;
+}
+
+/*PAGE INTERNE COMMUNES A UNE ET DEUX COLONNES*/
+
+#links_related_endnotes,
+.node-type-page-interne .meta,
+.section h1.title {
+	display:none;
+}
+.page-node-203 h1.title {
+	padding-left:20px;
+	background: url("/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg") repeat-x top center white;
+}
+.page-node-203 #content {
+   padding:20px;
+	width:720px;
+}
+
+.node-type-temp-exp h1.title {
+	display:block;
+}
+.node-type-page-interne h2.title-article {
+	display:block;
+	font-size:20px;
+}
+
+
+/*liens en savoir plus*/
+.related_links {
+	display: block;
+	clear :both;
+	margin: 15px 24px;
+}
+
+.related_links h2 {
+	font-weight: bold;
+}
+
+.node .related_links h2 {
+	margin: 0 0 10px 0;
+}
+
+.related_links ul {
+	margin: 0 24px;
+	padding: 0;
+}
+
+.related_links ul li {
+	padding-bottom: 3px;
+}
+
+span.print-link{
+	/*margin-top:100px;*/
+}
+
+.border {
+	margin:0 24px 0 24px;
+	border-top:1px dotted #595959;
+}
+.border-bottom {
+	margin:0 24px 0 24px;	
+	height:30px;
+	line-height:1px;
+	font-size:1px;
+	background-image: url(/sous_site_master/sites/all/themes/sciencespo/images/trait-sym.png);
+	background-repeat: repeat-x;
+	background-position: bottom left;
+}
+#block-menu-menu-blocs-footer a.active {
+	color:black;
+}
+
+h2.title-article, .node-type-mentions-legales h1 {
+	padding:20px 0 0 0;
+	margin:0 24px 15px 24px;
+}
+.field-field-sous-titre {
+	color:#707070;
+	font-style:italic;
+	font-size:18px;
+}
+a:link.jcarousel-prev, a:visited.jcarousel-prev {
+	display:block;
+	float:right;
+	width:20px;
+	height:40px;
+	line-height:40px;
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/suivant.png) no-repeat scroll center center #FFFFFF;
+	
+}
+a:hover.jcarousel-prev, a:active.jcarousel-prev {
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/suivant_red.png) no-repeat scroll center center #FFFFFF;
+}
+a.jcarousel-next:link, a.jcarousel-next:visited {
+	display:block;
+	float:right;
+	width:20px;
+	height:40px;
+	line-height:40px;
+  background: url(/sous_site_master/sites/all/themes/sciencespo/images/precedent.png) no-repeat scroll center center #FFFFFF;
+}
+a.jcarousel-next:hover, a.jcarousel-next:active {
+  background: url(/sous_site_master/sites/all/themes/sciencespo/images/precedent_red.png) no-repeat scroll center center #FFFFFF;
+}
+
+.terms-container {
+	display:block;
+	width:100%;
+	line-height:30px;
+	/*height:30px;*/
+	padding:0;
+}
+ul.inline li {
+	padding:0;
+	margin:0;
+}
+.terms-inline {
+	display:block;
+
+	line-height:20px;
+	/*height:30px;*/
+	margin-left:24px;
+	margin-right:24px;
+}
+.terms-inline a {
+	background-color:#999999;
+	color:white;
+	padding:0 2px 0 2px;
+	font-weight:bold;
+	text-decoration:none;
+	margin:0;
+}
+
+/*barre de partege de bas de page*/
+.share-bar {
+ 	border-bottom: 1px dotted #999999;
+	margin-left:24px;
+	margin-right:24px;
+	padding-top:2px;
+	padding-bottom:2px;
+	line-height:22px;
+	height:22px;
+}
+.share-bar ul li {
+   float:right;
+   list-style-type: none;
+}
+/*--------------------------------*/
+
+.printers {
+	float:left;
+	line-height:20px;
+	height:20px;
+}
+.addthis_toolbox {
+	float:right;
+	line-height:20px;
+	height:20px;
+}
+.addthis_button_google_plusone {
+	margin-top:2px;
+}
+.printers img {
+	margin-right:1px;
+	margin-left:1px;
+}
+
+/*BLOC DROITE OU GAUCHE SELON NIVEAU*/
+#block-mise_en_page-zone_de_gauche,
+#block-mise_en_page-zone_de_droite {
+/*	border-top: 1px dotted #999999; */
+	border-bottom: 1px dotted #999999;
+  font-family: times;
+  font-size: 18px;
+  font-style: italic;
+}
+#block-mise_en_page-menu_niveau3 {
+	border-bottom: 1px dotted #999999;
+}
+#block-mise_en_page-zone_de_gauche p, #block-mise_en_page-zone_de_droite p {
+	margin:0;
+	padding:0;
+	text-align: left;
+	line-height:20px;
+}
+#block-mise_en_page-zone_de_droite {
+	
+}
+
+#block-mise_en_page-zone_de_droite .graphique, #block-mise_en_page-zone_de_gauche .graphique {
+	padding-bottom: 20px;
+}
+#block-mise_en_page-zone_de_droite .graphique img, #block-mise_en_page-zone_de_gauche .graphique img {
+	width: 100%;
+}
+
+/*MENU GAUCHE NIVEAU 3*/
+#block-mise_en_page-menu_niveau3, #block-block-10 {
+/*	margin:70px 0 0 24px;*/
+/*	border-bottom: 1px dotted #999999;*/
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;	
+}
+
+#block-mise_en_page-menu_niveau3 ul {
+	list-style-image: none;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+#block-mise_en_page-menu_niveau3 li {
+	padding-bottom: 3px;
+}
+
+/*COLONNE DE DROITE*/
+.region-sidebar-second h2 {
+	padding:20px 0 20px 0;
+}
+
+.region-sidebar-second .block {
+	margin:0 0 2em 0;
+	padding:20px;
+}
+.region-sidebar-first .block {
+	margin:0 0 2em 0;
+	padding:20px;
+}
+.region-sidebar-second .block p {
+	text-align: justify;
+	font-style:italic;
+	margin:0;
+	padding:0;
+}
+
+/* listes contacts, pdf, presse, faq */
+#contacts, #pdfs, #presses, #faqs, #maps, #outils {
+	padding: 15px 24px 15px 24px;
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+	width: 672px;
+}
+
+.node-type-mentions-legales, .node-type-accessibilite {
+    background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+    /*padding: 15px 24px;*/
+}
+#contacts div.div-wrapper, #pdfs div.div-wrapper, #presses div.div-wrapper, #faqs div.div-wrapper, #maps div.div-wrapper, #outils div.div-wrapper  {
+   display:none;
+}
+#contacts div.listesp, #pdfs div.listesp, #presses div.listesp, #faqs div.listesp, #maps div.listesp, #outils div.listesp  {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+#contacts div.niveau1, #pdfs div.niveau1, #presses div.niveau1, #faqs div.niveau1, #maps div.niveau1, #outils div.niveau1 {
+	margin-left: 0;
+	height: auto;
+}
+
+#contacts div h2, #pdfs div h2, #presses div h2, #faqs div h2, #maps div h2, #outils div h2,
+#contacts div h3, #pdfs div h3, #presses div h3, #faqs div h3, #maps div h3, #outils div h3,
+#contacts div h4, #pdfs div h4, #presses div h4, #faqs div h4, #maps div h4, #outils div h4 {
+	display: block;
+	width: 100%;
+	padding: 0;
+}
+
+#contacts div h2 a:link, #pdfs div h2 a:link, #presses div h2 a:link, #faqs div h2 a:link, #maps div h2 a:link, #outils div h2 a:link,
+#contacts div h3 a:link, #pdfs div h3 a:link, #presses div h3 a:link, #faqs div h3 a:link, #maps div h3 a:link, #outils div h3 a:link,
+#contacts div h4 a:link, #pdfs div h4 a:link, #presses div h4 a:link, #faqs div h4 a:link, #maps div h4 a:link, #outils div h4 a:link {
+	display: block;
+	padding: 0;
+}
+
+#contacts div.collapsible h2 a:link, #pdfs div.collapsible h2 a:link, #presses div.collapsible h2 a:link, #faqs div.collapsible h2 a:link, #maps div.collapsible h2 a:link, #outils div.collapsible h2 a:link,
+#contacts div.collapsible h3 a:link, #pdfs div.collapsible h3 a:link, #presses div.collapsible h3 a:link, #faqs div.collapsible h3 a:link, #maps div.collapsible h3 a:link, #outils div.collapsible h3 a:link,
+#contacts div.collapsible h4 a:link, #pdfs div.collapsible h4 a:link, #presses div.collapsible h4 a:link, #faqs div.collapsible h4 a:link, #maps div.collapsible h4 a:link, #outils div.collapsible h4 a:link {
+	display: block;
+	color: #595959;
+	cursor: pointer;
+	font-size: 16px;
+	font-style: italic;
+	font-weight: 400;
+	margin: 8px 0;
+	text-decoration: none;	
+	background-position: right center;
+	background-repeat:no-repeat;
+   border-bottom: 1px dotted #595959;
+	line-height: 30px;
+}
+
+#contacts div.niveau1 div, #pdfs div.niveau1 div, #presses div.niveau1 div, #faqs div.niveau1 div, #maps div.niveau1 div, #outils div.niveau1 div {
+	padding-left: 30px;
+	height: auto;
+}
+
+.contact-titre dt{
+	float: left;
+	width: 28%;
+	height: 100px;
+	padding-right: 2%;
+}
+
+.contact-autre {
+	float: right;
+	width: 70%;
+	height: 100px;
+	margin:0;
+	color:rgb(89, 89, 89);
+	padding:0;
+}
+.contact-autre p {
+   margin:0;
+   padding:0;
+}
+
+.outil-titre {
+	float: left;
+	width: 28%;
+	padding-right: 2%;
+}
+
+.outil-description {
+	float: right;
+	width: 70%;
+}
+
+.map-code {
+	float: left;
+	width: 200px;
+	margin: 0 20px 0 0;
+}
+
+.map-code a.ext {
+	margin-left: 5px;
+}
+
+.map-image {
+	float: left;
+	width: 200px;
+	margin: 0 20px 0 0;
+	text-align: center;
+}
+
+.map-autre h3 {
+	margin: 0;
+	padding-top: 5px;
+}
+
+#pdfs ul, #pdfs li, #presses ul, #presses li, #contacts ul, #contacts li, #faqs ul, #faqs li, #outils ul, #outils li, #maps ul, #maps li {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#pdfs li.pdf, #presses li.presse, #contacts li.contact, #outils li.outil {
+	background-color: #F2F2F2;
+	padding: 8px 24px 20px 24px;
+}
+
+#maps li.map {
+	background-color: #F2F2F2;
+	padding: 0 24px 0 0;
+	margin-bottom: 1px;
+}
+
+#outils li.outil p {
+	margin: 0;
+	padding: 0;
+}
+
+#faqs li.faq {
+	padding: 8px 24px 8px 24px;
+	font-size: 15px;
+}
+
+#faqs li.faq p {
+	margin: 0.5em 0;
+}
+
+#pdfs li.odd, #presses li.odd, #contacts li.odd, #outils li.odd , #maps li.odd{
+	background-color: #ffffff;
+}
+
+.pdf-link {
+	float: left;
+	width: 28%;
+	padding-right: 2%;
+}
+
+.pdf-link a {
+	text-decoration: none;
+}
+
+.pdf-link a:hover span, .outil-titre a:hover {
+	color: #595959;
+}
+
+.pdf-link a img {
+	vertical-align: top;
+	margin-right: 5px;
+}
+
+.pdf-link a span {
+	text-decoration: underline;
+}
+
+.pdf-desc {
+	float: right;
+	width: 70%;
+}
+
+.faq-question {
+	cursor: pointer;
+}
+
+.faq-question span.puce {
+	float: left;
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/cercle_puce.png) #CCC no-repeat;
+	width: 8px;
+	height: 8px;
+	margin: 5px 8px 0 0;
+}
+
+.faq-reponse a:hover, .faq-reponse a:hover span {
+	color: #595959 !important;
+}
+
+/*Masque les onglets du formulaire de loggin USER*/
+/*.section-user .tabs {
+   display: none;
+}
+*/
+.region-sidebar-second .block {
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat top center #FFFFFF;
+}
+
+
+#block-mise_en_page-entretoise, #block-mise_en_page-zone_de_droite {
+	background:none;
+}
+
+#block-mise_en_page-fix_edito {
+	height: 40px;
+	margin: 0;
+	padding: 0;
+	display: block;
+}
+
+/* Réseaux Sociaux */
+/* Le block */
+#block-reseaux_sociaux-reseaux_sociaux ul {
+   margin:0;
+   padding:0;
+}
+#block-reseaux_sociaux-reseaux_sociaux ul li{
+   list-style-type: none;
+   float:left;
+   margin:0;
+   padding:0;
+}
+#block-reseaux_sociaux-reseaux_sociaux a {
+	margin-right: 5px;
+}
+
+#block-reseaux_sociaux-reseaux_sociaux img {
+	/*height: 20px;*/
+}
+
+#block-reseaux_sociaux-reseaux_sociaux .all {
+	padding-top: 5px;
+	clear:left;
+}
+
+#block-reseaux_sociaux-reseaux_sociaux .all a:hover {
+	color: #595959;
+}
+
+/* La page */
+#reseaux_sociaux {
+	padding: 15px 24px 15px 24px;
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+	width: 672px;
+}
+
+#reseaux_sociaux ul, #reseaux_sociaux li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+#reseaux_sociaux li {
+	background-color: #ffffff;
+	padding: 8px 24px 20px 24px;
+	width: 572px;
+}
+
+#reseaux_sociaux li.odd {
+	background-color: #F2F2F2;
+}
+
+#reseaux_sociaux li .link a {
+	text-decoration: none;
+}
+
+#reseaux_sociaux li .link a span {
+	text-decoration: underline;
+}
+
+#reseaux_sociaux li .link a img {
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+/* Sciences Po on the web */
+/* Le block */
+#block-scpo_on_the_web-scpo_on_the_web .scpo_on_the_web {
+	position: relative;
+	margin-bottom: 12px;
+}
+
+#block-scpo_on_the_web-scpo_on_the_web h3 {
+	position: absolute;
+	left: 0;
+	top: 20px;
+	font-size: 13px;
+}
+
+#block-scpo_on_the_web-scpo_on_the_web h3 a {
+	color: #ffffff;
+	text-decoration: none;
+	display: block;
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_transparentnoir70.png);
+	padding: 1px 4px;
+}
+
+#block-scpo_on_the_web-scpo_on_the_web .all {
+/*	margin-top: -20px;*/
+	position: relative;
+	z-index: 100;
+	float: left;
+}
+
+#block-scpo_on_the_web-scpo_on_the_web .all a:hover {
+	color: #595959;
+}
+
+/* La page */
+#scpo_web {
+	padding: 15px 24px 15px 24px;
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+	width: 672px;
+}
+
+#scpo_web ul, #scpo_web li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+#scpo_web li {
+	background-color: #ffffff;
+	padding: 8px 24px 20px 24px;
+	width: 572px;
+}
+
+#scpo_web li.odd {
+	background-color: #F2F2F2;
+}
+
+#scpo_web li .image {
+	width: 156px;
+	float: left;
+}
+
+#scpo_web li .content {
+	width: 401px;
+	float: left;
+	padding-left: 15px;
+}
+
+#scpo_web li h1 {
+	font-size: 13px;
+}
+
+#scpo_web li h1 a {
+	text-decoration: none;
+}
+
+/* Dernières publications */
+/* Le block */
+#block-dernieres_publications-dernieres_publications .dernieres_publications, #block-partenaires-partenaires .partenaires {
+	margin-bottom: 12px;
+}
+
+#block-dernieres_publications-dernieres_publications .dernieres_publications .image, #block-partenaires-partenaires .partenaires .image {
+	width: 25%;
+	float: left;
+}
+
+#block-dernieres_publications-dernieres_publications .dernieres_publications .content, #block-partenaires-partenaires .partenaires .content {
+	width: 70%;
+	float: left;
+	padding-left: 7px;
+}
+
+#block-dernieres_publications-dernieres_publications h3, #block-partenaires-partenaires h3 {
+	font-size: 13px;
+}
+
+#block-dernieres_publications-dernieres_publications h3 a, #block-partenaires-partenaires h3 a {
+	text-decoration: none;
+}
+
+#block-dernieres_publications-dernieres_publications h3 a:hover, #block-partenaires-partenaires h3 a:hover {
+	text-decoration: underline;
+	color: #595959;
+}
+
+#block-dernieres_publications-dernieres_publications .auteur, #block-partenaires-partenaires .auteur {
+	font-style: italic;
+}
+
+#block-dernieres_publications-dernieres_publications .all, #block-partenaires-partenaires .all {
+/*	margin-top: -20px;*/
+	position: relative;
+	z-index: 100;
+	float: left;
+}
+
+#block-dernieres_publications-dernieres_publications .all a:hover, #block-partenaires-partenaires .all a:hover {
+	color: #595959;
+}
+
+/* La page */
+#publications {
+	padding: 15px 24px 15px 24px;
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+	width: 672px;
+}
+
+#publications ul, #publications li, #partenaires ul, #partenaires li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+#publications li.publication, #partenaires li.publication {
+	background-color: #ffffff;
+	padding: 8px 24px 20px 24px;
+	width: 572px;
+}
+
+#publications li.odd, #partenaires li.odd {
+	background-color: #F2F2F2;
+}
+
+#publications li.publication .image, #partenaires li.publication .image {
+	width: 100px;
+	float: left;
+}
+
+#publications li.publication .content, #partenaires li.publication .content {
+	width: 472px;
+	float: left;
+}
+
+#publications li.publication h1, #partenaires li.publication h1 {
+	font-size: 13px;
+}
+
+#publications li.publication h1 a, #partenaires li.publication h1 a {
+	text-decoration: none;
+}
+
+/* Titre des block */
+#main .block  h2.title {
+	padding: 0;
+	margin: 0 0 10px 0;
+}
+
+/* Carousel de contenu */
+.node-type-scpocarousel {
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+}
+
+.node-type-scpocarousel h1 a {
+    color: #595959;
+    text-decoration: none;
+}
+
+.node-type-scpocarousel ul.links {
+	margin: 15px 24px;
+}
+
+#carousel-contenu {
+	padding: 0 24px;
+}
+
+#carousel-contenu ul ul {
+	list-style-type: disc;
+}
+
+#carousel-contenu h2 {
+	color: #707070;
+	font-style: italic;
+	font-size: 18px;
+	margin: 15px 0;
+}
+
+.field-field-sous-titre-scpocarousel, .field-field-image-scpocarousel, .field-field-video-scpocarousel {
+    margin: 15px 0;
+}
+
+.node-type-scpocarousel .border {
+	margin: 0;
+}
+
+/* Ajustement si le carousel de contenu est en page d'accueil */
+.zoning .node-type-scpocarousel h2.title-article {
+	margin: 0;
+	padding: 0;
+}
+
+.zoning .node-type-scpocarousel {
+	background: none;
+}
+
+.zoning #carousel-contenu {
+	padding: 0;
+}
+
+.zoning .node-type-scpocarousel ul.links {
+	margin: 0;
+}
+
+/* Espacer les différents tableaux de l'administration */
+.sticky-table tr td {
+	padding: 8px 5px;
+}
+
+/* Mise en exergue de l'url des fichiers attachés pour insertion de lien dans les textes */
+#upload-attachments .description, .attachments .description span {
+	color: blue;
+	font-weight: bold;
+	display: block;
+}
+
+#upload-attachments .description small {
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+/* Mise en forme du type de contenu "actualite" */
+.node-type-actualite {
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+}
+
+.node-type-actualite h1 a {
+    color: #707070;
+    text-decoration: none;
+}
+
+.field-field-sous-titre-actualite {
+	font-size: 15px;
+	font-weight: bold;
+	margin: 15px 24px 8px 24px;
+}
+
+.field-field-soustitre2-actualite {
+	font-style: italic;
+	font-size: 16px;
+	margin: 8px 24px 15px 24px;
+}
+
+.node-type-actualite .field-field-image-actualite {
+	margin:15px 24px;
+	width:531px;
+}
+
+/**/
+.node h1 {
+	display: inline-block;
+}
+.node p, .node-type-actualite  p, .node h1, .node h2, .node h3, .node h4, .node h5, .node h6 {
+	margin:15px 24px;
+	clear:left;
+}
+.node.node-type-scpocarousel h1 {
+   margin : 0;
+}
+
+.node-type-actualite table#attachments {
+	margin:0 24px 0 24px;
+}
+
+/* Mise en forme de la vue qui liste toutes les actualités */
+.view-news .views-row {
+	margin-bottom: 40px;
+}
+
+/* Mise en forme du bloc qui contient le filtre */
+.region-sidebar-second #block-views--exp-news-page_1 h2.title, .region-sidebar-second #block-views--exp-news-page_2 h2.title {
+	border-bottom: 1px dotted #999999;
+	padding-bottom: 15px;
+}
+
+.region-sidebar-second #block-views--exp-news-page_1 .content, .region-sidebar-second #block-views--exp-news-page_2 .content {
+	border-bottom: 1px dotted #999999;
+	padding-bottom: 12px;
+}
+
+.region-sidebar-second #block-views--exp-news-page_1 #edit-submit-news, .region-sidebar-second #block-views--exp-news-page_2 #edit-submit-news {
+	margin-top: 0.7em;
+}
+
+.region-sidebar-second #block-views--exp-news-page_1 .views-exposed-widget, .region-sidebar-second #block-views--exp-news-page_2 .views-exposed-widget {
+	float: none;
+	padding-right: 0px;
+}
+
+.region-sidebar-second #block-views--exp-news-page_1 select, .region-sidebar-second #block-views--exp-news-page_2 select {
+	width: 100%;
+}
+
+/* Créer une actualité */
+/* Mise en forme du paragraphe "Important" et "Aide" */
+fieldset.important {
+	border: 0;
+	margin: 0 0 15px 0;
+	padding: 0;
+}
+
+fieldset.important legend {
+	font-weight: bold;
+	text-decoration: underline;
+	margin: 0;
+	padding: 0;
+}
+
+fieldset.important .description {
+	font-weight: bold;
+}
+
+p.underline {
+	text-decoration: underline;
+	font-weight: bold;
+}
+
+/*  RECHERCHE APACHE SOLR  */
+#search-form {
+	display:none;
+}
+.section-search #content-area {
+
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+    padding: 15px 24px;
+
+}
+.section-search #content-area ul.search-results li {
+	list-style-type: none;
+   display:inline-block;
+   width:100%;
+}
+.section-search #content-area h3 {
+   display:inline-block;
+   float:left;
+/*    font-size: 1.843em;*/
+    font-weight: normal;
+    line-height: 1.3em;
+    margin:1%;
+    width:23%;
+}
+
+
+.section-search #content-area p {
+display:inline-block;
+/*   float:left;*/
+	margin:1%;
+	padding:0;
+	width:73%;
+}
+.search-results li.pair {
+   float:none;
+	background-color:#f2f2f2;
+
+}
+
+/* PARTAGER */
+.imprimer {
+	margin:0;
+	padding:0;
+/*	width:100%;*/
+}
+.imprimer td {
+	height:25px;
+	vertical-align:middle;
+	width:100%;
+	margin:0;
+	padding:0;
+	text-align:right;
+}
+.imprimer img, .imprimer a {
+	float:right;
+	margin:0 2px 0 2px;
+	width:16px;
+}
+
+#accessibilitylinks { 
+   background-color:white;
+   left: 50%; 
+   position: absolute; 
+   top:0; 
+/*   width: 150px; */
+   z-index: 10;
+   margin:0;
+   margin-left:-480px;
+   padding:0;
+   
+}
+#accessibilitylinks li {
+   float:left;
+   list-style:none; 
+}
+#accessibilitylinks a:link, #accessibilitylinks a:visited {
+   color:black;
+   font-size: 12px; 
+   padding:0 10px 0 10px;
+   text-decoration:none;
+}
+#accessibilitylinks a:active, #accessibilitylinks a:focus {
+   color:black;
+   font-size: 12px; 
+}

@@ -1,0 +1,5 @@
+; $Id: acces_direct.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Accès direct
+description = "Permet l'accès direct à une section du site"
+package = Sciences-Po
+core = 6.x

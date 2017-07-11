@@ -1,0 +1,5 @@
+; $Id: partenaires.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Partenaires
+description = "Permet d'afficher des partenaires"
+package = Sciences-Po
+core = 6.x

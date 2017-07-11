@@ -1,0 +1,94 @@
+/* CSS du carousel, ne pas changer ! */
+
+.scpocarousel {
+   overflow: hidden;
+   position: relative;
+}
+
+.scpocarousel ul.ul-scpocarousel {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	overflow: hidden;
+	position: relative;
+}
+
+.scpocarousel ul.ul-scpocarousel li.li-scpocarousel {
+   	margin: 0;
+	padding: 0;
+	float: left;
+}
+.scpocarousel ul.ul-scpocarousel li.li-scpocarousel img {
+	width: 100%;
+	height: auto;
+}
+
+.scpocarousel ul.ul-scpocarousel li.li-scpocarousel img.alt-display {
+   width:17px;
+   height:11px;
+   float:left;
+   margin:1px 5px 0 0;
+}
+.alt-display-container {
+   float:left;
+   line-height:15px;
+}
+
+
+
+div.nav-item {
+	float: right;
+	height:8px;
+	margin-top:14px;
+/*	border:1px solid red;*/
+}
+div.nav-arrow {
+	float: right;
+	height:18px;
+	margin-top:9px;
+	margin-right:7px;
+/*	border:1px solid red;*/
+}
+.nav-item a img, .nav-arrow a img {
+/*	border:1px solid blue;*/
+	vertical-align:top;
+}
+#pause {
+  	cursor:pointer;
+   /*	border:1px solid green;*/
+   	display:block;
+   	float:left;
+   	top:0;
+   	margin-left:4px;
+   
+}
+a.paspause {
+	background-color:#707070;
+}
+a.prev, a.next, .nav-item a {	  
+	background-color:#707070;
+	cursor:pointer;
+/*	border:1px solid green;*/
+	display:block;
+	float:left;
+	top:0;
+	margin-left:4px;
+}
+.nav-arrow a img {
+/*	display:none;*/
+	width: 18px;
+	height: 18px;
+}
+.nav-item a img {
+/*	display:none;*/
+  	width: 8px;
+	height: 8px;
+}
+.nav-arrow a {
+	width: 18px;
+	height: 18px;
+}
+.nav-item a {
+  	width: 8px;
+	height: 8px;
+}

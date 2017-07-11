@@ -1,0 +1,156 @@
+/*PAGE DES NEWSLETTERS*/
+
+
+.page-newsletter-inscription #content-area {
+   margin-left:24px;
+   margin-right:24px;
+}
+.page-newsletter-inscription #content-area div img, .page-newsletter-inscription #content-area div.image-newsletter {
+   float:left;
+   margin-right:20px;
+   clear:left;
+}
+.page-newsletter-inscription #content-area div fieldset {
+   clear:left;
+   border:none;
+   border-bottom: 1px solid rgb(200,200,200);
+   margin-top:20px;
+   margin-bottom:20px;
+}
+.page-newsletter-inscription #content-area div.bloc-nwsltr {
+   width:475px;
+   display:inline-block;
+   
+}
+.page-newsletter-inscription #content-area div .form-item{
+   float:left;
+   margin:0 70px 0 0;
+}
+.page-newsletter-inscription #content-area div .form-radios{
+   padding:0;
+   margin:0;
+}
+.page-newsletter-inscription #content-area div.archive{
+   width:100%;
+   float:left;
+   text-align:center;
+}
+.page-newsletter-inscription #edit-email-page-wrapper, #edit-email-page-wrapper input {
+   margin:0;
+}
+.page-newsletter-inscription #edit-email-page {
+   border:1px solid rgb(200,200,200);
+   width:150px;
+   margin:0 0 0 20px;
+   padding:0;
+   height:20px;
+   line-height:20px;
+   
+}
+#edit-email-page-wrapper label {
+   float:left;
+}
+
+/*FORMULAIRE D'ADMIN*/
+#newsletter-overview-form table {
+   width:100%;
+}
+#newsletter-overview-form table tr.odd {
+   background-color:white;
+}
+.page-admin-settings-newsletter-textes form tbody th {
+   padding-top:20px;
+   border-bottom:0 none transparent;
+   border-top:1px solid #CCC;
+}
+.page-admin-settings-newsletter-textes form label {
+   font-weight:normal;
+   font-style:italic;
+}
+#newsletter-overview-form table td {
+   border-left:2px solid white;/*rgb(240,240,240);*/
+   border-right:2px solid white;/*rgb(240,240,240)*/
+}
+
+#newsletter-overview-form fieldset,
+#newsletter-overview-form legend,
+#newsletter-overview-form a {
+   padding:0;
+   margin:0;
+   background-image:none;
+}
+.sticky-table thead th {
+   text-align:center;
+}
+#newsletter-list-form legend {
+   font-weight:bold;
+   margin-left:180px;
+}
+
+
+/*BLOCK*/
+
+#edit-email-wrapper {
+   float:left;
+   margin:0;
+   padding:0;
+}
+#block-newsletter-newsletter p {
+   font-style:normal;
+   margin:10px 0 0 0;
+   display:block;
+   clear:left;
+}
+
+#block-newsletter-newsletter label {
+   font-weight:normal;
+}
+#block-newsletter-newsletter a {
+   display:block;
+   clear:left;
+}
+#block-newsletter-newsletter input.form-text {
+   border:1px solid rgb(200,200,200);
+   width:120px;
+   margin:0;
+   padding:0;
+   height:20px;
+   line-height:20px;
+}
+#block-newsletter-newsletter input.form-submit {
+   float:right;
+   clear:right;
+   border:1px solid white;
+   background:rgb(240,240,240);
+   cursor:pointer;
+   margin:-24px 0 0 5px;
+   padding:0 5px;
+   line-height:22px;
+   height:22px;
+}
+
+
+/*FORMULAIRE DES TEXTES*/
+
+#newsletter-txt-settings table {
+   width:100%;
+}
+#newsletter-txt-settings textarea, #newsletter-txt-settings .resizable-textarea, #newsletter-txt-settings .edit-newsletter-wrapper{
+   white-space:normal;
+   width:340px;
+   text-align:left;
+} 
+#newsletter-txt-settings textarea {
+   height:80px;
+   
+}
+#newsletter-txt-settings label{
+   white-space:normal;
+   text-align:left;
+}
+#newsletter-txt-settings #edit-email-wrapper {
+   float:none;
+   height:100px;
+   line-height:20px;
+   
+}

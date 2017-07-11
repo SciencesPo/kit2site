@@ -1,0 +1,10 @@
+; $Id $
+name = Node_Type_Filter
+description = Filters lists, such as taxonomy/term, by content type.
+core = 6.x
+; Information added by drupal.org packaging script on 2008-09-16
+version = "6.x-1.2"
+core = "6.x"
+project = "node_type_filter"
+datestamp = "1221582635"
+

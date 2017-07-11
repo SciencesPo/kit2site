@@ -1,0 +1,5 @@
+; $Id: newsletter.info,v 1 2012/04/20 02:04:11 sun Exp $
+name = Newsletter
+description = "Permet l'inscription/désinscription aux newsletters Sciences Po"
+package = Sciences-Po
+core = 6.x

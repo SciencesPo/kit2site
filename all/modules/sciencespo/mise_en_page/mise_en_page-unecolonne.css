@@ -1,0 +1,33 @@
+.node-type-page-interne .node {
+	background: url(/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg) no-repeat scroll left top #FFFFFF;
+	width:100%;
+}
+
+/*Images & videos : 680 x 383 + 40 pour les boutons*/
+.imagefield {
+	width:100%;
+	/*max-height:383px;*/
+}
+
+.field-field-sous-titre,
+.node-type-page-interne p,
+.node-type-page-interne ul.links,
+.node-type-page-interne .field-field-image,
+.node-type-page-interne .field-field-video,
+.node-type-page-interne .field-field-graphique {
+	margin:15px 24px 15px 24px;
+}
+
+.node-type-page-interne p {
+	display:block;
+/*	text-align:justify;*/
+	clear:both;
+/*	width:672px;*/
+}
+
+/* Pour le carousel */
+.node-type-page-interne .field-field-image .item-list ul {
+	margin: 0;
+	padding: 0;
+}
+

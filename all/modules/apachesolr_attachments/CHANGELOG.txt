@@ -1,0 +1,33 @@
+// $Id: CHANGELOG.txt,v 1.5.2.8 2010/06/29 02:34:17 pwolanin Exp $
+
+Apache Solr Attachments x.x-x.x, xxxx-xx-xx
+------------------------------
+
+Apache Solr Attachments 6.x-1.x, xxxx-xx-xx
+------------------------------
+
+Apache Solr Attachments 6.x-1.1.0-beta2, 2010-06-28
+------------------------------
+#815104 by ebeyrent, pwolanin minimal handling for failed Solr extraction.
+
+Apache Solr Attachments 6.x-1.1.0-beta1, 2010-02-07
+------------------------------
+#635480 by pwolanin, use hook_apachesolr_update_index with namespace.
+#698672 by Agileware, fix ids so files get deleted from the index on cron.
+#698694 by pwolanin, retain information on removed files during cache clear.
+
+Apache Solr Attachments 6.x-1.0-alpha2, 2009-12-27
+------------------------------
+#666090 by pwolanin, add cron settings to the UI.
+#506526 by pwolanin, Preserve file paths on Windows.
+#664154 by pwolanin, Update for RC4 of ApacheSolr module and updated schema 0.9.4
+#616426 by pwolanin, set  extractFormat as 'text' for Solr Cell.
+
+Apache Solr Attachments 6.x-2.0-alpha1, 2009-10-27
+------------------------------
+#490078 by pwolanin, enable use of Solr Cell, aka ExtractingRequestHandler.
+#540974 by pwolanin, update docs for installing tika 0.3 and 0.4.
+#610816 by pwolanin, don't need to add path again to fl.
+#508576 by EclipseGc, respect Node Access on Files.
+#461514 by pwolanin, get rows not results, better limiting on cron.
+#449214 by pwolanin, rewrite to use tika 0.3 for text extraction.

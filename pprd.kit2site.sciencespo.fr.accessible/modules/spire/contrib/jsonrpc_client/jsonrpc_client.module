@@ -1,0 +1,179 @@
+<?php
+/**
+ * Class implements a simple JSON-RPC client.  Handles optional parameters,
+ * API key authentication and session IDs.  JSON call ID is automatically incremented
+ * for each call.
+ *
+ */
+class JsonRpcClient {
+  private $url, $version, $apikey, $domain, $id;
+  private $debug = NULL;
+  private $check_id = TRUE;
+
+  /**
+   * Constructor for JsonRpcClient.
+   *
+   * @param $url      URL of the service. EG. "http://example.com/services/json-rpc"
+   * @param $version  JSON version (Default 2.0)
+   * @param $apikey   Optional. API key for authentication.
+   * @param $domain   Optional. Domain for API key authentication. EG. ("example.com" or "any string, really")
+   * @param $startid  Optional. Starting value for id.
+   */
+  public function __construct($url, $version = '2.0', $apikey = NULL, $domain = NULL, $startid = 1) {
+    $this->url = $url;
+    $this->version = $version;
+    $this->apikey = $apikey;
+    $this->domain = $domain;
+    $this->id = $startid;
+  }
+
+  /**
+   * Call a method on the declared JSON-RPC service.  Throw exception on
+   * HTTP errors.  JSON-RPC errors are returned from function without throwing
+   * exception.
+   *
+   * @param $method Service method to call. EG. "system.connect".
+   * @param $params An associative array of parameters. EG. array("name" => "James T. Kirk").
+   * @param $sessid Optional. Session ID.
+   * @return      Result of JSON call as an associative array.
+   * @throws      JsonRpcClientException
+   */
+  public function call($method, $params = array(), $sessid = NULL) {
+    $json_message = $this->json_string($method, $params, $sessid);
+		$json_message = str_replace('\x3c\x3e', '<>', $json_message);
+
+    $this->_debug($json_message);
+
+    $http_result = drupal_http_request(
+        $this->url,
+        array('Content-Type' => 'application/json'),
+        'POST',
+        $json_message,
+				120.0
+      );
+
+
+			
+    $this->_debug($http_result);
+    // check for HTTP error
+    if ($http_result->code != '200') {
+      throw new JsonRpcClientHttpException(
+        t("HTTP error: @code - @message",
+          array('@code' => $http_result->code, '@message' => $http_result->error))
+      );
+    }
+    $result = json_decode($http_result->data, TRUE);
+
+    // check for mismatched JSON id
+    if ($this->check_id && !isset($result['error']) && $result['id'] != $this->id) {
+      throw new JsonRpcClientHttpException(
+        t("Mismatched JSON ID: @id",
+          array('@id' => $result['id']))
+      );
+    }
+    $this->_debug($result);
+    $this->id++;
+
+    return ($result);
+  }
+
+  /**
+   * Set ID checking to be enabled/disabled in the JSON response.  Not advised to disable
+   * for anything other than testing.
+   * 
+   * @param boolean $check_id TRUE/FALSE to enable/disable id checking on the JSON response.
+   */
+  public function set_id_check($check_id) {
+    $this->check_id = $check_id;
+  }
+
+  /**
+   * Set debug message type.  Defaults to no debug messages (NULL).
+   *
+   * @param $debug Type of debug message ('dsm', 'watchdog', NULL)
+   */
+  public function set_debug($debug = NULL) {
+    $this->debug = $debug;
+  }
+
+  /**
+   * Print a debug message depending on the debug status value.
+   *
+   * @param $message  Message to be sent to output.
+   */
+  private function _debug($message) {
+    switch ($this->debug) {
+      case "dsm":
+        if (module_exists('devel')) {
+          dsm($message);
+        }
+        break;
+      case "watchdog":
+        ob_start();
+        var_dump($message);
+        $result = ob_get_clean();
+        watchdog('jsonrpc_client', $result);
+    }
+  }
+
+  /**
+   * Build a JSON-RPC call and return as string.
+   *
+   * @param $method
+   * @param $params
+   * @param $sessid
+   * @return    String containing the JSON call.
+   */
+  private function json_string($method, $params = NULL, $sessid = NULL) {
+    // build the message as an array
+    $message = array(
+      'jsonrpc' => $this->version,
+      'method' => $method,
+    );
+    if ($sessid) {
+      $params['sessid'] = $sessid;
+    }
+    if ($params || $this->apikey) {
+      $message['params'] = array_merge($this->get_hash($method), $params);
+    }
+    $message['id'] = $this->id;
+    //convert to a JSON string
+    $json_message = drupal_to_js($message);
+    return $json_message;
+  }
+
+  /**
+   * Build an associative array containing hash, domain, timestamp, nonce for an
+   * API key authenticated services call.
+   *
+   * @param $method
+   * @return array containing the calculated API key values.
+   */
+  private function get_hash($method) {
+    $retval = array();
+    if ($this->apikey) {
+      $timestamp = (string) time();
+      $nonce = user_password();
+      $hash = hash_hmac(
+        'sha256',
+        $timestamp . ';' . $this->domain . ';' . $nonce . ';' . $method,
+        $this->apikey
+      );
+      $retval = array(
+        'hash' => $hash,
+        'domain_name' => $this->domain,
+        'domain_time_stamp' => $timestamp,
+        'nonce' => $nonce,
+      );
+    }
+    return $retval;
+  }
+
+}
+
+/**
+ * Custom exception thrown by JsonRpcClient on HTTP errors.
+ *
+ */
+class JsonRpcClientHttpException extends Exception{
+}

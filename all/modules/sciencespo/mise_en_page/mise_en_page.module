@@ -1,0 +1,1481 @@
+<?php
+// ; $Id: mise_en_page.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute un choix de mise en page au formulaire de création de contenu. la mise en page
+ * ne concerne que le node et conditionne le choix du template de node.
+ */
+
+
+/**
+ * Implementation of hook_perm().
+ */
+function mise_en_page_perm() {
+  return array('access mise en page');
+}
+
+/**
+ * Implementation of hook_init().
+ * Initialise les couleurs personnalisées du theme
+ * Insere le jquery pour les coins arrondis
+ * Insere le jquery pour l'animation des menus login, langue et custom
+ */
+function mise_en_page_init() {
+
+	global $base_url;
+	$ss = explode('/', $base_url);
+
+	//Initialisation des couleurs personnalisées choisies par insertion d'une balise style dans le header
+	//recup des variables
+	$colors = variable_get('colorsOption', 'F12859_A00C4C');
+	if($colors == 'perso') {
+		$colors = variable_get('colorsNames', array('F12859', 'A00C4C'));
+	}else{
+		$colors = explode('_', $colors);
+	}
+	//ecriture des balises style
+	$data = '
+		<style type="text/css" media="all">
+			#navigation {background-color:#CB021A;}
+			#header {background-color:#CB021A;}
+			a:link, a:visited {color:#CB021A;}
+			a:hover, a:active {color:#CB021A;}
+			.contact-titre {color:#CB021A;}
+			#block-mise_en_page-zone_de_gauche, #block-mise_en_page-zone_de_droite {color:#CB021A;}
+			.couleur-principale {color:#CB021A;}
+			a.couleur-principale {color:#CB021A;}
+			.couleur-secondaire {color:#CB021A;}
+			#block-scpo_on_the_web-scpo_on_the_web h1 a:hover {background-image:none;background-color:#CB021A;}
+			#zone_editoriale .bloc .voirVideo:hover {background-image:none;background-color:#CB021A;}
+			#zone_editoriale .bloc .titre:hover h2, #zone_editoriale .bloc .titre:hover .sous-titre, #zone_editoriale .bloc .titre:hover .sous-titre-2 {background-image:none;background-color:#CB021A;}
+			#zone_editoriale .gabarit .bloc {background-color:#CB021A;}
+			#zone_editoriale .gabarit5 .bloc3 .titre:hover {background-image:none;background-color:#CB021A;}
+			#zone_editoriale .gabarit6 .bloc34 .titre:hover {background-image:none;background-color:#CB021A;}
+			ul.pager li a.active {color:#CB021A;}
+
+         .nav-item a:hover, .nav-item a.active { background-color:#CB021A;}
+         a.pause, a.pause:link, a.pause:visited, a.pause:hover, a.pause:active { background-color:#CB021A;}
+         a.next:hover, a.prev:hover, a#pause:hover { background-color:#CB021A;}
+
+ 
+			.scpoeditocarousel .nav-item a:hover, .scpoeditocarousel .nav-item a.active { background-color:#CB021A;}
+
+			#footer ul li a:hover {	color: #CB021A; }
+			#block-mise_en_page-SPlogin span.puce:hover { background-color:#CB021A;}
+			ul.nice-menu span.puce:hover { background-color:#CB021A;}
+			ul.nice-menu li.niveau1 a:link, ul.nice-menu li.niveau1 a:visited { color:white;}
+			ul.nice-menu li.niveau2 a:link, ul.nice-menu li.niveau2 a:visited { color:#CB021A;}
+
+
+		</style>
+	';
+	//insertion dans le header
+	drupal_set_html_head($data);
+
+	//insertion du javascript des menus login, langues et custom
+   // drupal_add_js(drupal_get_path('module', 'mise_en_page') . '/menus_langue_login.js');
+   // drupal_add_js(drupal_get_path('module', 'mise_en_page') . '/resize-imagedefond.js');
+	drupal_add_js(drupal_get_path('module', 'mise_en_page') . '/gabarit-order.js');
+	drupal_add_js(drupal_get_path('module', 'mise_en_page') . '/blocs_et_imagefond.js');
+
+	//gestion des coins arrondis, notamment les menus login, langues et custom
+    $commands = array();
+    $commands[] = array('selector' => '.messages');
+    $commands[] = array('selector' => '#block-topboxes-langues', 'corners' => 'bottom');
+    $commands[] = array('selector' => '#block-topboxes-SPlogin', 'corners' => 'bottom');
+    $commands[] = array('selector' => '#block-topboxes-custom', 'corners' => 'bottom');
+	//$commands[] = array('selector' => 'ul.nice-menu li.first.niveau1 a', 'corners' => 'tl');
+	//$commands[] = array('selector' => 'ul.nice-menu li.last.niveau1 a', 'corners' => 'tr');
+	$commands[] = array('selector' => '.zone_padding', 'corners' => 'tl tr', 'width' => '5');
+	$commands[] = array('selector' => '#main .block', 'corners' => 'tl tr', 'width' => '5');
+	//$commands[] = array('selector' => '#block-mise_en_page-zone_de_gauche', 'corners' => 'none', 'width' => '0');
+	
+    // Add the rounded corners.
+    //rounded_corners_add_corners($commands);
+	
+	//variable utile à hook_block pour savoir si afficher le bloc zone_de_droite ou zone_de_gauche
+	variable_set('page_interne', 0);
+
+	//Limitation du titre et du sous titre + Modif breadcrumb + Target '_blank' dans les liens pdf / fichiers attachés
+	$script = 'var BaseUrl = \''.$base_url.'\';
+	
+      //variables des titles des boutons de carrousels
+      var prev = "'.t('Previous').'";
+      var next = "'.t('Next').'";
+      var pause = "'.t('Stand-by').'";
+      var item = "'.t('Show item').'";
+      var itemactif = "'.t('Current item').'";
+      //variables accordeons
+      var ferme = "'.t('Closed').'";
+      var ouvert = "'.t('Open').'";
+      
+      //couleurs primaire
+      var prim_color = "CB021A";
+      var second_color = "CB021A";
+
+
+		$(document).ready(function() {
+	
+		var url = decodeURI(window.location);
+
+		$(".collapse-processed a").each(function(index) {
+			var u = this.innerHTML.split("&nbsp;");
+			var t = u[0].trim();
+
+			if(url.indexOf(t) != -1){
+				console.log(this.parentNode.parentNode)
+				Drupal.toggleFieldset(this.parentNode.parentNode);
+			}
+		});
+	
+		//$("#block-search-0 .form-submit").click(function(){
+		//	$("#block-search-0").css("backgroundImage", "url(\''.$ss[count($ss) - 1].'/sites/all/themes/sciencespo/images/fond_recherche_on.png\')");
+//		});
+	
+		$("#block-topboxes-SPlogin a").hover(
+			function(){
+				$(this).prev().css("backgroundColor", "#CB021A");
+			},
+			function(){
+				$(this).prev().css("backgroundColor", "#CCC");
+			}
+		);
+		
+		$("#block-topboxes-SPlogin input").hover(
+			function(){
+				$(this).parents("li").find("span.puce").css("backgroundColor", "#CB021A");
+			},
+			function(){
+				$(this).parents("li").find("span.puce").css("backgroundColor", "#CCC");
+			}
+		);
+		
+		$("ul.nice-menu li.niveau3 a").hover(
+			function(){
+				$(this).prev().css("backgroundColor", "#CB021A");
+			},
+			function(){
+				$(this).prev().css("backgroundColor", "#CCC");
+			}
+		);
+		
+		$("#faqs li.faq").hover(
+			function(){
+				$(this).find("span.puce").css("backgroundColor", "#CB021A");
+			},
+			function(){
+				$(this).find("span.puce").css("backgroundColor", "#CCC");
+			}
+		);
+
+		function limit_input(id, limit, text) {		
+			if (($("input#edit-" + id).val() || $("input#edit-" + id).val() == \'\')  && $("input#edit-" + id).val().length <= limit) {
+				checked = "checked = \'checked\'";
+				$("input#edit-" + id).attr("maxlength", limit);
+			} else {
+				checked = "";
+			}
+			
+			$("#edit-" + id + "-wrapper").append("<input id=\'" + id + "-max-length\' type=\'checkbox\' " + checked + " ><label class=\'option\' for=\'" + id + "-max-length\'>" + text + " limit&eacute; &agrave; " +  limit +  " caract&egrave;res. Vous pouvez enfreindre la r&egrave;gle si vous le d&eacute;sirez.");
+			
+			$("#" + id + "-max-length").click(function(){
+				if ($(this).attr("checked") == false) {
+					$("input#edit-" + id).removeAttr("maxlength");
+				} else {
+					$("input#edit-" + id).attr("maxlength", limit);
+					str = $("input#edit-" + id).val();
+					$("input#edit-" + id).val(str.substr(0, limit));
+				}
+			});
+		}
+		
+		limit_input(\'title\', 40, \'Titre\');
+		limit_input(\'field-sous-titre-0-value\', 80, \'Sous-titre\');
+		limit_input(\'field-sous-titre-actualite-0-value\', 80, \'Sous-titre\');
+		limit_input(\'field-soustitre2-actualite-0-value\', 80, \'Sous-titre\');
+		limit_input(\'menu-link-title\', 35, \'Titre\');
+				
+		// breadcrumb = $(".breadcrumb a");
+		// $(breadcrumb[1]).attr("onclick", "return false;").css("textDecoration", "none").css("cursor", "default").css("color", "#595959");
+		
+		$("a[href$=\'.pdf\']").attr("target", "_blank");
+		$("table#attachments a").attr("target", "_blank");
+		
+      $("a").each(function(){
+            var str = "'.t("open in new window").'";
+            if(this.title.lastIndexOf("ew window") == -1 && this.title.lastIndexOf("ouvelle fen") == -1){
+              if(this.title) {
+                 if(this.target == "_blank"){
+                    this.title = this.title + " - " + str;
+                 }
+              }else if(!this.title && this.target == "_blank"){
+                 if($(this).html().indexOf("<img") != -1){
+                    this.title = $(this).children("img").attr("alt");
+                 }else{
+                  this.title = $(this).html() + " - " + str;
+                 }
+              }
+            }
+            });
+      
+
+	});';
+	drupal_add_js(drupal_get_path('module', 'mise_en_page') . '/accordeon.js');
+	drupal_add_js($script, 'inline');
+}
+
+
+/*
+ * Implementation of hook_menu
+ */
+function mise_en_page_menu()
+{
+	$items = array();
+
+	$items['liste-de-contacts'] = array(
+		'title' => 'Liste des contacts',
+		'page callback' => 'mise_en_page_liste_de_contacts',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['admin/build/themes/graphic-settings'] = array(
+		'title' => t('Graphic settings'),
+		'description'      => t('Configure graphic settings'),
+		'page callback'    => 'drupal_get_form',
+		'page arguments'   => array('mise_en_page_admin_settings'),
+		'access arguments' => array('access mise en page'),
+	);
+
+	$items['page404'] = array(
+		'title' => t('Page not found'),
+		'page callback' => 'mise_en_page_404',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	return $items;
+}
+
+function mise_en_page_404(){
+  global $language;
+  $mail = variable_get('site_mail', 'eve.demaziere@sciencespo.fr');
+  global $base_url;
+  $html = '';
+
+
+  if($language->language == 'fr' || !$language->language){
+    $html .= '<div style="margin:6em 0 0 2em"><h1>Page non trouvée</h1>';
+    $html .= '<p>La page que vous avez demandé n&#039;existe pas, ou n&#039;existe plus.<br>Pour poursuivre votre recherche :<br>retournez à la <a href="'.$base_url.'">page d&#039;accueil</a> ou cliquez sur le bouton "Page précédente" de votre navigateur.<p>';
+   $html .= '<p>Vous pouvez signaler le lien brisé en écrivant à : <a href="mailto:'.$mail.'">'.$mail.'</a></p></div>';
+  }
+
+  if($language->language == 'en'){
+    $html .= '<div style="margin:6em 0 0 2em"><h1>Page not found</h1>';
+    $html .= '<p>Sorry, the page or file you are looking for is not on this server.<br>You can:<br>go back to <a href="'.$base_url.'">home page</a> or click on the "back" button of your browser.<p>';
+   $html .= '<p>Write to the webmaster to inform of the situation: <a href="mailto:'.$mail.'">'.$mail.'</a></p></div>';
+  }
+
+  return $html;
+
+}
+
+function mise_en_page_admin_settings()
+{
+	//Choix des gabarits
+	$form['gabarits'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Choix des gabarits',
+		'#weight' => -40,
+		'#attributes' => array('class' => 'selection-gabarit'),
+		'#description' => '&nbsp;'
+	);
+		
+	$ordre = array();
+	for ($i=1; $i<=6; $i++) {
+		$cle = variable_get('ordre_gabarit_'.$i, $i);
+		$ordre['gabarit_'.$i] = $cle;
+	}
+	asort($ordre);
+		
+	$options_gabarits = array(
+		'gabarit_1' => 'Gabarit 1; 1',
+		'gabarit_2' => 'Gabarit 2; 1-1',
+		'gabarit_3' => 'Gabarit 3; 1-2',
+		'gabarit_4' => 'Gabarit 4; 1-2-3',
+		'gabarit_5' => 'Gabarit 5; 1-2-3-3',
+		'gabarit_6' => 'Gabarit 6; 1-2-3-3'
+	);
+	
+	$form['gabarits'][] = array(
+		'#value' => '<table>'
+	);
+	
+	$cle = 1;
+	foreach ($ordre as $gabarit => $k) {	
+		$form['gabarits']['selection_'.$gabarit] = array(
+			'#type' => 'checkbox',
+			'#default_value' => variable_get('selection_'.$gabarit, false),
+			'#title' => $options_gabarits[$gabarit],
+			'#prefix' => '<tr><td>',
+			'#suffix' => '</td>'
+		);
+		
+		$form['gabarits']['ordre_'.$gabarit] = array(
+			'#type' => 'select',
+			'#default_value' => $cle,
+			'#options' => array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6),
+			'#prefix' => '<td>',
+			'#suffix' => '<span class="modif"></span></td></tr>'
+		);
+		
+		$cle++;
+	}
+	
+	$form['gabarits'][] = array(
+		'#value' => '</table>'
+	);
+	
+	//Choix de l'image de fond
+	$q = "SELECT ctidf.field_image_de_fond_fid, n.title  FROM {node} n LEFT JOIN {content_type_image_de_fond} ctidf ON ctidf.nid=n.nid WHERE n.type LIKE 'image_de_fond' AND n.status = 1 ";
+	$r = db_query($q);
+	$result = array('0' => "Pas d'image");
+   // $result = array();
+	while ($row = db_fetch_array($r)) {
+		$result[$row['field_image_de_fond_fid']] = $row['title'];
+	}
+	$i = variable_get('fond', 0);
+	
+	$form['photo'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Image de fond',
+		'#weight' => -30,
+	);
+	$form['photo']['fond'] = array(
+		'#type' => 'select',
+		'#options' => $result,
+		'#default_value' => $i,
+		'#title' => 'Image de fond',
+	);
+	
+	//Choix du nombres de lignes dans le footer
+	$footerMaxLignes = variable_get('footerMaxLignes', 5);
+	$footerNiveauAD = variable_get('footerNiveauAD', 2);
+	
+	$form['footer'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Footer',
+		'#weight' => -20,
+	);
+	$form['footer']['footerMaxLignes'] = array(
+		'#type' => 'textfield',
+		'#size' => 6,
+		'#default_value' => $footerMaxLignes,
+		'#title' => 'Nombre maximum de lignes &agrave; afficher dans le footer',
+	);
+	$form['footer']['footerNiveauAD'] = array(
+		'#type' => 'select',
+		'#default_value' => $footerNiveauAD,
+		'#options' => array(2 => 2, 3 => 3),
+		'#title' => 'Nombre de niveau &agrave; afficher dans la boite acc&egrave;s direct',
+	);
+	
+	$lien_tout = variable_get('lien_tout', array('fr' => "Toute l'actu", 'en' => 'All news'));
+	$form['actu'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Actu',
+		'#weight' => -20,
+	);
+	$form['actu']['fra'] = array(
+		'#type' => 'textfield',
+		'#size' => 20,
+		'#default_value' => $lien_tout['fr'],
+		'#title' => 'Libellé en Français du lien sous la zone éditoriale',
+	);
+	$form['actu']['eng'] = array(
+		'#type' => 'textfield',
+		'#size' => 20,
+		'#default_value' => $lien_tout['en'],
+		'#title' => 'Libellé en Anglais du lien sous la zone éditoriale',
+	);
+
+	// //Choix des couleurs du site
+	// $colors = array(
+	// 	'59DADF_13235B' => 'Couleur principale : <span style="background-color:#59DADF;margin-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>Couleur secondaire : <span style="background-color:#13235B;">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;</span>',
+	// 	'009F95_72DA95' => 'Couleur principale : <span style="background-color:#009F95;margin-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>Couleur secondaire : <span style="background-color:#72DA95;">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;</span>', 
+	// 	'DEDA00_7C790E' => 'Couleur principale : <span style="background-color:#DEDA00;margin-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>Couleur secondaire : <span style="background-color:#7C790E;">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;</span>', 
+	// 	'A4DC00_64AC65' => 'Couleur principale : <span style="background-color:#A4DC00;margin-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>Couleur secondaire : <span style="background-color:#64AC65;">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;</span>', 
+	// 	'AE608D_F87F84' => 'Couleur principale : <span style="background-color:#AE608D;margin-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>Couleur secondaire : <span style="background-color:#F87F84;">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;</span>', 
+	// 	'F12859_A00C4C' => 'Couleur principale : <span style="background-color:#F12859;margin-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>Couleur secondaire : <span style="background-color:#A00C4C;">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;</span>', 
+	// 	'E9A7BC_E71A84' => 'Couleur principale : <span style="background-color:#E9A7BC;margin-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>Couleur secondaire : <span style="background-color:#E71A84;">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;</span>', 
+	// 	'1172B3_13235B' => 'Couleur principale : <span style="background-color:#1172B3;margin-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>Couleur secondaire : <span style="background-color:#13235B;">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;</span>', 
+	// 	'584E71_92117E' => 'Couleur principale : <span style="background-color:#584E71;margin-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>Couleur secondaire : <span style="background-color:#92117E;">&nbsp;&nbsp;&nbsp;&nbsp;</span>', 
+	// 	'perso' => 'Couleurs personnalis&eacute;es : '
+	// );
+
+	$form['colours'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Couleurs du site',
+		'#weight' => -10,
+	);
+	
+	// $form['colours']['choix'] = array(
+	// 	'#type' => 'radios',
+	// 	'#options' => $colors,
+	// 	'#title' => 'Couleurs Sciences Po',
+	// 	'#default_value' => variable_get('colorsOption', 'F12859_A00C4C'),
+	// 	'#description' => 'Les couleurs personnalis&eacute;es doivent &ecirc;tre sous la forme h&eacute;xad&eacute;cimale <b>sans le signe #</b>. Exemple : E9A7BC',
+	// );
+	if(variable_get('colorsOption', 'F12859_A00C4C') == 'perso') {
+		$c = variable_get('colorsNames', array('F12859', 'A00C4C'));
+	} else {
+		$c = array();
+	}
+	$form['colours']['perso1'] = array(
+		'#type' => 'textfield',
+		'#size' => 6,
+		'#default_value' => $c[0],
+		'#title' => 'Couleur principale : couleur du bandeau supérieur',
+		'#description' => 'Les couleurs personnalis&eacute;es doivent &ecirc;tre sous la forme h&eacute;xad&eacute;cimale <b>sans le signe #</b>. Exemple : E9A7BC',
+	);
+	$form['colours']['perso2'] = array(
+		'#type' => 'textfield',
+		'#size' => 6,
+		'#default_value' => $c[1],
+		'#title' => 'Couleur secondaire : couleur des liens hypertextes',
+		'#description' => 'Les couleurs personnalis&eacute;es doivent &ecirc;tre sous la forme h&eacute;xad&eacute;cimale <b>sans le signe #</b>. Exemple : E9A7BC',
+	);
+	
+	
+	$form['menu_principal_niveau1'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Menu principal',
+		'#weight' => -5,
+	);
+	$form['menu_principal_niveau1']['cliquable'] = array(
+		'#type' => 'checkbox',
+		'#title' => 'Le niveau 1 du menu principal est cliquable',
+		'#default_value' => variable_get('cliquable', 0),
+	);
+	
+	$form['sharebar'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Barre de partage Addthis',
+		'#weight' => -5,
+	);
+	$form['sharebar']['affichee'] = array(
+		'#type' => 'checkbox',
+		'#title' => 'La barre de partage Addthis est affichée',
+		'#default_value' => variable_get('sharebar', 0),
+	);
+
+	//************************************************************************
+	$site_title =  variable_get('site_title', array());
+
+	$form['site_title'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Titre du site',
+	);
+	$form['site_title']['title_fr'] = array(
+		'#type' => 'textarea',
+		'#size' => 20,
+		'#default_value' => $site_title['title_fr'],
+		'#title' => 'Titre en français',
+                '#description' => 'Le html est accepté',
+	);
+	$form['site_title']['title_en'] = array(
+		'#type' => 'textarea',
+		'#size' => 20,
+		'#default_value' => $site_title['title_en'],
+		'#title' => 'Titre en anglais',
+                '#description' => 'Le html est accepté',
+	);
+	//************************************************************************
+	$h1 =  variable_get('h1', array());
+
+	$form['h1'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Contenus des H1 de la colonne de droite et du footer',
+	);
+	$form['h1']['h1colonnedroite_fr'] = array(
+		'#type' => 'textfield',
+		'#size' => 20,
+		'#default_value' => $h1['h1colonnedroite_fr'],
+		'#title' => 'Contenu en français du h1 de la colonne de droite',
+	);
+	$form['h1']['h1colonnedroite_en'] = array(
+		'#type' => 'textfield',
+		'#size' => 20,
+		'#default_value' => $h1['h1colonnedroite_en'],
+		'#title' => 'Contenu en anglais du h1 de la colonne de droite',
+	);
+	$form['h1']['h1footer_fr'] = array(
+		'#type' => 'textfield',
+		'#size' => 20,
+		'#default_value' => $h1['h1footer_fr'],
+		'#title' => 'Contenu en français du h1 du footer',
+	);
+	$form['h1']['h1footer_en'] = array(
+		'#type' => 'textfield',
+		'#size' => 20,
+		'#default_value' => $h1['h1footer_en'],
+		'#title' => 'Contenu en anglais du h1 du footer',
+	);
+
+
+
+	
+	$form['#submit'][0] = 'mise_en_page_submit';
+
+	return system_settings_form($form);
+}
+
+
+/**
+ * Implementation of hook_submit().
+ * Enregistre les variables "colorsOption" et "colorsNames" nécessaires à l'initialisation du jeu de couleurs choisi. 
+ * Ces variables sont utilisées par mise_en_page_init() pour écrire une balise style définissant les couleurs au chargement de la page. 
+ *
+ */
+function mise_en_page_submit($form, &$form_state) {
+	global $base_url;
+  $values = $form_state['values'];
+
+	if($values['fond'] != 0) {
+		$q = "SELECT f.filepath FROM {files} f WHERE f.fid = %d ";
+		$r = db_query($q, $values['fond']);
+		while ($row = db_fetch_array($r)) {
+			$result[] = $row;
+		}
+		$b = explode('/', $base_url);
+		variable_set('imageDeFondPath', $b[count($b) - 1].'/'.$result[0]['filepath']);
+	}else{
+		variable_set('imageDeFondPath', '');
+	}
+
+	$lien_tout = array();
+  	if(!empty($values['fra'])) {
+		$lien_tout['fr'] = $values['fra'];
+	}
+  	if(!empty($values['eng'])) {
+		$lien_tout['en'] = $values['eng'];
+	}
+	variable_set('lien_tout', array('fr' => $values['fra'], 'en' => $values['eng']));
+
+	//couleurs
+	//   if(!empty($values['choix'])) {
+	// variable_set('colorsOption', $values['choix']);
+	// $c = explode('_', $values['choix']);
+	// if($values['choix'] == 'perso') {
+		variable_set('colorsNames', array($values['perso1'], $values['perso2']));
+	// }else{
+	// 	variable_set('colorsNames', array($c[0], $c[1]));
+	// }
+	//   }
+
+	$site_title = array();
+	if(!empty($values['title_fr'])) {
+		$site_title['title_fr'] = $values['title_fr'];
+	}
+	if(!empty($values['title_en'])) {
+		$site_title['title_en'] = $values['title_en'];
+	}
+        variable_set('site_title', $site_title);
+
+	$h1 = array();
+	if(!empty($values['h1colonnedroite_fr'])) {
+		$h1['h1colonnedroite_fr'] = $values['h1colonnedroite_fr'];
+	}
+	if(!empty($values['h1colonnedroite_en'])) {
+		$h1['h1colonnedroite_en'] = $values['h1colonnedroite_en'];
+	}
+	if(!empty($values['h1footer_fr'])) {
+		$h1['h1footer_fr'] = $values['h1footer_fr'];
+	}
+	if(!empty($values['h1footer_en'])) {
+		$h1['h1footer_en'] = $values['h1footer_en'];
+	}
+	
+    variable_set('h1', $h1);
+   variable_set('menu_cliquable', $values['cliquable']);
+   variable_set('sharebar', $values['affichee']);
+ 
+  // system_theme_settings_submit($form, $form_state);
+
+}
+
+/**
+ * DOCSCIENCESPO
+ * Implementation de hook_form_alter().
+ * Ajoute les éléments de formulaire pour la sélection des couleurs Sciences Po au formulaire de setting du theme
+ * Cache le titre du bloc de haut de page "custom"
+ * Modifie le bloc search pour apachesolr et le personnalise
+ * Reordonne les roles dans la vue des droit d'acces
+ * Supprime la case a cocher "envoyer un apercu" du formulaire d'envoi par mail 
+ */
+function mise_en_page_form_alter(&$form, &$form_state, $form_id)
+{	
+	global $base_url;
+	global $user;
+	global $language;
+
+	if ($form_id == 'print_mail_form') {
+      unset($form['chk_teaser']);
+   }
+
+	/* Dépublication du contenu modèle */
+	if ($form_id == 'node_admin_content') {
+		/* On cherche si les mentions légales sont dé publiées */
+		$t = translation_node_get_translations(40);
+		
+		if ($t['fr']->status == 0) {
+			drupal_set_message('Attention, les mentions légales en français ne sont pas encore publiées !', 'error');
+		}
+		
+		if ($t['en']->status == 0) {
+			drupal_set_message('Warning, legals in english are not published yet !', 'error');
+		}
+	
+		$form['depublication_fieldset'] = array(
+			'#type' => 'fieldset',
+			'#title' => t('Example content'),
+			'#weight' => -500
+		);
+		$form['depublication_fieldset']['submit'] = array(
+			'#type' => 'submit',
+			'#value' => t('Unpublish example content'),
+			'#submit' => array('unpublish_content_submit')
+		);
+	}
+	
+	/* On déplie les fieldset */
+	if (strstr($form_id, '_node_form')) {
+		foreach($form as $f => $data) {
+			if($f == '#node') {
+				continue;
+			}
+			if(!empty($data['#type']) && $data['#type'] == 'fieldset') {
+				$form[$f]['#collapsed'] = 0;
+			}
+		}
+	}
+	
+	if ($form_id == 'page_interne_node_form') {
+		$form['attachments']['#description'] .= '<span>Url &agrave; copier pour insertion de lien dans les textes</span>';
+		$form['links_related']['#weight'] = 17;
+		$form['revision_information']['#weight'] = 100;
+	}
+
+
+
+	if ($form_id == 'system_modules' || $form_id == 'system_modules_uninstall' ) {
+		if($user->uid != 1){
+
+			$path = explode('/', $_SERVER['SCRIPT_FILENAME']);
+			$site = $path[count($path) - 2];
+			$root = $_SERVER['DOCUMENT_ROOT'];
+
+         if(!strstr($_SERVER['SCRIPT_FILENAME'], 'pprd') && !strstr($_SERVER['SCRIPT_FILENAME'], 'devl')) {
+				$path = $root.'/sites/sciencespo.fr.'.$site.'/modules';
+			}else{
+				$domain = $_SERVER['HTTP_HOST'];
+				$path = $root.'sites/'.$domain.'.'.$site.'/modules';
+			}
+		
+			$modules_site = scandir($path);
+			$modules_core = module_rebuild_cache();
+
+			$not_throw_away = array();
+			foreach($form['status']['#default_value'] as $i => $name) {
+
+				foreach($modules_site as $n => $ms) {
+					if($ms == '.' || $ms == '..'){
+						continue;
+					}
+					if(strstr($name, $ms)) {
+						$not_throw_away[$i] = $name;
+					}
+				}
+			}
+			$throw_away = array_diff($form['status']['#default_value'], $not_throw_away);
+
+			foreach($throw_away as $i => $name) {
+				unset($form['status']['#default_value'][$i]);
+			}
+			$not_throw_away = array();
+			foreach($form['status']['#options'] as $name => $v) {
+				foreach($modules_site as $n => $ms) {
+					if($ms == '.' || $ms == '..'){
+						continue;
+					}
+					if(strstr($name, $ms)) {
+						if(!in_array($name, $not_throw_away)) {
+							$not_throw_away[$name] = $v;
+						}
+					}
+				}
+			}
+			$throw_away = array_diff_key($form['status']['#options'], $not_throw_away);
+			foreach($throw_away as $name => $v) {
+				unset($form['status']['#options'][$name]);
+			}
+
+
+		}
+		
+		
+
+
+	}	
+	
+	if ($form_id == 'node_type_form') {
+		$form['identity']['type']['#title']=t('Type (warning, content type dedicated to expert should end by "_exp")<br>(new custom type should start with "cc_" for carousel compatibility)');
+		$form['submission']['#collapsed'] = 0;
+		$form['workflow']['#collapsed'] = 0;
+		$form['print']['#weight'] = 10;
+		
+	}
+
+	//formulaire des couleurs de theme
+	if ($form_id == 'user_admin_perm') {
+		ksort($form['role_names']);
+		ksort($form['checkboxes']);
+	}	
+
+	if($form_id == 'system_theme_settings') {
+		//attente
+	}
+	
+	//block custom
+	if($form_id == 'edit-block-admin-configure' && $form['delta']['#value'] == 'custom_selector'){
+		$form['block_settings']['title']['#default_value'] = "<none>";
+		$form['block_settings']['title']['#type'] = 'hidden';
+	}
+	
+	//bloc recherche
+	if($form_id == 'search_block_form') {
+		$form['submit']['#value'] = 'OK';
+		$form['search_block_form']['#default_value'] = t('Search');
+		$form['search_block_form']['#attributes'] = array("class" => "form-text apachesolr-autocomplete unprocessed form-autocomplete", "onblur" => "if($(this).val() == '') $(this).val('".t('Search')."');", "onfocus" => "$(this).val('');");
+		$form['search_block_form']['#action'] = $base_url.'/'.$language->language.'/search/apachesolr_search';
+		$form['#action'] = $base_url.'/'.$language->language.'/search/apachesolr_search';
+		// $form['search_block_form']['#action'] = $base_url.'/'.$language->language.'/search/apachesolr_search';
+		// $form['#action'] = $base_url.'/'.$language->language.'/search/apachesolr_search';
+	}
+	
+	//bloc login
+	if($form_id == 'cas_login_form') {
+		//$form['submit']['#prefix'] = '<u>';
+		//$form['submit']['#suffix'] = '</u>';
+		$form['submit']['#value'] = t('This site');
+	}
+	
+	if($form_id == 'block_admin_configure') {
+		if($form['#parameters'][3] == 'custom' || $form['#parameters'][3] == 'SPlogin') {
+			unset($form['block_settings']['title']);
+		}
+	}
+}
+
+function unpublish_content_submit($form, &$form_state)
+{
+	$example_content_node_id = array (
+		426, 425, 424, 423, 383, 404, 406, 405, 379, 400, 399, 398, 397, 396, 395, 394, 393, 392, 391, 390, 389, 388, 387, 386, 385, 384, 382, 376, 381, 380, 377, 378, 375, 370, 374, 373, 
+		40, 41, //Les mentions légales
+		372, //Presse
+		371, //Presse
+		369, //Services et outils numériques
+		368, //Services et outils numériques
+		367, //Contact
+		366, //Contact
+		365, //Contact
+		364, //Contact
+		363, //Cartes
+		362, //FAQ
+		361, //FAQ
+		360, //FAQ
+		359, //FAQ
+		358, //Classique
+		357, //Classique
+		356, //Classique
+		355, //Jazz
+		352, //Rock
+		353, //Rock
+		321, //Actualité
+		320, //Actualité
+		317, //Actualité
+		318, //Actualité
+		319, //Actualité
+		286, //flux
+		312, //flux
+		332, //Scpocarousel contenu
+		330, //Scpocarousel contenu
+		331, //Scpocarousel contenu
+		333, //Scpocarousel
+		327, //Scpo on the web
+		322, //Scpo on the web
+		325, //Dernières publications
+		326, //Dernières publications
+		324, //Dernières publications
+		323, //Dernières publications
+		329, //PDF
+		328 //PDF
+	);
+	
+	foreach ($example_content_node_id as $id) {
+		$c = node_load($id);
+		$c->status = 0; 
+		node_save($c);
+		
+		$t_args = array(
+			'@type' => node_get_types('name', $c),
+			'%title' => $c->title
+		);
+	
+		drupal_set_message(t('@type %title has been unpublish.', $t_args));
+	}
+}
+
+/**
+ * DOCSCIENCESPO
+ * Implementation of hook_nodeapi().
+ * Compare le nid du node chargé avec les menus et détermine le niveau de menu. Passe le niveau à une variable qui sert ensuite à la fonction mise_en_page_block() 
+ * qui affiche les menus niveau 3 ou pas et change le bloc de contenu qui est à droite vers la gauche.
+ * Si le node est de type page_interne, choisit la feuille de style une ou deux colonnes en fonction de $node->field_disposition
+ */
+function mise_en_page_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
+	switch($op) {
+      case 'load':
+	   
+      break;
+		case 'view':
+			//variable utile à hook_block pour savoir si afficher le bloc zone_de_droite ou zone_de_gauche
+			variable_set('page_interne', 0);
+
+			variable_set('menu_niveau_trois', NULL);
+
+			$p = $node->path;
+
+			$m = menu_tree_all_data($menu_name = 'primary-links');
+			$niveau = 0;
+			$parent = NULL;
+			$menus = array();
+			$blck = array();
+			foreach($m as $menu => $i){
+				if($i['link']['link_path'] == 'node/'.$node->nid){
+					$niveau = 1;
+
+				}
+				if(!empty($i['below'])){
+					foreach($i['below'] as $sousmenu => $j){
+						if($j['link']['link_path'] == 'node/'.$node->nid){
+							$niveau = 2;
+						}
+						if(!empty($j['below'])){
+							foreach($j['below'] as $soussousmenu => $k){
+								if($k['link']['link_path'] == 'node/'.$node->nid){
+									$niveau = 3;
+									$parent = str_replace('node/', '', $j['link']['link_path']);
+									$parent_link = array('path' => $j['link']['link_path'], 'titre' => $j['link']['link_title'], 'query' => $k['link']['options']['query']);
+									$p = $sousmenu;
+									break 3;
+								}
+							}
+						}
+					}				
+				}
+			}
+			if($niveau == 3){
+				foreach($m as $menu => $i){
+					if(!empty($i['below'][$p])){
+						foreach($i['below'][$p]['below'] as $soussousmenu => $k){
+							$menus[] = array('path' => $k['link']['link_path'], 'titre' => $k['link']['link_title'], 'query' => $k['link']['options']['query']);
+						}
+					}
+				}
+				$blck['niveau'] = $niveau;
+				$blck['parent'] = $parent;
+				$blck['parent_link'] = $parent_link;
+				$blck['menu'] = $menus;
+				variable_set('menu_niveau_trois', $blck);
+			}
+			//passe le contenu de la zone de droite du node (field_zone_de_droite) à une variable qui est réutilisée pour l'affichage du bloc de droite 
+			variable_set('zone_de_droite', NULL);
+			$zdd = $node->field_zone_de_droite[0]['value'];
+			if($zdd == '') {
+				$parent_node = node_load(array('nid' => $parent));
+				$zdd = $parent_node->field_zone_de_droite[0]['value'];
+			}
+			
+			//On rajoute les graphiques au dessus de l'exergue
+			if ($node->field_graphique) {
+				foreach ($node->field_graphique as $field_graphique) {
+					if ($field_graphique) {
+                  $graphique .= '<div>'.theme_image($field_graphique['filepath'], str_replace(" ", "", $field_graphique['data']['alt']), '', '', false).'</div>'; 
+					}
+				}
+			}
+			if ($graphique != '') {
+				$graphique = '<div class="graphique">'.$graphique.'</div>';
+				$zdd = $graphique.$zdd;
+			}
+			
+			variable_set('zone_de_droite', $zdd);
+				
+
+
+			
+			if($node->type == 'page_interne'){
+				//variable utile à hook_block pour savoir si afficher le bloc zone_de_droite ou zone_de_gauche
+				variable_set('page_interne', 1);
+				//insertion de la feuille de style pour une ou deux colonnes
+				if($node->field_disposition[0]['value'] == 1) {//une colonne
+					drupal_add_css('sites/all/modules/sciencespo/mise_en_page/mise_en_page-unecolonne.css', $type = 'module', $media = 'all', $preprocess = TRUE);
+				}else{//2 colonnes
+					drupal_add_css('sites/all/modules/sciencespo/mise_en_page/mise_en_page-deuxcolonnes.css', $type = 'module', $media = 'all', $preprocess = TRUE);
+				}
+				$body = '<div class="body">';
+				$body .= $node->content['body']['#value'];
+				$body .= '</div>';
+				$node->content['body']['#value'] = $body;
+				foreach($node->field_video as $v) {
+					$node->field_image[] = $v;
+				}
+				foreach($node->content['field_video']['field']['items'] as $v) {
+					$node->content['field_image']['field']['items'][] = $v;
+				}
+				unset ($node->field_video);
+				unset ($node->content['field_video']);
+				
+				
+			}else{
+				variable_set('page_interne', 0);
+			}
+		break;
+
+	}
+	
+}
+
+
+
+
+function mise_en_page_block($op = 'list', $delta = 0, $edit = array()) {
+    switch ($op) {
+		case 'list':
+			$blocks['SPcontact'] = array(
+				'info' => 'Contacts Sciences Po',
+				'status' => 1,
+				'region' => 'footer',
+			);
+			$blocks['SPmentions_legales'] = array(
+				'info' => 'Mentions légales',
+				'status' => 1,
+				'region' => 'footer',
+			);
+			$blocks['menu_niveau3'] = array(
+				'info' => t('Level 3 menu !Do not modify!'),
+				'status' => 1,
+				'region' => 'sidebar_first',
+			);
+			$blocks['zone_de_droite'] = array(
+				'info' => t('Right block !Do not modify!'),
+				'status' => 1,
+				'region' => 'sidebar_second',
+			);
+			$blocks['zone_de_gauche'] = array(
+				'info' => t('Left block !Do not modify!'),
+				'status' => 1,
+				'region' => 'sidebar_first',
+			);
+			$blocks['entretoise'] = array(
+				'info' => t('Entretoise !Do not modify!'),
+				'status' => 1,
+				'region' => 'sidebar_second',
+			);
+         $blocks['entretoise-actu'] = array(
+            'info' => t('Entretoise actus !Do not modify!'),
+            'status' => 1,
+            'region' => 'sidebar_first',
+            'visibility' => 1,
+            'pages' => "news-fr\nnews-fr/*\nnews-en\nnews-en/*",
+         );
+			$blocks['fix_edito'] = array(
+				'info' => t('Fix edito !Do not modify!'),
+				'status' => 1,
+				'region' => 'edito',
+			);
+
+			return $blocks;
+		break;
+
+		case 'configure':
+			switch ($delta) {
+				case 'SPcontact' :
+					$v = variable_get('SPcontact', '');
+					$form['texte_contact'] = array(
+						'#type' => 'textarea',
+						'#title' => t('Contact text'),
+						'#default_value' => $v,
+					);
+					//Choix du logo
+					$q = "SELECT ctidf.field_logo_adresse_fid, n.title  FROM {node} n LEFT JOIN {content_type_logo_adresse} ctidf ON ctidf.nid=n.nid WHERE n.type LIKE 'logo_adresse' AND n.status = 1 ";
+					$r = db_query($q);
+					$result = array('0' => '---');
+					while ($row = db_fetch_array($r)) {
+						$result[$row['field_logo_adresse_fid']] = $row['title'];
+					}
+					$i = variable_get('logo_adresse', 0);
+					$i2 = variable_get('logo_adresse2', 0);
+
+					$form['logo_adresse'] = array(
+						'#type' => 'select',
+						'#options' => $result,
+						'#default_value' => $i['fid'],
+						'#title' => t("Logo shown in the address area"),
+					);
+					$form['logo_adresse2'] = array(
+						'#type' => 'select',
+						'#options' => $result,
+						'#default_value' => $i2['fid'],
+						'#title' => t("Second logo shown in the address area"),
+					);
+				break;
+			}
+			return $form;
+		
+		break;
+		
+		case 'save':
+		switch ($delta) {
+			case 'SPcontact' :
+				foreach($edit as $key => $d){
+					if($key == 'texte_contact') {
+						variable_set('SPcontact', $d);
+					}
+					if($key == 'logo_adresse') {
+						global $base_url;
+						if($edit['logo_adresse'] != 0) {
+							$q = "SELECT f.filepath FROM {files} f WHERE f.fid = %d ";
+							$r = db_query($q, $d);
+							while ($row = db_fetch_array($r)) {
+								$result[] = $row;
+							}
+							$b = explode('/', $base_url);
+							$logo_adresse = array();
+							$logo_adresse['url'] = $b[count($b) - 1].'/'.$result[0]['filepath'];
+							$logo_adresse['fid'] = $d;
+							variable_set('logo_adresse', $logo_adresse);
+						}
+						
+					}
+					if($key == 'logo_adresse2') {
+						global $base_url;
+						if($edit['logo_adresse2'] != 0) {
+							$q = "SELECT f.filepath FROM {files} f WHERE f.fid = %d ";
+							$r = db_query($q, $d);
+							while ($row = db_fetch_array($r)) {
+								$result2[] = $row;
+							}
+							$b = explode('/', $base_url);
+							variable_set('logo_adresse2', $b[count($b) - 1].'/'.$result2[0]['filepath']);
+							$logo_adresse2 = array();
+							$logo_adresse2['url'] = $b[count($b) - 1].'/'.$result2[0]['filepath'];
+							$logo_adresse2['fid'] = $d;
+							variable_set('logo_adresse2', $logo_adresse2);
+						}
+						
+					}
+				}
+				
+			break;
+			
+		}
+		
+		case 'view':
+			switch ($delta) {
+				case 'SPcontact':
+					global $base_url; 
+					global $language; 
+					$v = variable_get('SPcontact', '');
+					$block['subject'] = '';
+
+					$lien = l(t("Contacts"), 'liste-de-contacts');
+					$block['content'] = '<h2><span class="title">'.$lien.'</span></h2><p>';
+
+					$t = translation_node_get_translations(40);
+					$block['content'] .= '</p>';
+					$img1 = variable_get('logo_adresse', '');
+					$img2 = variable_get('logo_adresse2', '');
+					
+					// print '<pre>';
+					// print '$img1 = ';
+					// print_r($img1);
+					// print '</pre>';
+					// exit;
+					
+					if(!empty($img1)){
+						$block['content'] = str_replace("SPADRESSELOGO1", $img1, $block['content']);
+					}
+					if(!empty($img2)){
+						$block['content'] = str_replace("SPADRESSELOGO2", $img2, $block['content']);
+					}
+				break;
+				case 'SPmentions_legales':
+					global $language; 
+					// //DEBUG PHILIPPE
+					// print "<pre>";
+					// print '$language = ';
+					// //var_dump($language);
+					// print_r($language);
+					// print "</pre>";
+					// exit;
+					// //DEBUG PHILIPPE
+					
+					$block['subject'] = '';
+					$q = "SELECT nid FROM {node} WHERE type LIKE '%s' and language LIKE '%s' AND status = 1";
+					$r = db_query($q, array('mentions_legales', $language->language));
+					while ($row = db_fetch_array($r)) {
+					 $result['mentions_legales'] = $row['nid'];
+					}
+					$r = db_query($q, array('accessibilite', $language->language));
+					while ($row = db_fetch_array($r)) {
+					 $result['accessibilite'] = $row['nid'];
+					}
+					
+					// //DEBUG PHILIPPE
+					// print "<pre>";
+					// print '$result = ';
+					// //var_dump($result);
+					// print_r($result);
+					// print "</pre>";
+					// exit;
+					// //DEBUG PHILIPPE
+					
+					// $t = translation_node_get_translations($result['mentions_legales']);
+
+						$t = node_load(array('nid' => $result['mentions_legales']));
+						if($t){
+							$block['content'] .= '<h2><span class="title">'.l($t->title, 'node/'.$t->nid).'</span></h2>';
+						}
+					// }else{
+					// 	$block['content'] .= '<h2><span class="title">'.l($t[$language->language]->title, 'node/'.$t[$language->language]->nid).'</span></h2>';
+					// }
+
+					// $block['content'] = '<h2><span class="title">'.l($t[$language->language]->title, 'node/'.$t[$language->language]->nid).'</span></h2>';
+
+					// $t1 = translation_node_get_translations($result['accessibilite']);
+					// if(empty($t1)) {
+						$t1 = node_load(array('nid' => $result['accessibilite']));
+						// //DEBUG PHILIPPE
+						// print "<pre>";
+						// print '$t1 = ';
+						// //var_dump($t1);
+						// print_r($t1);
+						// print "</pre>";
+						// exit;
+						// //DEBUG PHILIPPE
+						
+						if($t1){
+							$block['content'] .= '<h2><span class="title">'.l($t1->title, 'node/'.$t1->nid).'</span></h2>';
+						}
+					// }else{
+					// 	$block['content'] .= '<h2><span class="title">'.l($t1[$language->language]->title, 'node/'.$t1[$language->language]->nid).'</span></h2>';
+					// }
+					
+				break;
+				case 'menu_niveau3':
+					global $base_url;
+					global $language;
+					$pi = variable_get('page_interne', 0);
+					$blck = variable_get('menu_niveau_trois', NULL);
+					$path_language = $language->language;
+					
+					if($pi == 1){
+						if($blck) {
+                     $block['subject'] = l($blck['parent_link']['titre'], drupal_get_path_alias($blck['parent_link']['path'], $path_language));
+							$content = '<ul class="menu3 couleur-principale">';
+							foreach($blck['menu'] as $m) {
+								$content .= '<li>'.l($m['titre'], drupal_get_path_alias($m['path'], $path_language), array('query' => $m['query'])).'</li>';
+							}
+
+							$block['content'] = $content;
+						}
+					}
+				break;
+				case 'zone_de_droite':
+					$pi = variable_get('page_interne', 0);
+					$blck = variable_get('menu_niveau_trois', NULL);
+					if($pi == 1){
+						if(!$blck) {
+							$content = variable_get('zone_de_droite', NULL);
+							if ($content) {
+								$block['subject'] = '';
+								$block['content'] = $content;
+								$block['status'] = 1;
+							}
+						}else{
+							$block['subject'] = '';
+							$block['content'] = '';
+							$block['status'] = 0;
+						}
+					}
+				break;
+				case 'zone_de_gauche':
+					$pi = variable_get('page_interne', 0);
+					$blck = variable_get('menu_niveau_trois', NULL);
+					if($pi == 1){
+						if(!$blck) {
+							$block['subject'] = '';
+							$block['content'] = '';
+							$block['status'] = 0;
+						}else{
+							$content = variable_get('zone_de_droite', NULL);
+							if ($content) {
+								$block['subject'] = '';
+								$block['content'] = $content;
+								$block['status'] = 1;
+							}
+						}
+					}
+				break;
+				case 'entretoise':
+					$block['content'] = '&nbsp;';
+				break;
+            case 'entretoise-actu':
+               $block['content'] = '&nbsp;';
+            break;
+				case 'fix_edito':
+					$block['content'] = '<div class="fix-edito"></div>';
+				break;
+				
+				
+			}
+			return $block;
+
+		break;
+		
+		
+	}
+}
+
+/**
+* Construit l'arbre de taxonomie
+*/
+function mise_en_page_constructTax($tree = array(), $parent = 0, $tree_temp = array()) 
+{
+	global $language;
+	global $user;
+
+	$editlink = 0;
+	$authorized = array('admin', 'expert', 'redacteur', 'validateur');
+	if($user->uid == 1){
+		$editlink = 1;
+	}
+	foreach($user->roles as $i => $role){
+		if(in_array($role, $authorized)){
+			$editlink = 1;
+			break;
+		}
+	}
+	
+	if ($language->language == 'fr') {
+		$id_taxo = 1;
+	} else {
+		$id_taxo = 15;
+	}
+
+	if (!$tree) {
+		$tree = taxonomy_get_tree($id_taxo, $parent = 0, $depth = -1, $max_depth = NULL);
+	}
+	
+	if (!$tree) {
+	  if ($language->language == 'fr') {
+		$id_taxo = 20;
+	  } else {
+		$id_taxo = 21;
+	  }
+		$tree = taxonomy_get_tree($id_taxo, $parent = 0, $depth = -1, $max_depth = NULL);
+	}
+	
+	$terms = array();
+
+	foreach ($tree as $term) {
+		if ($term->parents[0] == $parent) {
+
+			$terms[$term->tid] = array(
+				'name' => $term->name,
+				'desc' => $term->description,
+				'contacts' => array(),
+				'list' => '',
+				'count' => 0
+			);
+			
+			$q = ' SELECT N.nid 
+					FROM {term_node} AS TN, {node} AS N
+					WHERE N.nid = TN.nid
+						AND N.status = %d
+						AND TN.tid = %d 
+							ORDER BY N.sticky DESC ';
+			$r = db_query($q, 1, $term->tid);
+			
+			while($row = db_fetch_array($r)){
+				if(!in_array($row['nid'], $terms[$term->tid]['contacts'])){
+					$terms[$term->tid]['contacts'][] = $row['nid'];
+				}
+			}
+			
+			/* On intègre les thèmes directement ici */
+			if(count($terms[$term->tid]['contacts']) > 0) {
+				$items = array();
+				$count = 0;
+				foreach ($terms[$term->tid]['contacts'] as $nid) {
+					$c  = node_load(array('nid' => $nid));
+					$t = '<dl class="contact-titre"><dt>'.$c->field_titre[0]['value'].'</dt>';
+					$d = '<dd class="contact-autre">';
+					
+					if($editlink == 1){
+						$d .=	'<p class="contact-nom">'.$c->title.' [<a href="node/'.$c->nid.'/edit">edit</a>]</p>';
+					}else{
+						$d .=	'<p class="contact-nom">'.$c->title.'</p>';
+					}
+					
+					$d .= '<p class="contact-mail"><a href="mailto:'.$c->field_email[0]['value'].'">'.$c->field_email[0]['value'].'</a></p>
+						<p class="contact-tels">'.$c->field_tel1[0]['value'].'</p>';
+						if(!empty($c->field_tel2[0]['value'])){
+							$d .= '<p class="contact-tels">'.$c->field_tel2[0]['value'].'</p>';
+						}
+						$d .= '<p class="contact-address">'.$c->field_address[0]['value'].'</p>
+					</dd></dl>';
+					if($count%2 == 0){
+						$items[] = array( 'data' => $t.$d, 'class' => 'even contact clearfix' );
+					}else{
+						$items[] = array( 'data' => $t.$d, 'class' => 'odd contact clearfix' );
+					}
+					$count++;
+				}
+				$list = theme_item_list($items, $title = NULL, $type = 'ul');
+				$terms[$term->tid]['list'] = $list;
+				$terms[$term->tid]['count'] = $count;
+			}
+			
+		} else {
+			$tree_temp[$term->parents[0]][$term->tid] = $term;
+		}
+	}
+	
+	if (is_array($terms)) {
+		foreach ($terms as $tid => &$term) {
+			if (isset($tree_temp[$tid])) {
+				$term['children'] = mise_en_page_constructTax($tree_temp[$tid], $tid, $tree_temp);
+			}
+		}
+	}
+	
+	if ($parent) {
+		return $terms;
+	}
+	
+	return $terms;
+}
+
+/**
+* Construit la liste des contacts
+*/
+function mise_en_page_liste_de_contacts()
+{
+	menu_cache_clear('primary');
+   // drupal_add_js("misc/collapse.js", 'core');
+	
+	$taxContent = mise_en_page_constructTax();
+
+	foreach($taxContent as $value) {
+		$inter = theme_liste_contact($value);
+		$content .= $inter['content'];
+	}
+	
+	$page_content = theme('liste_de_contacts', $content);
+	
+	return $page_content;
+}
+
+
+/**
+ * Implementation of hook_theme().
+ */
+function mise_en_page_theme($existing, $type, $theme, $path) {
+	return array(
+		'liste_de_contacts' => array(
+			'template' => 'liste-de-contacts',
+			'arguments' => array('content' => NULL)
+		)
+	);
+}
+
+/**
+*Génère le thème pour  "liste-de-contacts" 
+*/
+function theme_liste_contact($value, $niv = 1)
+{
+	
+	//fieldset Value
+	if(count($value['children'])) {
+		foreach($value['children'] as $children) {
+			$inter = theme_liste_contact($children, $niv + 1);
+			$theme .= $inter['content'];
+			$value['count'] += $inter['count'];
+		}
+		$fieldsetValue = $value['list'].$theme;
+	} else {
+		$fieldsetValue = $value['list'];
+	}
+
+	//fieldset Name
+	if($value['count'] > 0) {
+		$number = '&nbsp;('.$value['count'].' ';
+		$value['count'] > 1 ? $number .= t('contacts').')' : $number .= t('contact').')';
+		$fieldsetTitle = $value['name'].$number;
+	} else {
+		$fieldsetTitle = $value['name'];
+		return;
+	}
+	$h = $niv + 1;
+	$content = '<div class="niveau'.$niv.' listesp collapsible collapsed clearfix">';
+   	$content .= '<h'.$h.'>'.$value['name'].'</h'.$h.'>';
+   	$content .= '<p>'.$value['desc'].'</p>';
+	$content .= $fieldsetValue;
+	$content .= '</div>';
+
+	return array('content' => $content, 'count' => $value['count']);
+}
+
+/*
+ * Implementation of hook_apachesolr_process_results().
+ * Remplace le nom de l'auteur drupal par le nom du champ auteur s'il existe
+ * S'il n'existe pas, on cache l'auteur drupal.
+ * On modifie le rendu en enlevant le lien sur  l'auteur
+ */
+function mise_en_page_apachesolr_process_results(&$results)
+{
+	foreach($results as &$result) {
+		$node = node_load($result["fields"]["nid"]);
+		$nodeauteur = node_load($node->field_auteur[0]["nid"]);
+		$result["user"] = $nodeauteur->title;
+	}
+}
+
+
+/**
+* hook_link_alter() implementation
+*/
+function mise_en_page_link_alter(&$links, $node) {
+   foreach ($links as $link => $values) {
+      $links[$link]['attributes']['title'] = $links[$link]['title'];
+      if($links[$link]['attributes']['target'] == '_blank') {
+         $links[$link]['attributes']['title'] .= ' - '.t('open in new window');
+      }
+
+   }
+   return $links;
+}

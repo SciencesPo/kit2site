@@ -1,0 +1,14 @@
+; $Id: apachesolr_attachments.info,v 1.1.4.2 2010/02/03 18:10:24 pwolanin Exp $ 
+name = Apache Solr search attachments
+description = Searching file attachments with Solr
+dependencies[] = apachesolr
+dependencies[] = apachesolr_search
+package = Apache Solr
+core = "6.x"
+
+; Information added by drupal.org packaging script on 2010-06-29
+version = "6.x-1.0-beta2"
+core = "6.x"
+project = "apachesolr_attachments"
+datestamp = "1277779204"
+

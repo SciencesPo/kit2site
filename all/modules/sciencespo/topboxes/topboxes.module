@@ -1,0 +1,387 @@
+<?php
+/**
+ * @file
+ * This is the file description for Untitled 2 module.
+ *
+ * In this more verbose, multi-line description, you can specify what this
+ * file does exactly. Make sure to wrap your documentation in column 78 so
+ * that the file can be displayed nicely in default-sized consoles.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function topboxes_init() {
+   drupal_add_js(drupal_get_path('module', 'topboxes') . '/topboxes.js');
+   drupal_add_css(drupal_get_path('module', 'topboxes') .'/topboxes.css');
+   
+}
+function topboxes_block($op = 'list', $delta = 0, $edit = array()) {
+   
+   global $language;
+   
+   switch ($op) {
+		case 'list':
+   		$blocks['custom'] = array(
+				'info' => 'Top menu customisable',
+				'status' => 0,
+				'region' => 'header',
+			);
+			$blocks['SPlogin'] = array(
+				'info' => 'SP Top menu login',
+				'status' => 0,
+				'region' => 'header',
+			);
+			$blocks['langues'] = array(
+				'info' => 'Selecteur de langue Sciences Po',
+				'status' => 0,
+				'region' => 'header',
+			);
+			return $blocks;
+		break;
+
+		case 'configure':
+			switch ($delta) {
+				case 'custom':
+					$v = variable_get('custom_block_content', array());
+          $v = $v[$language->language];
+					if(!empty($v)) {
+						for($i = 0; $i < count($v) / 3; $i++){
+							$form['set_'.$i] = array(
+								'#type' => 'fieldset',
+								'#title' => t('Ligne N&deg; @num de menu custom', array('@num' => $i + 1)),
+							);
+							$name = 'menu_'.$i;
+							$form['set_'.$i][$name] = array(
+								'#type' => 'textfield',
+								'#title' => t('Menu'),
+								'#default_value' => $v['menu_'.$i],
+							);
+							$name = 'link_'.$i;
+							$form['set_'.$i][$name] = array(
+								'#type' => 'textfield',
+								'#title' => t('Url'),
+								'#default_value' => $v['link_'.$i],
+							);
+							$name = 'newwindow_'.$i;
+							$form['set_'.$i][$name] = array(
+								'#type' => 'checkbox',
+								'#title' => t('S&#039;ouvre dans une nouvelle fen&ecirc;tre (ou nouvel onglet selon navigateur).'),
+								'#default_value' => $v['newwindow_'.$i],
+							);						
+							$name = 'delete_'.$i;
+							$form['set_'.$i][$name] = array(
+								'#type' => 'checkbox',
+								'#title' => t('Supprimer'),
+								'#default_value' => 0,
+							);						
+						}
+					}
+					//nouvel item
+					if(!$i){ $i = 0; }
+					$form['set_'.$i] = array(
+						'#type' => 'fieldset',
+						'#title' => t('Nouvelle ligne de menu custom'),
+					);
+					$name = 'menu_'.$i;
+					$form['set_'.$i][$name] = array(
+						'#type' => 'textfield',
+						'#title' => t('Menu'),
+					);
+					$name = 'link_'.$i;
+					$form['set_'.$i][$name] = array(
+						'#type' => 'textfield',
+						'#title' => t('Url'),
+					);
+					$name = 'newwindow_'.$i;
+					$form['set_'.$i][$name] = array(
+						'#type' => 'checkbox',
+						'#title' => t('S&#039;ouvre dans une nouvelle fen&ecirc;tre (ou nouvel onglet selon navigateur).'),
+						'#default_value' => 1,
+					);
+				break;
+				case 'SPlogin':
+					$v = variable_get('login_menu_liste', array());
+          $v = $v[$language->language];
+					if(!empty($v)) {
+						for($i = 0; $i < count($v) / 3; $i++){
+							$form['set_'.$i] = array(
+								'#type' => 'fieldset',
+								'#title' => t('Ligne N&deg; @num de menu Login', array('@num' => $i + 1)),
+							);
+							$name = 'menu_'.$i;
+							$form['set_'.$i][$name] = array(
+								'#type' => 'textfield',
+								'#title' => t('Menu'),
+								'#default_value' => $v['menu_'.$i],
+							);
+							$name = 'link_'.$i;
+							$form['set_'.$i][$name] = array(
+								'#type' => 'textfield',
+								'#title' => t('Url'),
+								'#default_value' => $v['link_'.$i],
+							);
+							$name = 'newwindow_'.$i;
+							$form['set_'.$i][$name] = array(
+								'#type' => 'checkbox',
+								'#title' => t('S&#039;ouvre dans une nouvelle fen&ecirc;tre (ou nouvel onglet selon navigateur).'),
+								'#default_value' => $v['newwindow_'.$i],
+							);						
+							$name = 'delete_'.$i;
+							$form['set_'.$i][$name] = array(
+								'#type' => 'checkbox',
+								'#title' => t('Supprimer'),
+								'#default_value' => 0,
+							);						
+						}
+					}
+					//nouvel item
+					if(!$i){ $i = 0; }
+					$form['set_'.$i] = array(
+						'#type' => 'fieldset',
+						'#title' => t('Nouvelle ligne de menu Login'),
+					);
+					$name = 'menu_'.$i;
+					$form['set_'.$i][$name] = array(
+						'#type' => 'textfield',
+						'#title' => t('Menu'),
+					);
+					$name = 'link_'.$i;
+					$form['set_'.$i][$name] = array(
+						'#type' => 'textfield',
+						'#title' => t('Url'),
+					);
+					$name = 'newwindow_'.$i;
+					$form['set_'.$i][$name] = array(
+						'#type' => 'checkbox',
+						'#title' => t('S&#039;ouvre dans une nouvelle fen&ecirc;tre (ou nouvel onglet selon navigateur).'),
+						'#default_value' => 1,
+					);
+				break;
+      	}
+      	return $form;
+
+		case 'save':
+   		switch ($delta) {
+   			case 'custom':
+   			$result = variable_get('custom_block_content', array());
+   			foreach($edit as $key => $d){
+   				if( (strstr($key, 'menu_') && $d != '') || (strstr($key, 'link_') && $d != '') ){
+   					$result[$language->language][$key] = $d;
+   				}
+   				if(strstr($key, 'newwindow_')){
+   					$n = explode('_', $key);
+   					if( $edit['menu_'.$n[1]] != '' && $edit['link_'.$n[1]] != '' ){
+   						$result[$language->language][$key] = $d;
+   					}
+
+
+   				}
+   			}
+   			foreach($edit as $key => $d){
+   				if(strstr($key, 'delete') && $d == 1){
+   					$n = explode('_', $key);
+   					foreach($result[$language->language] as $k => $v){
+   						$i = explode('_', $k);
+   						if($i[1] == $n[1]){
+   							unset($result[$language->language][$k]);
+   						}
+   					}
+   				}
+   			}
+   			variable_set('custom_block_content', $result);
+
+   			break;
+   			case 'SPlogin':
+   			$result = array();
+   			foreach($edit as $key => $d){
+   				if( (strstr($key, 'menu_') && $d != '') || (strstr($key, 'link_') && $d != '') ){
+   					$result[$language->language][$key] = $d;
+   				}
+   				if(strstr($key, 'newwindow_')){
+   					$n = explode('_', $key);
+   					if( $edit['menu_'.$n[1]] != '' && $edit['link_'.$n[1]] != '' ){
+   						$result[$language->language][$key] = $d;
+   					}
+
+
+   				}
+   			}
+   			foreach($edit as $key => $d){
+   				if(strstr($key, 'delete') && $d == 1){
+   					$n = explode('_', $key);
+   					foreach($result[$language->language] as $k => $v){
+   						$i = explode('_', $k);
+   						if($i[1] == $n[1]){
+   							unset($result[$language->language][$k]);
+   						}
+   					}
+   				}
+   			}
+   			variable_set('login_menu_liste', $result);
+
+   			break;
+   			
+  
+   		}
+
+		case 'view':
+			switch ($delta) {
+
+				case 'custom':
+             global $user;
+             global $base_url;
+					$custom_menus = variable_get('custom_block_content', array());
+          $custom_menus = $custom_menus[$language->language];
+					$block['subject'] = '';
+					$block['content'] = '<ul class="mainlist">';
+
+					if(!empty($custom_menus)){
+						
+						for($m = 0; $m < count($custom_menus) / 3; $m++){
+							if($m == 0){
+								$block['content'] .= '<li class="first"><a href="'.$custom_menus['link_'.$m].'" ';
+							}else if( $m == 1){
+								$block['content'] .= '<li class="ouvert hiddenlist"><a href="'.$custom_menus['link_'.$m].'" ';
+							}else{
+								$block['content'] .= '<li class="ouvert hiddenlist"><a href="'.$custom_menus['link_'.$m].'" ';
+							}
+							if($custom_menus['newwindow_'.$m] == 1){
+								$block['content'] .= 'target="_blank"';
+							}
+							if($m == 0){
+								$block['content'] .= ' title="'.$custom_menus['menu_'.$m].'">'.$custom_menus['menu_'.$m].'</a><span id="custom_fleche" class="menu-fleche"><img src="'.$base_url.'/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt=""/></span></li>'; 
+							}else{
+								$block['content'] .= '>'.$custom_menus['menu_'.$m].'</a></li>'; 
+							}
+							
+						}
+					}
+					$block['content'] .= '</ul>';
+				
+				break;
+
+				case 'SPlogin':
+				
+					global $user;
+					global $base_url;
+					require_once('sites/all/modules/cas/cas.module');
+					
+					$liste = variable_get('login_menu_liste', array());
+          $liste = $liste[$language->language];
+					$output = '<ul class="mainlist"><li class="first"><a lang="en" href="#">'.t('Login').'</a><span id="SPlogin_fleche" class="menu-fleche"><img src="'.$base_url.'/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt=""/></span></li>';
+				//print_r($liste);	
+					if(count($liste) > 0) {
+						for($m = 0; $m < count($liste) / 3; $m++){
+							$output .= '<li class="ouvert hiddenlist"><span class="puce"></span><a href="'.$liste['link_'.$m].'" ';
+							if($liste['newwindow_'.$m] == 1){
+								$output .= 'target="_blank"';
+							}
+							$output .= ' title="'.$liste['menu_'.$m].'">'.$liste['menu_'.$m].'</a></li>'; 
+						}
+					}
+
+
+					$output .= '</ul>';
+					$block['subject'] = '';
+					$block['content'] = $output;
+
+				break;
+
+   			case 'langues':
+               //uniquement si plusieurs langues
+   			   if(variable_get('language_count', 1) > 1 && variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE) != LANGUAGE_NEGOTIATION_NONE) {
+						
+   			      global $language;
+						global $base_url;
+   			      //creation des liens correspondant à chaque langue
+                   $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
+                   $langs = language_list('enabled');
+                   $links = array();
+                   foreach ($langs[1] as $lang) {
+                     $links[$lang->language] = array(
+                       'href'       => $path,
+                       'title'      => $lang->native,
+                       'language'   => $lang,
+                       'attributes' => array('lang' => $lang->language, 'class' => 'language-link'),
+                     );
+                   }
+                   drupal_alter('translation_link', $links, $path);
+                   $bloc = theme('links', $links, array());
+
+						 // $bloc =<ul><li class="fr first active"><a href="/admissions/fr/content/bac-francais-letranger-669" class="language-link active" lang="fr">Français</a></li>
+// 						 <li class="en last"><a href="/admissions/en/content/french-baccalaureat-1305" class="language-link" lang="en">English</a></li>
+// 						 </ul>                   
+// 						 
+						 //redécompostion de la liste pour la refaire accessible
+
+
+                   $p = '/(<a.*>.*?<\/a>)/';
+                   preg_match_all($p, $bloc, $matches);
+						 
+						 // $matches =Array
+						 // (
+						 //     [0] =&gt; Array
+						 //         (
+						 //             [0] =&gt; <a href="/admissions/fr/content/bac-francais-letranger-669" class="language-link active" lang="fr">Français</a>
+						 //             [1] =&gt; <a href="/admissions/en/content/french-baccalaureat-1305" class="language-link" lang="en">English</a>
+						 //         )
+						 // 
+						 //     [1] =&gt; Array
+						 //         (
+						 //             [0] =&gt; <a href="/admissions/fr/content/bac-francais-letranger-669" class="language-link active" lang="fr">Français</a>
+						 //             [1] =&gt; <a href="/admissions/en/content/french-baccalaureat-1305" class="language-link" lang="en">English</a>
+						 //         )
+						 // 
+						 // )
+                   $block['subject'] = '';
+                   $block['content'] = '<ul class="mainlist">';
+                   
+                   $domain = explode('/', $base_url);
+                   $d = $domain[count($domain) - 1];
+//A CAUSE DE L'INVERSION RECURRENTE DE L'ORDRE DES LANGUAGES, IL SUFFIT DE COMMENTER/DECOMMENTER AU CHOIX
+//LE PREMIER ITEM EST LE LANGUAGE EN COURS
+                   // foreach($matches[1] as $m) {
+                   //    if(strstr($m, "/".$language->language."/")) {
+                   //       $block['content'] .= '<li class="first">';
+                   //       $block['content'] .=  $m;
+                   //       $block['content'] .= '<span id="langues_fleche" class="menu-fleche"><img src="'.$base_url.'/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt=""/></span></li>';
+                   //    }
+                   // }
+                   // foreach($matches[1] as $m) {
+                   //    if(!strstr($m, "/".$language->language."/")) {
+                   //       $block['content'] .= '<li class="ouvert hiddenlist">';
+                   //       $block['content'] .=  $m;
+                   //       $block['content'] .= '</li>';
+                   //    }
+                   // }
+
+//LE PREMIER ITEM EST LE LANGUAGE DISPONIBLE
+                 foreach($matches[1] as $m) {
+                    if(!strstr($m, $d."/".$language->language)) {
+                       $block['content'] .= '<li class="first">';
+                       $block['content'] .=  $m;
+                       $block['content'] .= '<span id="langues_fleche" class="menu-fleche"><img src="'.$base_url.'/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt=""/></span></li>';
+                    }
+                 }
+                 foreach($matches[1] as $m) {
+                    if(strstr($m, $d."/".$language->language)) {
+                       $block['content'] .= '<li class="ouvert hiddenlist">';
+                       $block['content'] .=  $m;
+                       $block['content'] .= '</li>';
+                    }
+                 }
+//****************************************************************************************************
+                   $block['content'] .= '</ul>';
+						 
+                }
+   			break;  
+
+				
+
+         }
+
+			return $block;
+         break;
+   }	
+}

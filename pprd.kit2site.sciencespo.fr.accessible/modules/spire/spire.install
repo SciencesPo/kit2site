@@ -1,0 +1,122 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function spire_install() {
+	// Load the module.
+	drupal_load('module', 'spire');
+
+// install the auteur content type
+	$filename = drupal_get_path('module','spire') . "/spire.install.auteur.inc";
+	$content = implode ('', file ($filename));
+	// Build form state
+	$form_state = array(
+	 'values' => array(
+	    'type_name' => '<create>',
+	    'macro' => $content,
+	 ),
+	);
+	
+	drupal_execute("content_copy_import_form", $form_state);
+
+	// install the chercheur content type
+		$filename = drupal_get_path('module','spire') . "/spire.install.chercheur.inc";
+		$content = implode ('', file ($filename));
+		// Build form state
+		$form_state = array(
+		   'values' => array(
+		      'type_name' => '<create>',
+		      'macro' => $content,
+		   ),
+		);
+	drupal_execute("content_copy_import_form", $form_state);
+	
+	variable_set('pathauto_node_spire_chercheur_type_fr_pattern', 'chercheur/[node:title]');
+	variable_set('pathauto_node_spire_chercheur_type_en_pattern', 'researcher/[node:title]');
+
+	// install the degree content type
+		$filename = drupal_get_path('module','spire') . "/spire.install.degree.inc";
+		$content = implode ('', file ($filename));
+		// Build form state
+		$form_state = array(
+		 'values' => array(
+		    'type_name' => '<create>',
+		    'macro' => $content,
+		 ),
+		);
+		drupal_execute("content_copy_import_form", $form_state);
+
+
+// install the orgunit content type
+	variable_set('orgunits', array());
+	$filename = drupal_get_path('module','spire') . "/spire.install.orgunit.inc";
+	$content = implode ('', file ($filename));
+	// Build form state
+	$form_state = array(
+	 'values' => array(
+	    'type_name' => '<create>',
+	    'macro' => $content,
+	 ),
+	);
+	drupal_execute("content_copy_import_form", $form_state);
+
+
+// install the publication content type
+	$filename = drupal_get_path('module','spire') . "/spire.install.publication.inc";
+	$content = implode ('', file ($filename));
+	// Build form state
+	$form_state = array(
+	 'values' => array(
+	    'type_name' => '<create>',
+	    'macro' => $content,
+	 ),
+	);
+	drupal_execute("content_copy_import_form", $form_state);
+
+	variable_set('pathauto_node_spire_publication_type_fr_pattern', 'publication/[node:title]');
+	variable_set('pathauto_node_spire_publication_type_en_pattern', 'publication/[node:title]');
+
+
+	// install the relatinship content type
+		$filename = drupal_get_path('module','spire') . "/spire.install.relationship.inc";
+		$content = implode ('', file ($filename));
+		// Build form state
+		$form_state = array(
+		 'values' => array(
+		    'type_name' => '<create>',
+		    'macro' => $content,
+		 ),
+		);
+		drupal_execute("content_copy_import_form", $form_state);
+
+	// install the teaching content type
+		$filename = drupal_get_path('module','spire') . "/spire.install.teaching.inc";
+		$content = implode ('', file ($filename));
+		// Build form state
+		$form_state = array(
+		 'values' => array(
+		    'type_name' => '<create>',
+		    'macro' => $content,
+		 ),
+		);
+		drupal_execute("content_copy_import_form", $form_state);
+
+}
+
+
+function spire_uninstall() {
+  db_query("DELETE FROM system WHERE type='module' AND name='spire'")or die("Error");
+  node_type_delete('spire_orgunit_type');
+  node_type_delete('spire_chercheur_type');
+  node_type_delete('spire_publication_type');
+  node_type_delete('spire_teaching_type');
+  node_type_delete('spire_relationship_type');
+  node_type_delete('spire_auteur_type');
+  node_type_delete('spire_degree_type');
+	
+   variable_del('orgunits');
+   variable_del('chercheurs_en_plus');
+  
+  drupal_flush_all_caches();
+}

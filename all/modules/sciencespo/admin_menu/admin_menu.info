@@ -1,0 +1,6 @@
+; $Id: admin_menu.info,v 1.5.2.2 2010/07/28 02:04:11 sun Exp $
+name = Administration menu
+description = "Provides a dropdown menu to most administrative tasks and other common destinations (to users with the proper permissions)."
+package = Sciences-Po
+core = 6.x
+

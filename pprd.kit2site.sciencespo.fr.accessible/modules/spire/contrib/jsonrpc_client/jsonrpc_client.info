@@ -1,0 +1,11 @@
+name = "JSON-RPC Client API"
+description = "JSON-RPC Client API module"
+package = "Services - clients"
+core = "6.x"
+
+; Information added by drupal.org packaging script on 2011-05-10
+version = "6.x-1.0-beta4"
+core = "6.x"
+project = "jsonrpc_client"
+datestamp = "1305055015"
+

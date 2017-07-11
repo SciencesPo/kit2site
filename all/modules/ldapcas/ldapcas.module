@@ -1,0 +1,154 @@
+<?php
+// $Id$
+
+function ldapcas_menu() {
+
+  $items = array();
+
+  $items['admin/settings/ldap/ldapcas'] = array(
+    'title' => 'CAS',
+    'description' => 'Configure LDAP synchronization settings when logging in with CAS.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ldapcas_settings'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function ldapcas_settings() {
+  $form['sync'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Synchronization options'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+
+  $form['sync']['ldapcas_everylogin'] = array(
+     '#type' => 'radios',
+     '#title' => t('Fetch LDAP user data upon CAS login'),
+     '#options' => array(0 => t('Only when an account is created.'), 1 => t('Every time a user logs in.')),
+     '#default_value' => variable_get('ldapcas_everylogin', 0),
+  );
+
+  if( variable_get('cas_authmap',0) ) {
+    $form['sync']['ldapcas_everylogin']['#description'] = '<div class="error">LDAP CAS is incompatible with the "Is Drupal also the CAS user repository?" option in ' . l(t("CAS settings"), "admin/user/cas") . '</div>';
+  }
+
+  $form['sync']['ldapcas_usedata'] = array(
+     '#type' => 'checkbox',
+     '#title' => t('Should we extract user data from an LDAP directory?'),
+     '#default_value' => variable_get('ldapcas_usedata', 0)
+  );
+  if ( module_exists("ldapdata") ) {
+    $form['sync']['ldapcas_usedata']['#description'] = t('Activate this option if you want to extract the user data from an LDAP directory.');
+  }
+  else {
+    $form['sync']['ldapcas_usedata']['#description'] = t('<strong>Please enable and configure LDAP Data module to use this option</strong>.');
+    $form['sync']['ldapcas_usedata']['#disabled'] = true;
+    $form['sync']['ldapcas_usedata']['#default_value'] = 0;
+  }
+
+  $form['sync']['ldapcas_usegroups'] = array(
+     '#type' => 'checkbox',
+     '#title' => t('Should we extract user groups from an LDAP directory?'),
+     '#default_value' => variable_get('ldapcas_usegroups', 0)
+  );
+  if ( module_exists("ldapgroups") ) {
+    $form['sync']['ldapcas_usegroups']['#description'] = t('Activate this option if you want to extract the user groups from an LDAP directory.' );
+  }
+  else {
+    $form['sync']['ldapcas_usegroups']['#description'] = t('<strong>Please enable and configure LDAP Groups module to use this option</strong>.');
+    $form['sync']['ldapcas_usegroups']['#disabled'] = true;
+    $form['sync']['ldapcas_usegroups']['#default_value'] = 0;
+  }
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_user.
+ */
+function ldapcas_user($op, &$edit, &$account, $category = NULL)
+{
+  switch ($op) {
+    case 'login':
+      _ldapcas_user_login($account);
+      break;
+  }
+}
+
+/**
+ * Updates the user's ldap data on login.
+ */
+function _ldapcas_user_login(&$user)
+{
+  $authmap = user_get_authmaps($user->name);
+  if (!isset($authmap['cas'])) {
+    return;
+  }
+
+  $ldapcas_sync = $_SESSION['cas_first_login'] || variable_get("ldapcas_everylogin",FALSE);
+  $ldapdata_sync = module_exists("ldapdata") && variable_get("ldapcas_usedata",FALSE);
+  $ldapgroups_sync = module_exists("ldapgroups") && variable_get("ldapcas_usegroups",FALSE);
+
+  if( !$ldapcas_sync || (!$ldapdata_sync && !$ldapgroups_sync) ) {
+    return;
+  }
+
+  if ( module_exists("ldapauth") ) {
+    module_invoke("ldapauth", "init");
+  }
+  else {
+    watchdog('ldapcas', t('Could not initialize LDAP Authentication module.'), array(), WATCHDOG_ERROR);
+    return;
+  }
+
+  // Pretend that the user was authenticated by ldapauth.
+  // Otherwise calls to the ldap modules will return without any effect.
+  user_set_authmaps($user, array(
+    // Delete cas entry first, because there is a unique key on authname in authmap.
+    "authname_cas" => null,
+    "authname_ldapauth" => $user->name));
+
+  _ldapcas_update_user($user);
+
+  if ( $ldapdata_sync ) {
+    // Call init hook otherwise additional config ldapdata.conf.php will not be loaded.
+    module_invoke("ldapdata", "init");
+    _ldapdata_user_load($user, TRUE);
+  }
+
+  if ( $ldapgroups_sync ) {
+    module_invoke("ldapgroups", "init");
+    module_invoke("ldapgroups", "user_login", $user);
+  }
+
+  // Reset the authmap to cas authentication.
+  user_set_authmaps($user, array(
+    "authname_ldapauth" => null,
+    "authname_cas" => $user->name));
+}
+
+/**
+ * Updates the user object with some LDAP specific attributes:
+ * - $user->ldap_config contains the sid of the ldap server
+ * - $user->ldap_dn contains the DN used to search for the user   
+ */
+function _ldapcas_update_user(&$user)
+{
+  $result = db_query("SELECT sid FROM {ldapauth} WHERE status = '%d' ORDER BY sid", 1);
+  while ($row = db_fetch_object($result)) {
+    // Cycle thru the authentication schemes - first successful one wins.
+    // Instantiate ldap.
+    _ldapauth_init($row->sid);
+    $ldap_user_entry = _ldapauth_user_lookup($user->name);
+    if ($ldap_user_entry)
+    {
+      $user->ldap_config = $row->sid;
+      $user->ldap_dn = $ldap_user_entry['dn'];
+      break;
+    }
+  }
+}

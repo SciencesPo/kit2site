@@ -1,0 +1,5 @@
+; $Id: barre_corp.info,v 1 2015/03/20 02:04:11 sun Exp $
+name = Barre Corporate
+description = "Intégration de la barre corporate du portail dans les kit2site"
+package = Sciences-Po
+core = 6.x

@@ -1,0 +1,24 @@
+; $Id: montheme.info.txt $
+
+name        = Mon thème personnalisable
+description = Thème de personnalisation du site
+core       = 6.x
+base theme = sciencespo
+screenshot = screenshot.png
+stylesheets[all][]   = css/montheme.css
+
+;******************************************
+;NE PAS TOUCHER LES INSTRUCTIONS CI-DESSOUS
+
+regions[sidebar_first]  = First sidebar
+regions[sidebar_second] = Second sidebar
+regions[navigation]     = Navigation bar
+regions[edito]      = Editorial sciences po
+regions[content_top]    = Content top
+regions[content_bottom] = Content bottom
+regions[header]         = Header
+regions[footer]         = Footer
+regions[page_closure]   = Page closure
+
+;NE PAS TOUCHER LES INSTRUCTIONS CI-DESSUS
+;******************************************

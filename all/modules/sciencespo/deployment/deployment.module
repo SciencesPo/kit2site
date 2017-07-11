@@ -1,0 +1,25 @@
+<?php
+// ; $Id: deployment.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+function deployment_menu(){
+   $items = array();
+
+	$items['deploy'] = array(
+		'page callback' => 'deployment_deploy',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	
+	return $items;
+	
+}
+
+function deployment_deploy(){
+   $module_list = array('newsletter');
+   module_enable($module_list);
+   locale_system_update($module_list);
+   
+}
+
+
+

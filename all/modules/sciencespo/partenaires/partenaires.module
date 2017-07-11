@@ -1,0 +1,232 @@
+<?php
+// ; $Id: partenaires.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute les partenaires
+ */
+
+/**
+ * Implementation of hook_perm().
+ */
+function partenaires_perm()
+{
+  return array('access partenaires');
+}
+
+/*
+* Implementation of hook_menu
+*/
+function partenaires_menu()
+{
+	global $language;
+	$items = array();
+	$partenaires = variable_get('partenaires_titre', array('fr' => 'Nos partenaires', 'en' => 'Our Partners'));
+
+	$items['partenaire'] = array(
+		'title' => $partenaires[$language->language],
+		'page callback' => 'partenaires_liste_des_partenaires',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	return $items;
+}
+
+/*
+ * Implementation of hook_form_alter
+ * Cache le titre des blocs partenaires (remplacé par le champ $form['partenaires'])
+ */
+function partenaires_form_alter(&$form, &$form_state, $form_id)
+{
+	switch ($form_id) {
+		case 'block_admin_configure':
+			if($form['delta']['#value'] == 'partenaires') {
+				unset($form['block_settings']['title']);				
+			}
+		break;
+	}
+}
+
+/*
+ * Implementation of hook_block
+ */
+function partenaires_block($op = 'list', $delta = 0, $edit = array()) {
+
+	global $base_url;
+	global $language;
+	
+    switch ($op) {
+		case 'list':
+			$blocks['partenaires'] = array(
+				'info' => t('Partners'),
+				'status' => 0,
+			);
+			return $blocks;
+		break;
+		
+		case 'configure':
+			$partenaires = variable_get('partenaires_titre', array());
+			$form['partenaires_fr'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in french'),
+				'#default_value' => $partenaires['fr'], 
+			);
+			$form['partenaires_en'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in english'),
+				'#default_value' => $partenaires['en'],
+			);
+			$form['partenaires_nb'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Vertical image number'),
+				'#default_value' => $partenaires['nb'],
+			);
+			return $form;
+			
+		break;
+		
+		case 'save':
+			$partenaires = array();
+			$partenaires['fr'] = $edit['partenaires_fr'];
+			$partenaires['en'] = $edit['partenaires_en'];
+			$partenaires['nb'] = $edit['partenaires_nb'];
+			variable_set('partenaires_titre', $partenaires);
+		break;
+		
+		case 'view':
+			switch ($delta) {
+				case 'partenaires':
+				
+					global $language;
+				
+					$partenaires = variable_get('partenaires_titre', array('nb' => 2, 'fr' => 'Nos partenaires', 'en' => 'Our Partners'));
+					$subject = $partenaires[$language->language];
+					
+					/* Il nous faut le nombre de résultats */
+					$sql = "	SELECT count(N.nid) AS nb
+								FROM {node} AS N
+								WHERE N.type = '%s'
+									AND N.status = %d
+									AND (N.language = '' OR N.language = '%s') ";
+								
+					$res = db_query($sql, array('partenaires', 1, $language->language));
+					
+					$dn = db_fetch_array($res);
+					$n = $dn['nb'];
+					$nb = $partenaires['nb'];
+
+					/* Puis on effectue la requête */
+					$q = "	SELECT N.nid
+								FROM {node} AS N
+								WHERE N.type = '%s'
+									AND N.status = %d
+									AND (N.language = '' OR N.language = '%s') 
+									ORDER BY N.sticky DESC ";
+								
+					$r = db_query($q, array('partenaires', 1, $language->language));
+					
+					$items = array();
+					$temp = '';
+					$count = 0;
+					
+					while ($partenaires = db_fetch_array($r)) {
+						$c = node_load(array('nid' => $partenaires['nid']));
+						$temp .= '
+							<div class="partenaires clearfix">
+								<div class="image">'.theme_image($c->field_image_partenaires[0]['filepath'], $c->field_image_partenaires[0]['data']['alt'], $c->field_image_partenaires[0]['data']['title'], '', false).'</div>
+								<div class="content">
+									<h3>'.l($c->title, $c->field_lien_partenaires[0]['value'], array('attributes' => array('target' => '_blank'))).'</h3>
+									<div class="auteur">'.$c->field_auteur_partenaires[0]['value'].'</div>
+								</div>
+							</div>
+						';
+						$count++;
+						/* Si on est dans le dernier élément et que le nombre est impair, on l'injecte dans la liste  */
+						
+						if ($nb != 0 && $count%$nb == 0) {
+							$items[] = $temp;
+							$temp = '';
+						}else if ($count == $n){
+							$items[] = $temp;
+							$temp = '';
+						}
+					}
+					
+					$content = '
+						<div id="carousel_partenaires">'.theme_carousel('#carousel_partenaires', $items).'</div>
+						<div class="all">'.l(t('See all'), 'partenaire').'</div>
+					';
+					
+					$block['subject'] = $subject;
+					$block['content'] =	$content;
+ 
+				break;
+			}
+			return $block;
+
+		break;
+	}
+}
+
+/**
+* Construit la liste des partenaires
+*/
+function partenaires_liste_des_partenaires()
+{
+	global $language;
+	menu_cache_clear('primary');
+
+	$partenaires = variable_get('partenaires_titre', array('fr' => 'Nos partenaires', 'en' => 'Our Partners'));
+	$title = $partenaires[$language->language];
+
+	$q = "	SELECT N.nid
+				FROM {node} AS N
+				WHERE N.type = '%s'
+					AND N.status = %d
+					AND (N.language = '' OR N.language = '%s') 
+					ORDER BY N.sticky DESC ";
+				
+	$r = db_query($q, array('partenaires', 1, $language->language));
+	
+	$items = array();
+	$count = 0;
+	
+	while ($partenaires = db_fetch_array($r)) {
+		$c = node_load(array('nid' => $partenaires['nid']));
+		$i = '<div class="image">
+			<a href="'.$c->field_lien_partenaires[0]['value'].'" target="_blank">
+				'.theme_image($c->field_image_partenaires[0]['filepath'], $c->field_image_partenaires[0]['data']['alt'], $c->field_image_partenaires[0]['data']['title'], array('width' => '40', 'height' => '62'), false).'
+			</a>
+		</div>';
+		$d = '<div class="content">
+			<h3>'.l($c->title, $c->field_lien_partenaires[0]['value'], array('attributes' => array('target' => '_blank'))).'</h3>
+			<div class="auteur">'.$c->field_auteur_partenaires[0]['value'].'</div>
+		</div>';
+		if ($count%2 == 0) {
+			$items[] = array( 'data' => $i.$d, 'class' => 'even publication clearfix' );
+		}else{
+			$items[] = array( 'data' => $i.$d, 'class' => 'odd publication clearfix' );
+		}
+		$count++;
+	}
+	
+	$content = theme_item_list($items, NULL, $type = 'ul');
+	
+	$page_content = theme('liste_des_partenaires', $content, $title);
+	
+	return $page_content;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function partenaires_theme($existing, $type, $theme, $path) {
+	return array(
+		'liste_des_partenaires' => array(
+			'template' => 'liste-des-partenaires',
+			'arguments' => array('content' => NULL, 'title' => NULL)
+		)
+	);
+}
+

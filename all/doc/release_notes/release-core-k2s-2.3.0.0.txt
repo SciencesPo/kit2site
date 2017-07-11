@@ -1,0 +1,76 @@
+RELEASE NOTE - core Kite2Site - V:2.3.0.0
+créé le 17/02/2012 par DSI-EED-MLE
+
+1.
+Il est possible de créer son propre type de contenu. 
+En préfixant le type de contenu avec "cc_" il devient rattachable aux carrousels
+=>	cf documentation utilisateur [utilisation du KIT2SITE-2.3.0.0.doc]
+=> chapitre : 6.2.4.1.	Créer un nouveau type de contenu
+
+2.
+Les sites créés sur l'environnement de production sont automatiquement mis hors 
+ligne à la création.
+Les sites hors ligne sont accessibles via l'utilisateur demo.kitdesite, cet
+utilisateur permet de visualiser le site sans qu'il soit visible des 
+personnes/robots n'ayant pas d'accès authentifié
+=> cf documentation utilisateur = chapitre 5.7 « Connexion de « visiteurs » à un site hors-ligne » 
+=> identifiants de connexion : cf documentation sur le groupe ENTG « Kit de site Documentation » = /apprenants/connexion_visiteur_Drupal_K2S.pdf
+
+3.
+Par défaut le titre d'une actualité pointe sur elle même. 
+Avec le champ URL il est possible d'ajouter une autre cible :
+- si Le lien commence par "http:", il s'ouvre dans une nouvelle fenêtre
+- si le lien est relatif, il s'ouvre dans la fenêtre en cours
+
+4.
+Jusqu'à deux logo peuvent être associés au contenu contact et être placé à
+l'endroit désiré (par déplacement d'une balise <img/>)
+=> cf documentation utilisateur = 6.5.7 « Insertion d’un ou plusieurs logo dans la zone d’adresse du pied de page »
+
+5.
+La balise "Alt" est affichée sous les images
+=> cf documentation utilisateur = 6.2.19.3  « Les balises d’images » (utilisation, conseils pour la rédaction)
+
+6.
+Le libellé du lien "toute l'actu" peut être modifié. 
+Dans ce cas le titre et le fil d'ariane sont automatiquement modifiés
+
+7.
+Les blocs du haut s'alignent automatiquement à droite quel que soit leur
+nombre
+=> cf documentation utilisateur = 6.3.2 « Les menus du haut de page (langue/login/custom) »
+
+8.
+L'image de fond suit dynamiquement l'homothétie de la fenêtre du navigateur 
+pour qu'aucune zone vide n'apparaisse.
+Cela ne change pas les contraintes de chargement de la page (taille, type, etc)
+=> cf documentation utilisateur = 6.1.2 « Image de fond »
+
+9.
+Ajout d'un template mon_theme
+Via une connexion FTP pour les ADMIN et EXPERT :
+- Le template du theme SciencesPo est accessible en lecture seule
+- Le template du theme mon_theme est accessible en lecture/ecriture
+Par defaut le theme activé à la création du site est montheme
+Il n'est plus possible d'activer le theme sciencespo
+=> cf documentation utilisateur = 7.2 « Template expert
+
+10.
+Un lien "A propos de kit2site" dans "Aide" sur le menu d'administration 
+permet d'accéder à toutes les release notes et documentations utilisateurs
+=> cf documentation utilisateur = 2.3 « Documentation du K2S
+
+11.
+Le module XmlSiteMap est installé pour chaque site, il n'est pas
+activé par défaut et les ADMIN et EXPERT y ont accès
+
+12.
+Les modules de statistique (Google Analytics et Piwiks) sont commun à tous
+les sites (inclus dans le kit2site). Le paramétrage est accessible par 
+les EXPERT et ADMIN.
+=> cf documentation utilisateur = 6.9.1. « Paramétrage des stats GA et Piwik »
+
+13.
+En fonction des langues utilisées sur le site l'EXPERT doit choisir 
+explicitement les langues dont il a besoin.
+=> cf documentation utilisateur = 3.2.4 « Supprimer une langue »

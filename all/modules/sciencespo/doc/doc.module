@@ -1,0 +1,117 @@
+<?php
+// ; $Id: doc.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute un menu "A propos" et gère la page d'affichage des release notes et des docs.
+ */
+
+/**
+ * Implementation of hook_perm().
+ */
+function doc_perm() {
+  return array('access doc');
+}
+
+/*
+ * Implementation of hook_menu
+ */
+function doc_menu() {
+
+  $items['admin/help/doc'] = array(
+		'title' => "A propos de kit2site...",
+    	'page callback' => 'doc_liste',
+    	'access arguments' => array('access doc'),
+		'type' => MENU_LOCAL_TASK,
+  );
+	$items['admin/help/doc-specifique'] = array(
+		'title' => "Doc specifique à ce site",
+		'page callback' => 'doc_doc',
+		'access arguments' => array('access content'),
+		'type' => MENU_LOCAL_TASK,
+	);
+	
+
+  return $items;
+}
+
+
+
+
+/**
+* Construit la doc
+*/
+function doc_liste()
+{
+
+	global $base_url;
+	
+	$dir = $_SERVER['DOCUMENT_ROOT'].'/sites/all/doc';	
+	$list = array();
+	$notes = scandir ( $dir.'/release_notes');
+	foreach($notes as $filename) {
+		if($filename == "." || $filename == ".." ) {
+			continue;
+		}
+		preg_match_all("/.*(\d\.\d\.\d\.\d)\.txt/", $filename, $matches, PREG_PATTERN_ORDER);
+		if(!empty($matches[1])) {
+			$list[$matches[1][0]] = array($matches[0][0]);
+		}
+	}
+	$docs = scandir ( $dir.'/docs');
+	foreach($docs as $filename) {
+		if($filename == "." || $filename == ".." ) {
+			continue;
+		}
+		preg_match_all("/.*(\d\.\d\.\d\.\d)\..*/", $filename, $matches, PREG_PATTERN_ORDER);
+		if(!empty($matches[1])) {
+			$list[$matches[1][0]][] = $matches[0][0];
+		}
+	}
+	$version = array_keys($list);
+	sort($version);
+	$version = $version[count($version) - 1];
+	$content = '';
+	$content .= '<p style="margin:30px 0 30px 24px;"><strong>Version actuelle : </strong><strong style="color:red;">'.$version.'</strong></p>';
+
+	$content .= '<table class="doc" style="width:100%;margin-left:24px">';
+	$content .= '<tr style="border-bottom:2px solid grey">';
+	$content .= '<th>Version</th><th>Release note</th><th>Documentation correspondante</th>';
+	$content .= '</tr>';
+	foreach($list as $v => $d) {
+		$content .= '<tr style="border-bottom:1px solid rgb(200,200,200)">';
+		$content .= '<td>'.$v.'</td>';
+		$content .= '<td><a href="'.$base_url.'/sites/all/doc/release_notes/'.$d[0].'" target="_blank">'.$d[0].'</a></td>';
+		$content .= '<td><a href="'.$base_url.'/sites/all/doc/docs/'.$d[1].'" target="_blank">'.$d[1].'</a></td>';
+		$content .= '</tr>';
+	}
+	
+	$content .= '</table>';
+	
+	
+	$title = 'A propos de Kit2site...';
+	
+
+
+
+	$page_content = theme("liste_doc", $content, $title);
+	return $page_content;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function doc_theme($existing, $type, $theme, $path) {
+	return array(
+		'liste_doc' => array(
+			'template' => 'liste-doc',
+			'arguments' => array('content' => NULL, 'title' => NULL)
+		)
+	);
+}
+
+function utilitaires_doc(){
+	drupal_goto('aide-specifique-au-site');
+}
+
+

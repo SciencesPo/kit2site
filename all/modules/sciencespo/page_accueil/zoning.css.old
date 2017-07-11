@@ -1,0 +1,161 @@
+/* Mise en forme du template */
+/* zoning_1_3 */
+.zoning_1_3 .zone1 {
+	width: 60%;
+	float: left;
+}
+
+.zoning_1_3 .zone2 {
+	width: 40%;
+	float: left;
+}
+
+.zoning_1_3 .zone1 .zone_margin {
+	padding-right: 10px;
+}
+
+/* zoning_1_2_3 */
+.zoning_1_2_3 .zone1 {
+	width: 40%;
+	float: left;
+}
+
+.zoning_1_2_3 .zone2 {
+	width: 35%;
+	float: left;
+}
+
+.zoning_1_2_3 .zone3 {
+	width: 25%;
+	float: left;
+}
+
+.zoning_1_2_3 .zone2 .zone_margin {
+	padding: 0 10px 0 10px;
+}
+
+/* zoning_1_3_3 */
+.zoning_1_3_3 .zone1 {
+	width: 50%;
+	float: left;
+}
+
+.zoning_1_3_3 .zone2 {
+	width: 25%;
+	float: left;
+}
+
+.zoning_1_3_3 .zone3 {
+	width: 25%;
+	float: left;
+}
+
+.zoning_1_3_3 .zone1 .zone_margin {
+	padding-right: 10px;
+}
+
+.zoning_1_3_3 .zone2 .zone_margin {
+	padding-right: 5px;
+}
+
+.zoning_1_3_3 .zone3 .zone_margin {
+	padding-left: 5px;
+}
+
+/* zoning_3_1_3 */
+.zoning_3_1_3 .zone1 {
+	width: 25%;
+	float: left;
+}
+
+.zoning_3_1_3 .zone2 {
+	width: 50%;
+	float: left;
+}
+
+.zoning_3_1_3 .zone3 {
+	width: 25%;
+	float: left;
+}
+
+.zoning_3_1_3 .zone2 .zone_margin {
+	padding: 0 10px 0 10px;
+}
+
+/* zoning_3_3_3_3 */
+.zoning_3_3_3_3 .zone1 {
+	width: 25%;
+	float: left;
+}
+
+.zoning_3_3_3_3 .zone2 {
+	width: 25%;
+	float: left;
+}
+
+.zoning_3_3_3_3 .zone3 {
+	width: 25%;
+	float: left;
+}
+
+.zoning_3_3_3_3 .zone4 {
+	width: 25%;
+	float: left;
+}
+
+.zoning_3_3_3_3 .zone1 .zone_margin {
+	padding-right: 7px;
+}
+
+.zoning_3_3_3_3 .zone2 .zone_margin {
+	padding: 0 5px 0 3px;
+}
+
+.zoning_3_3_3_3 .zone3 .zone_margin {
+	padding: 0 3px 0 5px;
+}
+
+.zoning_3_3_3_3 .zone4 .zone_margin {
+	padding-left: 7px;
+}
+
+/* Style */
+.zoning .zone_padding {
+	padding: 20px;
+	background: url("/sous_site_master/sites/all/themes/sciencespo/images/fond_bloc_720.jpg") no-repeat top center #FFFFFF;
+}
+
+.zoning h1 {
+	margin-bottom: 15px;
+}
+
+.zoning h1 a {
+	text-decoration: none;
+	color: #595959;
+}
+
+.zoning .sous_titre {
+	font-size: 18px;
+	color: #707070;
+	font-style: italic;
+	margin-bottom: 15px;
+	line-height: 1.3em;
+}
+
+.zoning .border {
+	margin: 0;
+}
+
+.exergue {
+	font-style: italic;
+}
+
+.carrousel {
+	margin-top: 15px;
+}
+
+.carrousel .item-list ul {
+	margin: 0;
+	padding: 0;
+}
+

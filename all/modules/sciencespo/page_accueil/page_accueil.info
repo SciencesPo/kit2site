@@ -1,0 +1,5 @@
+; $Id: page_accueil.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Page d'accueil
+description = "Template de la page d'accueil"
+package = Sciences-Po
+core = 6.x

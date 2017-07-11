@@ -1,0 +1,327 @@
+<?php
+// ; $Id: page_accueil.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Template de la page d'accueil
+ */
+
+/**
+ * Implementation of hook_init().
+ */
+function page_accueil_init()
+{
+	drupal_add_css(drupal_get_path('module', 'page_accueil').'/tables.css');
+	drupal_add_css(drupal_get_path('module', 'page_accueil').'/zoning.css');
+
+	$tables_default = array (		
+		'zoning_1_2_3' => '<strong>zoning_1_2_3</strong> <table class="template-table" cellspacing="10">
+			<tr height="200"><td width="350">ZONE 1</td><td width="250">ZONE 2</td><td width="200">ZONE 3</td></tr>
+		</table>',
+		'zoning_1_3' => '<strong>zoning_1_3</strong> <table class="template-table" cellspacing="10">
+			<tr height="200"><td width="600">ZONE 1</td><td width="200">ZONE 2</td></tr>
+		</table>',
+		'zoning_1' => '<strong>zoning_1</strong> <table class="template-table" cellspacing="10">
+			<tr height="200"><td width="800">ZONE 1</td></tr>
+		</table>',
+		'zoning_1_3_3' => '<strong>zoning_1_3_3</strong> <table class="template-table" cellspacing="10">
+			<tr height="200"><td width="400">ZONE 1</td><td width="200">ZONE 2</td><td width="200">ZONE 3</td></tr>
+		</table>',
+		'zoning_3_1_3' => '<strong>zoning_3_1_3</strong> <table class="template-table" cellspacing="10">
+			<tr height="200"><td width="200">ZONE 1</td><td width="400">ZONE 2</td><td width="200">ZONE 3</td></tr>
+		</table>',
+		'zoning_3_3_3_3' => '<strong>zoning_3_3_3_3</strong> <table class="template-table" cellspacing="10">
+			<tr height="200"><td width="200">ZONE 1</td><td width="200">ZONE 2</td><td width="200">ZONE 3</td><td width="200">ZONE 4</td></tr>
+		</table>',
+	);
+	
+	$tables = variable_set('page_accueil_tables', $tables_default);
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function page_accueil_perm()
+{
+  return array('access zoning', 'access contenu', 'access settings');
+}
+ 
+/*
+ * Implementation of hook_menu
+ */
+function page_accueil_menu()
+{
+	$items = array();
+
+	$items['admin/content/page_accueil'] = array(
+		'title' => t('Home page'),
+		'description' => t('Administer home page.'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('page_accueil_admin_zoning'),
+		'access arguments' => array('access zoning'),
+		'file' => 'page_accueil.admin.inc',
+	);
+	$items['admin/content/page_accueil/zoning'] = array(
+		'title' => t('Zoning'),
+		'type' => MENU_DEFAULT_LOCAL_TASK,
+		'weight' => -10,
+		'file' => 'page_accueil.admin.inc',
+	);
+	$items['admin/content/page_accueil/contenu'] = array(
+		'title' => t('Content'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('page_accueil_admin_contenu'),
+		'access arguments' => array('access contenu'),
+		'type' => MENU_LOCAL_TASK,
+		'weight' => -5,
+		'file' => 'page_accueil.admin.inc',
+	);
+	$items['admin/content/page_accueil/settings'] = array(
+		'title' => t('Settings'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('page_accueil_admin_settings'),
+		'access arguments' => array('access settings'),
+		'type' => MENU_LOCAL_TASK,
+		'weight' => 0,
+		'file' => 'page_accueil.admin.inc',
+	);
+	$items['la-page-d-accueil'] = array(
+		'title' => t('Home page'),
+		'page callback' => 'page_accueil_view',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	return $items;
+}
+
+/**
+* Génère la page d'accueil
+*/
+function page_accueil_view()
+{
+	global $language;
+	global $base_url;
+	$page_accueil = variable_get('page_accueil', array('fr' => array('zoning' => 'zoning_1_2_3'), 'en' => array('zoning' => 'zoning_1_2_3')));
+	
+        //print_r($page_accueil);
+        //print "\n<br>";
+        //exit;
+	
+        if (!$page_accueil[$language->language]['contenu']) {
+		$urlAdmin = $base_url.'/'.$language->language.'/admin/content/page_accueil';
+		drupal_set_message(t('You did not set your home page.').'<br/><a href="'.$urlAdmin.'">'.$urlAdmin.'</a>', 'error');
+		return false;
+	}
+	
+	$page_accueil = $page_accueil[$language->language];
+	
+	$zones = array();
+	
+	
+	foreach ($page_accueil['contenu'] as $k => $v) {
+
+
+		$c = node_load(array('nid' => $v['id']));
+
+		
+		/* Si le contenu n'existe pas, on averti les utilisateurs */		
+		if (!$c) {
+			$varTitre = t('Content unavailable');
+			$varTexte = '<p>'.t('There is currently no content available for the home page. Sorry for any inconvenience.').'</p>';
+			$arguments['titre'] = $varTitre;
+			$arguments['texte'] = $varTexte;
+			$zones[$k] = theme($k, $arguments);
+		
+		/* On vérifie si on est dans un carousel de contenu, et dans ce cas c'est différent */
+		} else if ($c->type == 'scpocarousel') {
+			$zones[$k] = node_view($c);
+		} else {
+		
+			//On charge les différentes options.
+			$arguments = array();
+			//Les champs sont différents selon le type de contenu (ici page-interne ou actualité)
+			if ($c->type == 'page_interne') {
+				$champ_image = $c->field_image;
+				$champ_video = $c->field_video;
+				$champ_sous_titre = $c->field_sous_titre[0]['value'];
+			} else {
+				$champ_image = $c->field_image_actualite;
+				$champ_video = $c->field_video_actualite;
+				$champ_sous_titre = $c->field_sous_titre_actualite[0]['value'];
+			}
+			
+			if (!empty($v['champs']['titre'])) {
+				$arguments['titre'] = l($c->title, $c->path);
+			}
+			
+			if (!empty($v['champs']['extrait_du_titre'])) {
+				$words = variable_get('page_accueil_title_words', 3);
+				$texte = limitwords($c->title, $words + 1);
+				$arguments['extrait_du_titre'] = $texte;
+			}
+			
+			if (!empty($v['champs']['sous-titre'])) {
+				$arguments['sous-titre'] = $champ_sous_titre;
+			}
+			
+			if (!empty($v['champs']['extrait_du_sous-titre'])) {
+				$words = variable_get('page_accueil_subtitle_words', 3);
+				$texte = limitwords($champ_sous_titre, $words + 1);
+				$arguments['extrait_du_sous-titre'] = $texte;
+			}
+			
+
+
+			if (!empty($v['champs']['texte'])) {
+				
+				$arguments['texte'] = $c->body;
+			}
+			
+			if (!empty($v['champs']['extrait_du_texte'])) {
+				$arguments['extrait_du_texte'] = $c->teaser.'<p>'.l(t('More'), $c->path).'</p>';
+			}
+			
+			if (!empty($v['champs']['exergue'])) {
+				$arguments['exergue'] = $c->field_zone_de_droite[0]['value'];
+			}
+			
+			if (!empty($v['champs']['extrait_de_exergue'])) {
+				$exergue = explode('<!--break-->', $c->field_zone_de_droite[0]['value']);
+				$arguments['extrait_de_exergue'] = $exergue[0];
+			}
+			if (!empty($v['champs']['carrousel'])) {
+				$arguments['carrousel'] = array();
+				foreach($champ_image as $image) {
+					if ($image['fid'] != '') {
+						$arguments['carrousel'][] = theme_image($image['filepath'], $image['data']['alt'], $image['data']['title'], '', false);
+					}
+				}
+				foreach($champ_video as $item) {
+					if (!empty($item['value'])) {
+						//exploser le champ pour séparer video et description textuelle s'il y en a une
+						$fieldContent = explode('<!--break-->', $item['value']);
+						$video = $fieldContent[0];
+						$transtext = $fieldContent[1];
+						$video = str_replace(array('<p>', '</p>'), '', $video);
+						$video = html_entity_decode($video);
+						$video = str_replace('&amp;', '&', $video);
+						$pp = '/(<p>.*<\/p>)/';
+						preg_match($pp, $video, $pmatches);
+						$title = preg_replace('/<a(.*?)>/', '', $pmatches[1]);
+						$title = str_replace('</a>', '', $title);
+						$title = str_replace('<p>', '', $title);
+						if(!empty($title)){
+							$title = 'title="'.str_replace('</p>', '', $title).'"';
+						}else{
+							$title = NULL;
+						}
+
+
+
+						if(!strstr($_GET['q'], 'description-textuelle')){//pas de description textuelle de la video a afficher
+							$longdesc = ''; 
+							if(!empty($transtext)) {
+								$ppp = '/src="(.*?)"/';
+								preg_match($ppp, $item['value'], $ppmatches);
+								$src = $ppmatches[1];
+								$srcs = explode('?', $src);
+								$src = str_replace('http://', '', $srcs[0]);
+								$longdesc = ' longdesc="node/'.$c->nid.'/description-textuelle/'.$src.'"';
+							}
+							if($title) {
+								$v = '<iframe$2 '.$longdesc.' '.$title.'>$3</iframe>';
+							}else{
+								$v = '<iframe$2 '.$longdesc.'>$3</iframe>';
+							}
+							$video = preg_replace('/(.*)<iframe(.*)>(.*)<\/iframe>(.*)/', $v, $video);
+						}else{//afficher la transcription textuelle
+							if(!empty($transtext)) {
+								$video = preg_replace('/(.*)<iframe(.*)>(.*)<\/iframe>(.*)/', '<iframe$2 '.$title.'>$3</iframe>', $video);
+				               $video .= '<span class="transcription-textuelle">'.$transtext.'</span><br />';
+				               $video .= '<span class="alt-display-container">'.l('Close the text alternative for the video', drupal_get_path_alias('node/'.$node->nid)).'</span><br />';
+							}
+						}
+
+
+						$arguments['carrousel'][] = $video;
+					}
+				}
+			}
+			
+			//Il reste à discuter de "graphique", "lien_relatif" et "fichier_attache".
+			
+			$zones[$k] = theme($k, $arguments);
+		
+		}
+	}
+  if($language->language == 'en'){
+    drupal_set_title("Home");	
+  }else{
+    drupal_set_title("Accueil");	
+  }
+	$content = theme($page_accueil['zoning'], $zones);
+	
+	return $content;
+}
+
+function limitwords($texte, $words)
+{
+	$content = explode(' ', $texte, $words);
+			
+	if (count($content) == $words) {
+		array_pop($content);
+		$content = implode(' ', $content).' [...]' ;
+	} else {
+		$content = implode(' ', $content);
+	}
+	
+	return $content;
+}
+
+function page_accueil_theme($existing, $type, $theme, $path)
+{
+	return array(
+		'zone1' => array(
+			'template' => 'zone1',
+			'arguments' => array('arguments' => array()),
+		),
+		'zone2' => array(
+			'template' => 'zone2',
+			'arguments' => array('arguments' => array()),
+		),
+		'zone3' => array(
+			'template' => 'zone3',
+			'arguments' => array('arguments' => array()),
+		),
+		'zone4' => array(
+			'template' => 'zone4',
+			'arguments' => array('arguments' => array()),
+		),
+		'zoning_1_2_3' => array(
+			'template' => 'zoning_1_2_3',
+			'arguments' => array('zones' => array()),
+		),
+		'zoning_1_3' => array(
+			'template' => 'zoning_1_3',
+			'arguments' => array('zones' => array()),
+		),
+		'zoning_1' => array(
+			'template' => 'zoning_1',
+			'arguments' => array('zones' => array()),
+		),
+		'zoning_1_3_3' => array(
+			'template' => 'zoning_1_3_3',
+			'arguments' => array('zones' => array()),
+		),
+		'zoning_3_1_3' => array(
+			'template' => 'zoning_3_1_3',
+			'arguments' => array('zones' => array()),
+		),
+		'zoning_3_3_3_3' => array(
+			'template' => 'zoning_3_3_3_3',
+			'arguments' => array('zones' => array()),
+		)
+	);
+}
+

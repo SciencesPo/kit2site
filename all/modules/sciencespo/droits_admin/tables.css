@@ -1,0 +1,21 @@
+table.droits-admin-table {
+	display: inline;
+	border-collapse: separate;
+}
+
+table.droits-admin-table th {
+	border: 0;
+	padding: 10px;
+}
+
+table.droits-admin-table td {
+	text-align: center;
+	vertical-align: middle;
+}
+
+table.droits-admin-table td.item {
+	text-align: left;
+	font-weight: bold;
+	padding-right: 50px;
+}
+

@@ -1,0 +1,197 @@
+<?php
+
+
+function barre_corp_init(){
+
+	global $language;
+	drupal_add_css(drupal_get_path('module', 'barre_corp').'/barre_corp.css', 'module', 'all', TRUE);
+	drupal_add_js(drupal_get_path('module', 'barre_corp') . '/barre_corp.js');
+	barre_corp_build('navcorporate');
+
+	
+	$script = 'var lang = "'.$language->language.'"';
+
+	drupal_add_js($script, 'inline');
+
+
+}
+
+function barre_corp_menu() {
+
+	$items = array();
+	$items['admin/build/themes/bloc-entete'] = array(
+		'title' => "Bloc d'entête",
+        'page callback'    => 'drupal_get_form',
+        'page arguments'   => array('barre_corp_settings_form'),
+		'access arguments' => array('administer'),
+	);
+	return $items;
+}
+	
+
+function barre_corp_settings_form () {
+	
+	$l = locale_language_list($field = 'name', $all = FALSE);
+	$v = variable_get('new-custom-block-title', array());
+
+	foreach($l as $lcode => $lname){
+		$form['new-custom-block-title_'.$lcode] = array(
+		  '#type' => 'textfield',
+		  '#title' => t('Titre du bloc custom en '.$lname),
+		  '#default_value' => $v[$lcode],
+		);
+	}
+	$form['enregistrer'] = array(
+	  '#type' => 'submit',
+	  '#value' => t('Enregistrer'),
+	);
+	
+	return $form;
+}
+
+function barre_corp_settings_form_submit ($form_id, $form_state) {
+	$values = $form_state['values'];
+	$l = locale_language_list($field = 'name', $all = FALSE);
+	$v = variable_get('new-custom-block-title', array());
+	foreach($l as $lcode => $lname){
+		$v[$lcode] = $values['new-custom-block-title_'.$lcode];
+	}
+	variable_set('new-custom-block-title', $v);
+}
+
+function barre_corp_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+
+    case 'list':
+      $blocks['menu_corporate']['info'] = t('Menu corporate');
+      $blocks['menu_corporate']['status'] = 1;
+      $blocks['menu_corporate']['region'] = 'header';
+      return $blocks;
+	  break;
+
+    case 'view':
+      if ($delta == 'menu_corporate') {
+        $block['subject'] = t('Menu corporate');
+        $block['content'] = theme('barre_corp_block', barre_corp_build('navcorporate'), 'navcorporate');
+		
+      }
+      return $block;
+	  break;
+
+  }    
+}
+
+
+
+
+
+
+function barre_corp_build($menu_name) {
+	
+	global $language;
+	global $base_url;
+	global $db_url; // the internal variable that contains database link
+	if (!is_array($db_url)) {
+	  $default_db = $db_url;
+	  $db_url = array('default' => $default_db);
+	}
+
+
+	$lang = $language->language;
+
+
+	//set up the new database value
+	$db_url['mydb'] = 'mysqli://portail2ws98:9df8h7d9fg4hd9f@mysqlserver01/portail2_pprd';
+	// $db_url['mydb'] = 'mysqli://portail2:ezjfl5reip%21pr8ieb7%3Ffh@mysqlserver01/portail2';
+	// $db_url['mydb'] = 'mysqli://portail2:gr7AZbcd0l@mysqlserver04/portail2';//nouveau mot de passe 13/11/2015
+
+	db_set_active('mydb');    // activation & execution same as explained above
+	$menu = menu_tree_all_data($menu_name);
+	db_set_active('default'); // set back to original
+	$menu_data = array();
+	// if($menu_name == 'navmain'){
+		// print "\n<pre>\n";
+		// print "\$menu = ";
+		// // var_dump($menu);
+		// print_r($menu);
+		// print "\n</pre>\n";
+		// exit;
+	// }
+
+
+	foreach ($menu as $key => $menu_item) {
+
+		if($menu_item['link']['hidden'] == 1){ continue; }//ne pas tenir compte des menus désactivés
+		if($menu_item['link']['link_path'] == '/' || $menu_item['link']['link_path'] == '<front>'){ $menu_item['link']['link_path'] = 'javascript:void(0)'; }//rendre inertes les menus qui n'ont pas d'url
+		if($menu_item['link']['options']['langcode'] && $menu_item['link']['options']['langcode'] != $lang){ continue; }//ne pas tenir compte des menus d'une autre langue
+
+		if(!$menu_data[$key]){
+			$menu_data[$key] = array();
+		}
+	
+		$menu_data[$key]['title'] = $menu_item['link']['link_title'];
+		$menu_data[$key]['path'] = $menu_item['link']['link_path'];
+		$menu_data[$key]['desc'] = $menu_item['link']['options']['attributes']['title'];
+		
+		if($menu_item['link']['link_path'] == $pageurl) {
+			$menu_data[$key]['current'] = 1;
+		}else{
+			$menu_data[$key]['current'] = 0;
+		}
+	
+		if($menu_item['below']){
+			if(!$menu_data[$key]['below']) {
+				$menu_data[$key]['below'] = array();
+			}
+			foreach($menu_item['below'] as $key_key => $menu_item_item){
+
+				if($menu_item_item['link']['hidden'] == 1){ continue; }//ne pas tenir compte des menus désactivés
+
+				if(!$menu_data[$key]['below'][$key_key]) {
+					$menu_data[$key]['below'][$key_key] = array();
+				}
+				$menu_data[$key]['below'][$key_key]['title'] = $menu_item_item['link']['link_title'];
+				$menu_data[$key]['below'][$key_key]['path'] = $menu_item_item['link']['link_path'];
+				$menu_data[$key]['below'][$key_key]['desc'] = $menu_item_item['link']['options']['attributes']['title'];
+				
+				if($menu_item_item['link']['link_path'] == $pageurl) {
+					$menu_data[$key]['below'][$key_key]['current'] = 1;
+				}else{
+					$menu_data[$key]['below'][$key_key]['current'] = 0;
+				}
+				if($menu_item_item['below']){
+					if(!$menu_data[$key]['below'][$key_key]['below']) {
+						$menu_data[$key]['below'][$key_key]['below'] = array();
+					}
+					foreach($menu_item_item['below'] as $key_key_key => $menu_item_item_item){
+
+						if($menu_item_item_item['link']['hidden'] == 1){ continue; }//ne pas tenir compte des menus désactivés
+
+						if(!$menu_data[$key]['below'][$key_key]['below'][$key_key_key]) {
+							$menu_data[$key]['below'][$key_key]['below'][$key_key_key] = array();
+						}
+						$menu_data[$key]['below'][$key_key]['below'][$key_key_key]['title'] = $menu_item_item['link']['link_title'];
+						$menu_data[$key]['below'][$key_key]['below'][$key_key_key]['path'] = $menu_item_item['link']['link_path'];
+						$menu_data[$key]['below'][$key_key]['below'][$key_key]['desc'] = $menu_item_item['link']['options']['attributes']['title'];
+						if($menu_item_item_item['link']['link_path'] == $pageurl) {
+							$menu_data[$key]['below'][$key_key]['below'][$key_key_key]['current'] = 1;
+						}else{
+							$menu_data[$key]['below'][$key_key]['below'][$key_key_key]['current'] = 0;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return $menu_data;
+}
+
+function barre_corp_theme() {
+	return array(
+		'barre_corp_block' => array(
+			'template' => 'barre_corp',
+			'arguments' => array('menu_data' => NULL, 'menu_name' => NULL),
+		),
+	);
+}

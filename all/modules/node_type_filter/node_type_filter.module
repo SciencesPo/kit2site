@@ -1,0 +1,32 @@
+<?php
+// $Id: node_type_filter.module,v 1.2.2.1.2.2.2.2 2008/03/21 11:47:02 nancyw Exp $
+/**
+ * @file
+ * Lets you filter node listing pages simply by &type=story,blog to the URL (for example)
+ */
+ 
+/**
+ * Implementation of hook_help().
+ */ 
+function node_type_filter_help($path, $arg) {
+  switch ($path) {
+    case 'admin/modules#description':
+      return t('filters node listings by type');
+  }
+}
+  
+/**
+ *  Implementation of hook_db_rewrite_sql().
+ */ 
+function node_type_filter_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
+  if ($primary_field == 'nid' && $primary_table=='n') {
+    if (isset($_GET['type']) && $str_types = $_GET['type']) {
+      $types = explode(',', $str_types);
+      foreach ($types as $type) {
+        $ctypes[] = db_escape_string($type);
+      }
+      $return['where'] = 'n.type IN (\''. implode("','", $ctypes) .'\')';
+      return $return;                                                      
+    }
+  }  
+} 

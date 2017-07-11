@@ -1,0 +1,5 @@
+; $Id: scpocarousel.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Scpocarousel
+description = "Permet d'ajouter le carousel de Sciences Po"
+package = Sciences-Po
+core = 6.x

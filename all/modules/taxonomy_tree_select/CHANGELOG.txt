@@ -1,0 +1,30 @@
+
+Taxonomy Tree Select 6.x-1.1
+----------------------
+- Feature request #953182 by Andreyy: Multilingual support with integration with Internationalization.
+- Fixed #1084828 bug report by mrfelton: Doesn't work in conjunction with a node form that is included in the user registration form with content profile.
+
+
+Taxonomy Tree Select 6.x-1.0
+----------------------
+- Fixed #1002290 bug report by danillonunes: Missing "None" option from non-required vocabularies.
+
+
+Taxonomy Tree Select 6.x-1.0-alpha3
+----------------------
+- #809952 Request by fschaap: Now an list of checkboxes/radios is generated via PHP instead the old JavaScript way.
+- Fixed #908910 bug report by jessehs: JS/CSS files not loading after a validation error.
+- Fixed #866036 bug report by José San Martin: Support for Mac's Command Key.
+
+
+Taxonomy Tree Select 6.x-1.0-alpha2
+----------------------
+- Fixed a bug when your save an vocabulary definitions and see the message "Missing default arguments" to variable_get function.
+- Fixed some bugs when a vocabulary has no one term.
+- #792870 Suggestion by creando sensaciones: Now a branch can be opened without select their term by clicking in their marker.
+- Fixed #792870 bug report by creando sensaciones: When you save a term, vocabulary lost their tree select setting.
+
+
+Taxonomy Tree Select 6.x-1.0-alpha1
+----------------------
+- First release :)

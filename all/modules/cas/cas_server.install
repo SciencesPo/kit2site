@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @file Cas Server Schema Install 
+ *
+ */
+
+
+/**
+ * Inastall db tables. 
+ *
+ */
+function cas_server_install() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      // the {tablename} syntax is so multisite installs can add a
+      // prefix to the table name as set in the settings.php file
+      db_query("CREATE TABLE {cas_server_tickets} (
+      service varchar(255) NOT NULL default '',
+		  ticket varchar(255) NOT NULL default '',
+		  uid int unsigned NOT NULL,
+		  timestamp int NOT NULL, 
+          PRIMARY KEY  (ticket)
+        ) /*!40100 DEFAULT CHARACTER SET utf8 */;");
+      break;
+
+    case 'pgsql':
+      db_query("CREATE TABLE {cas_server_tickets} (
+        service varchar(255) NOT NULL default '',
+        ticket varchar(255) NOT NULL default '',
+        uid integer NOT NULL CHECK (uid >= 0),
+        timestamp integer NOT NULL, 
+          PRIMARY KEY  (ticket)
+        )");
+
+      // Pgsql requires keys and indexes to be defined separately.
+      // It's important to name the index as {tablename}_fieldname_idx
+      // (the trailing _idx!) so update scripts can be written easily
+      db_query("CREATE INDEX {cas_server_tickets}_uid_idx
+                ON {cas_server_tickets} (uid)");
+      break;
+  }
+}
+
+function cas_server_update_1() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+    $items = array();
+    $items[] = update_sql("CREATE TABLE {cas_server_tickets} (
+      service varchar(255) NOT NULL default '',
+      ticket varchar(255) NOT NULL default '',
+      uid int unsigned NOT NULL,
+      timestamp int NOT NULL,
+        PRIMARY KEY  (ticket)
+      ) /*!40100 DEFAULT CHARACTER SET utf8 */;");
+      return $items;
+      break;
+
+    case 'pgsql':
+      $items = array();
+      $items[] = update_sql("CREATE TABLE {cas_server_tickets} (
+          service varchar(255) NOT NULL default '',
+          ticket varchar(255) NOT NULL default '',
+       	  uid integer NOT NULL CHECK (uid >= 0),
+       	  timestamp integer NOT NULL, 
+          PRIMARY KEY  (ticket)
+        )");
+
+      // Pgsql requires keys and indexes to be defined separately.
+      // It's important to name the index as {tablename}_fieldname_idx
+      // (the trailing _idx!) so update scripts can be written easily
+      $items[] = update_sql("CREATE INDEX {cas_server_tickets}_uid_idx
+                ON {cas_server_tickets} (uid)");
+      return $items;
+      break;
+  }
+}
+
+function cas_server_uninstall() {
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    db_query('DROP INDEX {cas_server_tickets}_uid_idx');
+  }
+  db_query('DROP TABLE {cas_server_tickets}');
+}

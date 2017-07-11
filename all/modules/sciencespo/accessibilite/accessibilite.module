@@ -1,0 +1,72 @@
+<?php
+// ; $Id: accessibilite.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+function accessibilite_init() {
+
+}
+
+function accessibilite_perm() {
+  return array('administrer accessibilite');
+}
+
+function accessibilite_menu() {
+	$items['admin/settings/accessibilite'] = array(
+	  'title' => 'Accessibilité',
+	  'description' => 'Fonctions d&#x27;accessibilit&eacute;',
+	  'page callback' => 'drupal_get_form',
+	  'page arguments' => array('accessibilite_form'),
+	  'access arguments' => array('administrer accessibilite'),
+		// 'type' => MENU_NORMAL_ITEM,
+	);
+	$items['admin/settings/accessibilite/div2h2'] = array(
+	  'title' => 'Changer les "label" en "h2"',
+	  'description' => 'Changer les <div class=field-label> en h2',
+	  'page callback' => 'drupal_get_form',
+	  'page arguments' => array('accessibilite_form'),
+	  'access arguments' => array('administrer accessibilite'),
+		'type' => MENU_DEFAULT_LOCAL_TASK,
+	);
+	return $items;
+}
+
+function accessibilite_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
+	$types = variable_get('accessibilite', array());
+	
+	if($types[$node->type] === $node->type){
+
+		$p = '/<div class="field-label">(.*?)\s*:(.*?)<\/div>/im';
+		$r = '<h2 class="field-label">$1</h2>';
+		$node->body = preg_replace($p, $r, $node->body);
+	}
+
+	// <div class="field-label">Spécialités / Fields of Expertise :&nbsp;</div>
+}
+
+function accessibilite_form(){
+	$form['accessibilite'] = array(
+		'#type' => 'checkboxes', 
+		'#title' => t('Types de contenu &agrave; modifier'), 
+		'#description' => t('Les tags <code>&lt;div class=&quot;field-label&quot;&gt;blah blah : &lt;/div&gt;</code> seront remplacés par <code>&lt;h2 class=&quot;field-label&quot;&gt;blah blah&lt;/h2&gt;</code> et les ":" seront supprimés pour les types de contenu sélectionnés'),
+		'#default_value' => variable_get('accessibilite', array()),
+		'#options' => node_get_types($op = 'names', NULL, FALSE),
+	);
+	$form['save'] = array(
+	  '#type' => 'submit',
+	  '#value' => t('Save'),
+	);
+	
+	return $form;
+}
+
+function accessibilite_form_submit($form, $form_state){
+	variable_set('accessibilite', $form_state['values']['accessibilite']);
+}
+
+//met les tables des views en accessibilite
+function accessibilite_views_post_render(&$view) {
+  foreach($view->display as $v => $vue) {
+    $titre = '<caption>'.t($view->display[$v]->display_options['title']).'</caption>';
+    $view->display[$v]->handler->output = preg_replace('/(<table.*>?)/', '${1}'.$titre, $view->display[$v]->handler->output);
+    $view->display[$v]->handler->output = str_replace('<th class', '<th scope="col" class', $view->display[$v]->handler->output);
+  }
+}

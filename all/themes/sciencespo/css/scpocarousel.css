@@ -1,0 +1,70 @@
+/* CSS du carousel, ne pas changer ! */
+.scpocarousel {
+   overflow: hidden;
+   position: relative;
+}
+
+.scpocarousel ul.ul-scpocarousel {
+   margin: 0;
+	padding: 0;
+	list-style-type: none;
+	overflow: hidden;
+	position: relative;
+}
+
+.scpocarousel ul.ul-scpocarousel li.li-scpocarousel {
+   margin: 0;
+	padding: 0;
+	float: left;
+}
+.scpocarousel ul.ul-scpocarousel li.li-scpocarousel img {
+	width: 100%;
+	height: auto;
+}
+.scpocarousel ul.ul-scpocarousel li.li-scpocarousel img.alt-display {
+   width:17px;
+   height:11px;
+   float:left;
+   margin:1px 5px 0 0 ;
+}
+.alt-display-container {
+   float:left;
+   line-height:15px;
+}
+.nav-item {
+	float: right;
+   padding-top: 16px;
+}
+.nav-arrow {
+	float: right;
+ 	padding-top: 11px;
+   padding-right: 10px;
+}
+.nav-arrow a, .nav-item a {
+	background-color:#757575;
+	border:none;
+	margin:0;
+	padding:0;
+	float: left;
+	display:inline-block;
+/*	font-size:0.1px;*/
+	line-height:0.1px;
+   	margin-left: 4px;
+}
+.nav-arrow a {
+	width: 18px;
+	height: 18px;
+/*   margin-left: 4px;*/
+   padding:0;
+}
+.nav-item a img {
+	display:inline-block;
+  	width: 8px;
+	height: 8px;
+	border:0;
+	margin:0;
+	padding:0;
+}
+.nav-arrow a, .nav-item a {
+   cursor:pointer;
+}

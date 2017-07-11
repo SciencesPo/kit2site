@@ -1,0 +1,5 @@
+; $Id: faq.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = FAQ
+description = "Permet d'ajouter une question à la FAQ"
+package = Sciences-Po
+core = 6.x

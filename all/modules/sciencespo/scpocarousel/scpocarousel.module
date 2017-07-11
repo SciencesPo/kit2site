@@ -1,0 +1,135 @@
+<?php
+// ; $Id: scpocarousel.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+* @file
+* Ajoute le carousel de Sciences Po
+*/
+
+/**
+* Implementation of hook_init().
+*/
+function scpocarousel_init()
+{
+	drupal_add_css('sites/all/modules/sciencespo/scpocarousel/scpocarousel.css', $type = 'module', $media = 'all', $preprocess = TRUE);
+	drupal_add_js(drupal_get_path('module', 'scpocarousel').'/scpocarousel.js');
+}
+
+/**
+* Génère le thème du carousel 
+* @id : l'identifiant de la div dont on applique le carousel
+* @items : le tableau contenant le contenu de chaque li
+*/
+function theme_carousel($id, $items = array(), $options = array())
+{
+	global $base_url;
+	if ($options['ratio']) {
+		$ratio = $options['ratio'];
+	} else {
+		$ratio = 'false';
+	}
+	$script = '$(document).ready(function() {
+		$("'.$id.'").scpocarousel({ratio: '.$ratio.'});
+	});';
+	
+	drupal_add_js($script, 'inline');
+
+	/* Rajout d'une class sur les ul/li pour éviter d'appliquer un carousel aux ul/li intèrieur */
+	$newitems = array();
+	$idsnot = array("#carousel_dernieres_publications", "#carousel_scpo_on_the_web", "#carousel_partenaires", "#carousel_publisspire");
+	foreach ($items as $item) {
+		if(!in_array($id, $idsnot)){
+         if(strstr($item, '<img')) {
+   			$p = '/alt="(.+)" [title|src]/';
+   			preg_match($p, $item, $matches);
+
+   			$pp = '/(<p>.+<\/p>)/';
+			
+			if(!empty($matches)){
+	   			if(!empty($pmatches)){
+	   				$alter = '<span class="alt-display-container"><img class="alt-display" src="'.$base_url.'/sites/all/themes/sciencespo/images/icon_photo.png" alt="" />'.$matches[1].'</span><br />'.$pmatches[1];
+	   				$item = str_replace($pmatches[1], $alter, $item);
+	   			}else{//si balise alt
+	   			   $item .= '<span class="alt-display-container"><img class="alt-display" src="'.$base_url.'/sites/all/themes/sciencespo/images/icon_photo.png" alt=""/>'.$matches[1].'</span><br />';
+	   			}
+			}
+         }else{
+            $item = html_entity_decode($item);
+            $p = '/longdesc="(.*?)"/';
+            preg_match($p, $item, $matches);
+            if(!empty($matches)){
+               $item .= '<span class="alt-display-container">'.l(t('Text alternative for the video'), $matches[1]).'</span><br />';
+            }
+         }
+		}
+
+		$newitems[] = array( 'data' => $item, 'class' => 'li-scpocarousel' );
+	}
+	$list = theme_item_list($newitems, $title = NULL, $type = 'ul', array('class' => 'ul-scpocarousel'));
+	return $list;
+}
+
+/**
+* Implementation of hook_nodeapi().
+*/
+function scpocarousel_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL)
+{
+	if ($node->type == 'scpocarousel') {
+		switch ($op) {
+			case 'view' :
+            $items_tries = array();
+   			foreach ($node->field_contenu_scpocarousel as $contenu) {
+               $q = "SELECT n.nid, n.sticky FROM node n WHERE nid = %d";
+               $r = db_query($q, array($contenu['nid']));
+               while ($row = db_fetch_array($r)) {
+                  $items_tries[$row['nid']] = $row['sticky'];
+               }
+            }
+               arsort($items_tries);
+   			$items = array();
+   			foreach ($items_tries as $nid => $sticky) {
+   				$c = node_load(array('nid' => $nid));
+   				$c_view = node_view($c);
+   				$items[] = '<h2>'.htmlspecialchars($c->title).'</h2>'.$c_view;
+   			}
+ 
+				unset($node->content['field_contenu_scpocarousel']);
+				$node->content['body']['#value'] = '<div id="carousel-contenu">'.theme_carousel('#node-'.$node->nid.' #carousel-contenu', $items, array('ratio' => true)).'</div>';
+				break;
+		}
+	} 
+}
+
+
+/**
+* Implementation of hook_form_alter().
+* Modifie le formulaire d'édition de scpocarousel pour 
+* qu'il prenne en compte les types de contenu commencant par "cc_"
+*/
+
+function scpocarousel_form_alter(&$form, &$form_state, $form_id) {
+	switch ($form_id) {
+		case 'scpocarousel_node_form':
+			foreach($form['#field_info']['field_contenu_scpocarousel']['referenceable_types'] as $f => $s) {
+				if(strstr($f, 'cc_')) {
+					$form['#field_info']['field_contenu_scpocarousel']['referenceable_types'][$f] = $f;
+				}
+			}
+		break;
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

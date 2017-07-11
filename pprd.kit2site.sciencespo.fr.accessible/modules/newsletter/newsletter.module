@@ -1,0 +1,230 @@
+<?php
+// ; $Id: newsletter.info,v 1 2012/04/20 02:04:11 sun Exp $
+/*
+COMMANDES SOAP SYMPA
+-login : user email and passwords are checked against Sympa user DB, or another backend.
+-casLogin : this function will verify CAS proxy tickets against the CAS server
+-authenticateAndRun : useful for SOAP clients that can't set an HTTP cookie ; they can provide both the Sympa session cookie and the requested command in a single call
+-authenticateRemoteAppAndRun : equivalent of the previous command used in a trusted context (see trust_remote_applications)
+-lists : provides a list of available lists (authorization scenarios are applied)
+-complexLists : same as the previous feature, but provides a complex structure for each list
+-info : provides description informations about a given list
+-which : gets the list of subscription of a given user
+-complexWhich : same as previous command, but provides a complex structure for each list
+-amI : tells if a given user is member of a given list
+-review : lists the members of a given list
+-subscribe : subscribes the current user to a given list
+-signoff : current user is removed from a given list
+-add : used to add a given user to a given list (admin feature)
+-del : removes a given user from a given list (admin feature)
+-createList : creates a new mailing list (requires appropriate privileges)
+-closeList : closes a given mailing list (admin feature)
+
+*/
+/*
+ * Implementation of hook_init()
+ */
+function newsletter_init(){
+   include('newsletter.inc');
+   include('newsletter.block.inc');
+   include('newsletter.forms.inc');
+
+   drupal_add_css(drupal_get_path('module', 'newsletter') .'/newsletter.css', 'module');
+   global $txt_default;
+   $txt_default = array(
+      'etiquettes' => array(
+         'newsletter' => 'Titre de la page',
+         'intro' => 'Texte d\'intro',
+         'avert' => 'Avertissement légal',
+         'sabonner' => 'Bouton radio d\'abonnement',
+         'sedesabonner' => 'Bouton radio de désabonnement',
+         'email-txt' => 'Texte avant champ email',
+         'email' => 'Étiquette champ email',
+         'warning-mail-wrong' => 'Alerte champ email mal rempli',
+         'warning-mail-empty' => 'Alerte pas champ email pas rempli',
+         'already_subscribed' => 'Confirmation après enregistrement :  a tenté de s\'abonner à la (les) liste(s) en étant déjà abonné',
+         'new_subscribing' => 'Confirmation après enregistrement :  a été abonné à une (des) nouvelle(s) liste(s)',
+         'unsubscribing' => 'Confirmation après enregistrement :  a été désabonné à la (les) liste(s)',
+         'not_subscribed' => 'Confirmation après enregistrement : a tenté de se désabonner à la liste sans y être abonné',
+         'merci' => 'Confirmation après enregistrement : remerciements',
+         'archives' => 'Consulter les archives',
+      ),
+      'fr' => array(
+         'newsletter' => '<span lang="en">Newsletter</span>',
+         'intro' => 'Indispensable pour être toujours au courant de ce qui se passe à Sciences Po. Vous pouvez vous inscrire à nos listes de diffusion, le meilleur moyen de découvrir les nouveaux articles, les chroniques ou notes nouvellement sorties.',
+         'avert' => 'Conformément à la réglementation de la Commission Nationale de l\'informatique et des Libertés (CNIL), votre adresse e-mail ne sera utilisée que pour vous faire parvenir notre lettre de diffusion.',
+         'sabonner' => 'S\'abonner',
+         'sedesabonner' => 'Se désabonner',
+         'email-txt' => 'Choisissez une ou plusieurs <span lang="en">newsletters</span>, entrez votre adresse e-mail puis cliquez sur "Ok"',
+         'email' => 'Votre adresse e-mail',
+         'warning-mail-wrong' => 'L\'adresse e-mail que vous avez saisie n\'est pas valide (elle doit être de la forme nom@domaine.xxx)',
+         'warning-mail-empty' => 'Vous devez fournir votre adresse e-mail',
+         'already_subscribed' => 'Vous êtes déjà abonné à ',
+         'new_subscribing' => 'Vous êtes dorénavant abonné à ',
+         'unsubscribing' => 'Vous avez été désabonné de ',
+         'not_subscribed' => 'Vous n\'êtes pas abonné avec cette adresse à ',
+         'merci' => 'Merci pour votre participation !',
+         'archives' => 'Consulter les archives',
+      ),
+      'en' => array(
+         'intro' => 'English introduction',
+         'avert' => 'English legal text',
+         'newsletter' => 'Newsletter',
+         'sabonner' => 'Subscribe',
+         'sedesabonner' => 'Unsubscribe',
+         'email-txt' => 'Please choose one or several newsletters and enter your email address then cilck "Ok"',
+         'email' => 'Your email address',
+         'warning-mail-wrong' => 'Invalid email address (should be name@domain.xxx)',
+         'warning-mail-empty' => 'You must enter your email address',
+         'already_subscribed' => 'You have already subscribed to ',
+         'new_subscribing' => 'You have now subscribed to ',
+         'unsubscribing' => 'You unsubscribed to ',
+         'not_subscribed' => 'You haven\'t subscribed yet, or not with this email, to ',
+         'merci' => 'Thanks for your input !',
+         'archives' => 'Read the newsletter archive',
+      ),
+   );
+
+//liste des newsletters disponibles dans sympa
+   global $sympa_lists;
+   // $sympa_lists = array();
+   // global $abonnes;
+   global $default;
+   global $textes;
+
+//dev only
+   // variable_set('textes_page_newsletter', $txt_default);
+///dev only
+
+	$textes = variable_get('textes_page_newsletter', $txt_default);
+
+   $default = array('soapFileWsdl' => "http://ldd01.sciences-po.fr/sympa/wsdl", 'soapServer' => "http://ldd01.sciences-po.fr:81/sympasoap/", 'trusted_application' => 'foo_proxy',  'trusted_application_password' => 'foo', 'proxy_vars' => 'USER_EMAIL=prs@sciences-po.fr');
+}
+/**
+ * Implementation of hook_perm().
+ */
+function newsletter_perm() {
+  return array('access newsletter', 'settings server newsletter');
+}
+
+
+/*
+ * Implementation of hook_menu()
+ */
+function newsletter_menu() {
+	$items = array();
+
+   $items['admin/settings/newsletter'] = array(
+      'title' => t('Newsletter settings'),
+      'description'      => t('Configuration de la newsletter'),
+      'page callback'    => 'drupal_get_form',
+      'page arguments'   => array('newsletter_overview_form'),
+      'file' => 'newsletter.forms.inc' ,
+      'access arguments' => array('access newsletter'),
+      'type' => MENU_NORMAL_ITEM,
+   );
+	
+	$items['admin/settings/newsletter/configure'] = array(
+		'title' => t('Newsletter configuration'),
+		'description'      => t('Configure le serveur de newsletter'),
+		'page callback'    => 'drupal_get_form',
+		'page arguments'   => array('newsletter_admin_settings'),
+      'file' => 'newsletter.forms.inc' ,
+		'access arguments' => array('settings server newsletter'),
+		'type' => MENU_LOCAL_TASK,
+	);
+   $items['admin/settings/newsletter/textes'] = array(
+   	'title' => t('Textes de l\'interface newsletter'),
+   	'description'      => t('Textes et traductions de l\'interface newsletter'),
+		'page callback'    => 'drupal_get_form',
+   	'page arguments'   => array('newsletter_txt_settings'),
+      'file' => 'newsletter.forms.inc' ,
+   	'access arguments' => array('access newsletter'),
+   	'type' => MENU_LOCAL_TASK,
+   );
+	$items['admin/settings/newsletter/listes'] = array(
+		'title' => t('Newsletter listes'),
+		'description'      => t('Configure les listes de newsletter'),
+      'page callback'    => 'drupal_get_form',
+      'page arguments'   => array('newsletter_overview_form'),
+      'file' => 'newsletter.forms.inc' ,
+      'access arguments' => array('access newsletter'),
+		'type' => MENU_DEFAULT_LOCAL_TASK,
+	);
+	$items['newsletter-inscription'] = array(
+		'title' => t('Subscribe to website newsletters'),
+		'page callback' => 'newsletter_page_inscription',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+   $items['newsletter-abonnes'] = array(
+   	'page callback' => 'newsletter_get_abonnes',
+   	'access callback' => TRUE,
+   	'type' => MENU_CALLBACK,
+   );
+
+	return $items;
+}
+
+function newsletter_get_abonnes($name) {
+	$name = str_replace('_', '.', $name);
+   global $default;
+	$sympa = variable_get('sympa', $default);
+	$options	= array('compression'=>false, 'exceptions'=>false, 'wsdl_cache' => 0, 'trace'=>true, 'uri' => $sympa['soapServer'], 'location' => $sympa['soapServer'] );
+	$soapclient = new SoapClient(null, $options);
+   $ab = $soapclient->authenticateRemoteAppAndRun($sympa['trusted_application'], $sympa['trusted_application_password'], $sympa['proxy_vars'], 'review', array($name));
+
+
+   $filename = "Abonnes_".$name.".xls";
+   $rows[] = "Adresse de messagerie\tNom";
+   foreach ($ab as $an) {
+      $a = explode(";", $an);
+      $rows[] = implode("\t", $a);
+   }
+   $contents = implode("\n", $rows);
+   header('Content-type: application/ms-excel');
+   header('Content-Disposition: attachment; filename='.$filename);
+   print $contents;
+   exit;
+
+   // drupal_goto('admin/settings/newsletter/listes');
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function newsletter_theme() {
+  return array(
+    'newsletter_overview_form' => array(
+      'arguments' => array(
+         'form' => array(),
+         ),
+      ),
+    'newsletter_txt_form' => array(
+      'arguments' => array(
+         'form' => array(),
+         ),
+      ),
+    
+  );
+  
+}
+
+
+/*
+ * page d'inscription à la newsletter
+ */
+function newsletter_page_inscription($arg1 = NULL, $arg2 = NULL) {
+	global $language;
+	$lg = $language->language;
+	global $textes;
+
+   $content = '<h1 class="title-article">'.$textes[$lg]['newsletter'].'</h1>';
+   $content .= '<p>'.$textes[$lg]['intro'].'</p>';
+   $content .= '<p>'.$textes[$lg]['avert'].'</p>';
+   $content .= drupal_get_form('newsletter_list_form');
+	return $content;
+}
+
+
+

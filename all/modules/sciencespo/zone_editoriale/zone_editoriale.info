@@ -1,0 +1,5 @@
+; $Id: zone_editoriale.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Zone éditoriale
+description = "Permet d'ajouter la zone éditoriale"
+package = Sciences-Po
+core = 6.x

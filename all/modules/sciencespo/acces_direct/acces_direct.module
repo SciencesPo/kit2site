@@ -1,0 +1,130 @@
+<?php
+// ; $Id: acces_direct.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute l'accès direct à une section du site
+ */
+
+/**
+ * Implementation of hook_perm().
+ */
+function acces_direct_perm() {
+  return array('access acces direct');
+}
+
+/*
+ * Implementation of hook_form_alter
+ * Cache le titre des blocs acces_direct (remplacé par le champ $form['acces_direct'])
+ */
+function acces_direct_form_alter(&$form, &$form_state, $form_id) {
+	switch ($form_id) {
+		case 'block_admin_configure':
+			if($form['delta']['#value'] == 'acces_direct') {
+				unset($form['block_settings']['title']);				
+			}
+		break;
+	}
+}
+
+/*
+ * Implementation of hook_block
+ */
+function acces_direct_block($op = 'list', $delta = 0, $edit = array()) {
+
+	global $base_url;
+	global $language;
+	
+    switch ($op) {
+		case 'list':
+			$blocks['acces_direct'] = array(
+				'info' => t('Direct Access'),
+				'status' => 1,
+				'region' => 'footer',
+			);
+			return $blocks;
+		break;
+		
+		case 'configure':
+			$acces_direct = variable_get('acces_direct_titre', array());
+			$form['acces_direct_fr'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in french'),
+				'#default_value' => $acces_direct['fr'], 
+			);
+			$form['acces_direct_en'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in english'),
+				'#default_value' => $acces_direct['en'],
+			);
+			return $form;
+			
+		break;
+		
+		case 'save':
+			$acces_direct = array();
+			$acces_direct['fr'] = $edit['acces_direct_fr'];
+			$acces_direct['en'] = $edit['acces_direct_en'];
+			variable_set('acces_direct_titre', $acces_direct);
+		break;
+		
+		case 'view':
+			switch ($delta) {
+				case 'acces_direct':
+				
+					global $language;
+				
+					$acces_direct = variable_get('acces_direct_titre', array('fr' => 'Accès direct', 'en' => 'Direct Access'));
+					$content = '<select onchange="location.href=this.value"><option class="selectable">'.$acces_direct[$language->language].'</option>';
+					
+					$m = menu_tree_all_data($menu_name = 'primary-links');
+
+					$footerNiveauAD = variable_get('footerNiveauAD', 2);
+					
+					foreach ($m as $menu) {
+						if($menu['link']['hidden'] == "1") {
+							continue;
+						}
+						if ($menu['link']['options']['langcode'] == $language->language || !isset($menu['link']['options']['langcode'])) {
+							if ($menu['link']['link_path'] != 'la-page-d-accueil') {
+							
+								if ($menu['link']['link_path'] != '<front>' && $menu['link']['link_path'] != '') {
+									$option_attr_value = 'value="'.$base_url.'/'.drupal_get_path_alias($menu['link']['link_path'], $language->language).'"';
+									$option_attr_disabled = '';
+								} else {
+									$option_attr_value = '';
+									$option_attr_disabled = 'disabled=""';
+								}
+							
+								$content .= '<option '.$option_attr_disabled.' '.$option_attr_value.'>'.$menu['link']['title'].'</option>';
+								if (!empty($menu['below'])) {
+									foreach ($menu['below'] as $sousmenu) {
+										$content .= '<option class="selectable" value="'.$base_url.'/'.drupal_get_path_alias($sousmenu['link']['link_path'], $language->language).'"> - '.$sousmenu['link']['title'].'</option>';
+										
+										//On vérifie si on doit afficher le niveau 3
+										if ($footerNiveauAD == 3) {
+											if (!empty($sousmenu['below'])) {
+												foreach ($sousmenu['below'] as $soussousmenu) {
+													$content .= '<option class="selectable" value="'.$base_url.'/'.$language->language.'/'.drupal_get_path_alias($soussousmenu['link']['link_path'], $path_language = '').'"> - - '.$soussousmenu['link']['title'].'</option>';
+												}
+											}
+										}
+										
+									}
+								}
+							}
+						}
+					}
+					
+					$content .= '</select>';
+
+					$block['content'] =	$content;
+ 
+				break;
+			}
+			return $block;
+
+		break;
+	}
+}
+

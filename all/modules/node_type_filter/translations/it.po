@@ -1,0 +1,24 @@
+# $Id $
+# LANGUAGE translation of PROJECT
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: V 1.00\n"
+"POT-Creation-Date: 2005-07-22 12:43+0200\n"
+"PO-Revision-Date: 2005-07-22 12:44+0100\n"
+"Last-Translator: Matteo Ferrari <webmaster@cantincoro.org>\n"
+"Language-Team:  MATTEO <m.ferrari@tiscali.it>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: d:\cantincorov2\modules\node_type_filter.module:14
+msgid "filters node listings by type"
+msgstr "filtra le liste di nodi per tipo"
+
+#: d:\cantincorov2\modules\node_type_filter.module:0
+msgid "node_type_filter"
+msgstr "filtro_tipo_nodi"
+

@@ -1,0 +1,5 @@
+; $Id: stats_edito.info,v 1 2011/10/14 09:00:00 sun Exp $
+name = Statistiques de la zone éditoriale
+description = "Permet d'enregistrer les statistiques de la zone éditoriale"
+package = Sciences-Po
+core = 6.x

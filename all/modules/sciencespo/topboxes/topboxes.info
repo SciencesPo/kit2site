@@ -1,0 +1,5 @@
+name = topboxes
+description = "Gestion des trois boites déroulantes du header"
+core = 6.x
+
+package = Sciences-Po

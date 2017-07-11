@@ -1,0 +1,168 @@
+jQuery(document).ready(function() {
+
+	window.Drupal.settings.selector = new Object();
+	window.Drupal.settings.selector.stop = new Object();
+	window.Drupal.settings.selector.stop = 0;
+	window.Drupal.settings.selector.open = new Object();
+	window.Drupal.settings.selector.open = 0;
+
+	window.Drupal.settings.langue_selector = new Object();
+	window.Drupal.settings.langue_selector.stop = new Object();
+	window.Drupal.settings.langue_selector.stop = 0;
+	window.Drupal.settings.langue_selector.open = new Object();
+	window.Drupal.settings.langue_selector.open = 0;
+
+	window.Drupal.settings.custom_selector = new Object();
+	window.Drupal.settings.custom_selector.stop = new Object();
+	window.Drupal.settings.custom_selector.stop = 0;
+	window.Drupal.settings.custom_selector.open = new Object();
+	window.Drupal.settings.custom_selector.open = 0;
+	
+
+
+//SELECTEUR DE LANGUES ********************************************************************************************************************
+
+   $('#block-locale-0 li:not(li.first)').css('display','none');
+
+	var html = $('#block-locale-0 li.first').html();
+	$('#block-locale-0 li.first').html( html + '<span id="langue_fleche" class="menu-fleche"></span>');
+	$('#langue_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt="fleche_droite"/>');
+
+	$('#block-locale-0').bind('mouseenter',function(){
+	if(window.Drupal.settings.langue_selector.stop == 0){
+	  window.Drupal.settings.langue_selector.stop = 1;
+	  window.Drupal.settings.langue_selector.open = 1;
+
+	  
+	  $('#block-locale-0 li:first-child').css('border-bottom','1px dotted black');
+	  
+
+	  $('#langue_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechebas.png" alt="fleche_droite"/>');
+	  
+	  $('#block-locale-0  li:not(li.first)').slideDown('slow', function(){
+		if(window.Drupal.settings.langue_selector.open == 0){
+		  $('#block-locale-0  li:not(li.first)').slideUp('slow', function(){
+			$('#langue_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt="fleche_droite"/>');
+			window.Drupal.settings.langue_selector.stop = 0;
+
+
+			});
+           
+		}
+		else{
+		  window.Drupal.settings.langue_selector.stop = 0;
+		}
+	  });
+	}
+	});
+
+	$('#block-locale-0').bind('mouseleave',function(){
+	if(window.Drupal.settings.langue_selector.stop == 0){
+	  window.Drupal.settings.langue_selector.stop = 1;
+	  window.Drupal.settings.langue_selector.open = 0;
+
+	  $('#langue_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt="fleche_droite"/>');
+	  $('#block-locale-0  li:not(li.first)').slideUp('slow', function(){window.Drupal.settings.langue_selector.stop = 0});
+      $('#block-locale-0 li:first-child').css('border-bottom','none');
+
+	  }
+	else if(window.Drupal.settings.langue_selector.open == 1){
+	  window.Drupal.settings.langue_selector.open = 0;
+	}
+	});
+
+//LOGIN ********************************************************************************************************************
+
+   $('#block-mise_en_page-SPlogin li:not(li.first)').css('display','none');
+
+	$('#block-mise_en_page-SPlogin').bind('mouseenter',function(){
+	if(window.Drupal.settings.selector.stop == 0){
+	  window.Drupal.settings.selector.stop = 1;
+	  window.Drupal.settings.selector.open = 1;
+
+	  
+  	  $('#block-mise_en_page-SPlogin li:first-child').css('border-bottom','1px dotted black');
+	  
+	  
+	  
+	  
+	  $('#login_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechebas.png" alt="fleche_droite"/>');
+	  
+	  $('#block-mise_en_page-SPlogin li:not(li.first)').slideDown('slow', function(){
+		if(window.Drupal.settings.selector.open == 0){
+		  $('#block-mise_en_page-SPlogin li:not(li.first)').slideUp('slow', function(){
+			$('#login_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt="fleche_droite"/>');
+			window.Drupal.settings.selector.stop = 0;
+		  });
+		}
+		else{
+		  window.Drupal.settings.selector.stop = 0;
+		}
+	  });
+	}
+	});
+
+	$('#block-mise_en_page-SPlogin').bind('mouseleave',function(){
+	if(window.Drupal.settings.selector.stop == 0){
+	  window.Drupal.settings.selector.stop = 1;
+	  window.Drupal.settings.selector.open = 0;
+
+	  $('#login_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt="fleche_droite"/>');
+	  $('#block-mise_en_page-SPlogin li:not(li.first)').slideUp('slow', function(){window.Drupal.settings.selector.stop = 0});
+  	  $('#block-mise_en_page-SPlogin li:first-child').css('border-bottom','none');
+	}
+	else if(window.Drupal.settings.selector.open == 1){
+	  window.Drupal.settings.selector.open = 0;
+	}
+	});
+
+
+
+
+
+
+//CUSTOM BLOCK MENU ******************************************************************************************************************
+
+  
+   $('#block-mise_en_page-custom  li:not(li.first)').css('display','none');
+
+
+	$('#block-mise_en_page-custom').bind('mouseenter',function(){
+	if(window.Drupal.settings.custom_selector.stop == 0){
+	  window.Drupal.settings.custom_selector.stop = 1;
+	  window.Drupal.settings.custom_selector.open = 1;
+
+   	  $('#block-mise_en_page-custom li:first-child').css('border-bottom','1px dotted black');
+
+	  $('#custom_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechebas.png" alt="fleche_droite"/>');
+	  $('#block-mise_en_page-custom  li:not(li.first)').slideDown('slow', function(){
+		if(window.Drupal.settings.custom_selector.open == 0){
+		  $('#block-mise_en_page-custom  li:not(li.first)').slideUp('slow', function(){
+			$('#custom_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt="fleche_droite"/>');
+			window.Drupal.settings.custom_selector.stop = 0;
+		  });
+		}
+		else{
+		  window.Drupal.settings.custom_selector.stop = 0;
+		}
+	  });
+	}
+	});
+
+	$('#block-mise_en_page-custom').bind('mouseleave',function(){
+	if(window.Drupal.settings.custom_selector.stop == 0){
+	  window.Drupal.settings.custom_selector.stop = 1;
+	  window.Drupal.settings.custom_selector.open = 0;
+
+	  $('#custom_fleche').html('<img src="' + BaseUrl + '/sites/all/themes/sciencespo/images/icon_flechedroite.png" alt="fleche_droite"/>');
+	  $('#block-mise_en_page-custom li:not(li.first)').slideUp('slow', function(){window.Drupal.settings.custom_selector.stop = 0});
+   	  $('#block-mise_en_page-custom li:first-child').css('border-bottom','none');
+	}
+	else if(window.Drupal.settings.custom_selector.open == 1){
+	  window.Drupal.settings.custom_selector.open = 0;
+	}
+	});
+
+
+  
+});

@@ -1,0 +1,7 @@
+; $Id: nice_menus.info,v 1.6 2007/11/14 04:30:26 add1sun Exp $
+name = Nice Menus
+description = CSS/jQuery drop-down, drop-right and drop-left menus to be placed in blocks
+dependencies[] = menu
+package = Sciences-Po
+core = 6.x
+

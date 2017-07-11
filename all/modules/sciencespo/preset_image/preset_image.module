@@ -1,0 +1,52 @@
+﻿<?php
+// ; $Id: preset_image.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+* @file
+* Ajoute la génération d'images selon des présets définis
+*/
+
+/**
+* Implementation of hook_nodeapi().
+*/
+function preset_image_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL)
+{
+	if ($node->type == 'actualite') {
+		switch ($op) {
+			case 'insert' :
+				preset_image_generate_all_action($node);
+				break;
+			case 'update' :
+				preset_image_generate_all_action($node);
+				break;
+		}
+	}
+}
+
+/**
+ * ""imagecache_generate_all_action""
+ * Generate all imagecache presets for the given node.
+ *
+ * @param $node
+ *   A node object.
+ * @param $context
+ *   Contains values from the calling action.
+ *
+ * @see imagecache_action_info()
+ */
+function preset_image_generate_all_action($node)
+{
+	$files = imagecache_get_images_in_node($node);
+	$presets = imagecache_presets();
+	if (!empty($files) && !empty($presets)) {
+		foreach ($files as $file) {
+			foreach ($presets as $presetname) {
+				//On modifie la fonction pour n'effectuer que les présets correspondant au type de contenu
+				if (strpos($presetname['presetname'], $node->type) !== false) {
+					imagecache_generate_image($presetname['presetname'], $file['filepath']);
+				}
+			}
+		}
+	}
+}	
+

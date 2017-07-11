@@ -1,0 +1,5 @@
+; $Id: deployment.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Deployment
+description = "Gère des actions de migration et de déploiement"
+package = Sciences-Po
+core = 6.x

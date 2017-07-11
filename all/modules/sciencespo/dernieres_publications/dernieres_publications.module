@@ -1,0 +1,244 @@
+<?php
+// ; $Id: dernieres_publications.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute les dernières publications
+ */
+
+/**
+ * Implementation of hook_perm().
+ */
+function dernieres_publications_perm()
+{
+  return array('access dernieres publications');
+}
+
+/*
+* Implementation of hook_menu
+*/
+function dernieres_publications_menu()
+{
+	global $language;
+	$items = array();
+	$dernieres_publications = variable_get('dernieres_publications_titre', array('fr' => 'Dernières publications', 'en' => 'Last Publications'));
+
+	$items['publication'] = array(
+		'title' => $dernieres_publications[$language->language],
+		'page callback' => 'dernieres_publications_liste_des_publications',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	return $items;
+}
+
+/*
+ * Implementation of hook_form_alter
+ * Cache le titre des blocs dernieres_publications (remplacé par le champ $form['dernieres_publications'])
+ */
+function dernieres_publications_form_alter(&$form, &$form_state, $form_id)
+{
+	switch ($form_id) {
+		case 'block_admin_configure':
+			if($form['delta']['#value'] == 'dernieres_publications') {
+				unset($form['block_settings']['title']);				
+			}
+		break;
+	}
+}
+
+/*
+ * Implementation of hook_block
+ */
+function dernieres_publications_block($op = 'list', $delta = 0, $edit = array()) {
+
+	global $base_url;
+	global $language;
+	
+    switch ($op) {
+		case 'list':
+			$blocks['dernieres_publications'] = array(
+				'info' => t('Last Publications'),
+				'status' => 0,
+			);
+			return $blocks;
+		break;
+		
+		case 'configure':
+			$dernieres_publications = variable_get('dernieres_publications_titre', array());
+			$form['dernieres_publications_fr'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in french'),
+				'#default_value' => $dernieres_publications['fr'], 
+			);
+			$form['dernieres_publications_en'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in english'),
+				'#default_value' => $dernieres_publications['en'],
+			);
+			$form['dernieres_publications_nb'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Vertical image number'),
+				'#default_value' => $dernieres_publications['nb'],
+			);
+			$form['dernieres_publications_nbpage'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Max Number of Pages'),
+				'#default_value' => $dernieres_publications['nbpage'],
+			);
+			return $form;
+			
+		break;
+		
+		case 'save':
+			$dernieres_publications = array();
+			$dernieres_publications['fr'] = $edit['dernieres_publications_fr'];
+			$dernieres_publications['en'] = $edit['dernieres_publications_en'];
+			$dernieres_publications['nb'] = $edit['dernieres_publications_nb'];
+			$dernieres_publications['nbpage'] = $edit['dernieres_publications_nbpage'];
+			variable_set('dernieres_publications_titre', $dernieres_publications);
+		break;
+		
+		case 'view':
+			switch ($delta) {
+				case 'dernieres_publications':
+				
+					global $language;
+				
+					$dernieres_publications = variable_get('dernieres_publications_titre', array('nb' => 2, 'fr' => 'Dernières publications', 'en' => 'Last Publications'));
+					$subject = $dernieres_publications[$language->language];
+					
+					/* Il nous faut le nombre de résultats */
+					$sql = "	SELECT count(N.nid) AS nb
+								FROM {node} AS N
+								WHERE N.type = '%s'
+									AND N.status = %d
+									AND (N.language = '' OR N.language = '%s') ";
+					if(!empty($dernieres_publications['nbpage'])){
+                                          $limit = $dernieres_publications['nbpage'] * $dernieres_publications['nb'];
+                                          $sql .= " LIMIT 0, ".$limit;
+                                        }
+					$res = db_query($sql, array('dernieres_publications', 1, $language->language));
+					
+					$dn = db_fetch_array($res);
+					$n = $dn['nb'];
+					$nb = $dernieres_publications['nb'];
+
+					/* Puis on effectue la requête */
+					$q = "	SELECT N.nid
+								FROM {node} AS N
+								WHERE N.type = '%s'
+									AND N.status = %d
+									AND (N.language = '' OR N.language = '%s') 
+									ORDER BY N.sticky DESC, N.created DESC ";
+								
+					if(!empty($dernieres_publications['nbpage'])){
+                                          $limit = $dernieres_publications['nbpage'] * $dernieres_publications['nb'];
+                                          $q .= " LIMIT 0, ".$limit;
+                                        }
+					$r = db_query($q, array('dernieres_publications', 1, $language->language));
+					
+					$items = array();
+					$temp = '';
+					$count = 0;
+					
+					while ($dernieres_publications = db_fetch_array($r)) {
+						$c = node_load(array('nid' => $dernieres_publications['nid']));
+						$temp .= '
+							<div class="dernieres_publications clearfix">
+								<div class="image">'.theme_image($c->field_image_dernieres_publi[0]['filepath'], trim($c->field_image_dernieres_publi[0]['data']['alt']), trim($c->field_image_dernieres_publi[0]['data']['title']), '', false).'</div>
+								<div class="content">
+									<h3>'.l($c->title, $c->field_lien_dernieres_publi[0]['value'], array('attributes' => array('target' => '_blank'))).'</h3>
+									<div class="auteur">'.$c->field_auteur_dernieres_publi[0]['value'].'</div>
+								</div>
+							</div>
+						';
+						$count++;
+						/* Si on est dans le dernier élément et que le nombre est impair, on l'injecte dans la liste  */
+						if ($count%$nb == 0) {
+							$items[] = $temp;
+							$temp = '';
+						}else if ($count == $n){
+							$items[] = $temp;
+							$temp = '';
+						}
+					}
+					
+					$content = '
+						<div id="carousel_dernieres_publications">'.theme_carousel('#carousel_dernieres_publications', $items).'</div>
+						<div class="all">'.l(t('See all'), 'publication').'</div>
+					';
+					
+					$block['subject'] = $subject;
+					$block['content'] =	$content;
+ 
+				break;
+			}
+			return $block;
+
+		break;
+	}
+}
+
+/**
+* Construit la liste des publications
+*/
+function dernieres_publications_liste_des_publications()
+{
+	global $language;
+	menu_cache_clear('primary');
+
+	$publications = variable_get('dernieres_publications_titre', array('fr' => 'Dernières publications', 'en' => 'Last Publications'));
+	$title = $publications[$language->language];
+        drupal_set_title($publications[$language->language]);
+	$q = "	SELECT N.nid
+				FROM {node} AS N
+				WHERE N.type = '%s'
+					AND N.status = %d
+					AND (N.language = '' OR N.language = '%s') 
+					ORDER BY N.sticky DESC, N.created DESC ";
+				
+	$r = db_query($q, array('dernieres_publications', 1, $language->language));
+	
+	$items = array();
+	$count = 0;
+	
+	while ($publications = db_fetch_array($r)) {
+		$c = node_load(array('nid' => $publications['nid']));
+		$i = '<div class="image">
+			<!--<a href="'.$c->field_lien_dernieres_publi[0]['value'].'" target="_blank">-->
+				'.theme_image($c->field_image_dernieres_publi[0]['filepath'], trim($c->field_image_dernieres_publi[0]['data']['alt']), trim($c->field_image_dernieres_publi[0]['data']['title']), array('width' => '40', 'height' => '62'), false).'
+			<!--</a>-->
+		</div>';
+		$d = '<div class="content">
+			<h2>'.l($c->title, $c->field_lien_dernieres_publi[0]['value'], array('attributes' => array('target' => '_blank'))).'</h2>
+			<div class="auteur">'.$c->field_auteur_dernieres_publi[0]['value'].'</div>
+		</div>';
+		if ($count%2 == 0) {
+			$items[] = array( 'data' => $i.$d, 'class' => 'even publication clearfix' );
+		}else{
+			$items[] = array( 'data' => $i.$d, 'class' => 'odd publication clearfix' );
+		}
+		$count++;
+	}
+	
+	$content = theme_item_list($items, NULL, $type = 'ul');
+	
+	$page_content = theme('liste_des_publications', $content, $title);
+	
+	return $page_content;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function dernieres_publications_theme($existing, $type, $theme, $path) {
+	return array(
+		'liste_des_publications' => array(
+			'template' => 'liste-des-publications',
+			'arguments' => array('content' => NULL, 'title' => NULL)
+		)
+	);
+}
+

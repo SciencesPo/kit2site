@@ -1,0 +1,5 @@
+; $Id: outils_numeriques.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = Services et outils numériques
+description = "Permet d'ajouter un service ou un outil numérique"
+package = Sciences-Po
+core = 6.x

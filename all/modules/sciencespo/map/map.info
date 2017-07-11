@@ -1,0 +1,5 @@
+; $Id: map.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = MAP
+description = "Permet d'ajouter une carte"
+package = Sciences-Po
+core = 6.x

@@ -1,0 +1,1814 @@
+BD43 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+BD43 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+BD43 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+BD43 .|    <= ''
+BD43 .<= ''
+BD43 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+BD43 .<= ''
+BD43 .=> phpCAS::forceAuthentication() [cas.module:198]
+BD43 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+BD43 .|    |    => CASClient::isAuthenticated() [client.php:953]
+BD43 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+BD43 .|    |    |    |    no user found [client.php:1230]
+BD43 .|    |    |    <= false
+BD43 .|    |    |    no ticket found [client.php:1111]
+BD43 .|    |    <= false
+BD43 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+BD43 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+BD43 .|    |    |    |    => CASClient::getURL() [client.php:440]
+BD43 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+BD43 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+BD43 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+BD43 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+BD43 .|    |    |    exit()
+BD43 .|    |    |    -
+BD43 .|    |    -
+BD43 .|    -
+74A2 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+74A2 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+74A2 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+74A2 .|    |    ST or PT 'ST-11-XEXSnFqDcxbduZ3A4hEf-cas' found [client.php:767]
+74A2 .|    <= ''
+74A2 .<= ''
+74A2 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+74A2 .<= ''
+74A2 .=> phpCAS::forceAuthentication() [cas.module:198]
+74A2 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+74A2 .|    |    => CASClient::isAuthenticated() [client.php:953]
+74A2 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+74A2 .|    |    |    |    no user found [client.php:1230]
+74A2 .|    |    |    <= false
+74A2 .|    |    |    PT `ST-11-XEXSnFqDcxbduZ3A4hEf-cas' is present [client.php:1084]
+74A2 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+74A2 .|    |    |    |     [client.php:2699]
+74A2 .|    |    |    |    => CASClient::getURL() [client.php:551]
+74A2 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+74A2 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+74A2 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+74A2 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+74A2 .|    |    |    |    <= true
+74A2 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+74A2 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+74A2 .|    |    |    |    <= ''
+74A2 .|    |    |    |    => CASClient::renameSession('ST-11-XEXSnFqDcxbduZ3A4hEf-cas') [client.php:2790]
+74A2 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+74A2 .|    |    |    |    <= ''
+74A2 .|    |    |    <= true
+74A2 .|    |    |    PT `ST-11-XEXSnFqDcxbduZ3A4hEf-cas' was validated [client.php:1086]
+74A2 .|    |    |    => CASClient::getURL() [client.php:1137]
+74A2 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+74A2 .|    |    |    => CASClient::getURL() [client.php:1138]
+74A2 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+74A2 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+74A2 .|    |    |    exit()
+74A2 .|    |    |    -
+74A2 .|    |    -
+74A2 .|    -
+94D8 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+94D8 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+94D8 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+94D8 .|    <= ''
+94D8 .<= ''
+94D8 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+94D8 .<= ''
+94D8 .=> phpCAS::forceAuthentication() [cas.module:198]
+94D8 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+94D8 .|    |    => CASClient::isAuthenticated() [client.php:953]
+94D8 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+94D8 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+94D8 .|    |    |    |    proxies = "" [client.php:1225]
+94D8 .|    |    |    <= true
+94D8 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+94D8 .|    |    <= true
+94D8 .|    |    no need to authenticate [client.php:955]
+94D8 .|    <= true
+94D8 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+94D8 .<= ''
+8D56 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+8D56 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+8D56 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+8D56 .|    <= ''
+8D56 .<= ''
+8D56 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+8D56 .<= ''
+8D56 .=> phpCAS::forceAuthentication() [cas.module:198]
+8D56 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+8D56 .|    |    => CASClient::isAuthenticated() [client.php:953]
+8D56 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+8D56 .|    |    |    |    no user found [client.php:1230]
+8D56 .|    |    |    <= false
+8D56 .|    |    |    no ticket found [client.php:1111]
+8D56 .|    |    <= false
+8D56 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+8D56 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+8D56 .|    |    |    |    => CASClient::getURL() [client.php:440]
+8D56 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+8D56 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+8D56 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+8D56 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+8D56 .|    |    |    exit()
+8D56 .|    |    |    -
+8D56 .|    |    -
+8D56 .|    -
+F55C .START phpCAS-1.2.1 ****************** [CAS.php:473]
+F55C .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+F55C .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+F55C .|    |    ST or PT 'ST-12-oP3xpLWOtJ7FbPDo7MS7-cas' found [client.php:767]
+F55C .|    <= ''
+F55C .<= ''
+F55C .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+F55C .<= ''
+F55C .=> phpCAS::forceAuthentication() [cas.module:198]
+F55C .|    => CASClient::forceAuthentication() [CAS.php:1016]
+F55C .|    |    => CASClient::isAuthenticated() [client.php:953]
+F55C .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+F55C .|    |    |    |    no user found [client.php:1230]
+F55C .|    |    |    <= false
+F55C .|    |    |    PT `ST-12-oP3xpLWOtJ7FbPDo7MS7-cas' is present [client.php:1084]
+F55C .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+F55C .|    |    |    |     [client.php:2699]
+F55C .|    |    |    |    => CASClient::getURL() [client.php:551]
+F55C .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+F55C .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+F55C .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+F55C .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>philippe.hubert</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+F55C .|    |    |    |    <= true
+F55C .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+F55C .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+F55C .|    |    |    |    <= ''
+F55C .|    |    |    |    => CASClient::renameSession('ST-12-oP3xpLWOtJ7FbPDo7MS7-cas') [client.php:2790]
+F55C .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+F55C .|    |    |    |    <= ''
+F55C .|    |    |    <= true
+F55C .|    |    |    PT `ST-12-oP3xpLWOtJ7FbPDo7MS7-cas' was validated [client.php:1086]
+F55C .|    |    |    => CASClient::getURL() [client.php:1137]
+F55C .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+F55C .|    |    |    => CASClient::getURL() [client.php:1138]
+F55C .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+F55C .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+F55C .|    |    |    exit()
+F55C .|    |    |    -
+F55C .|    |    -
+F55C .|    -
+73EE .START phpCAS-1.2.1 ****************** [CAS.php:473]
+73EE .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+73EE .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+73EE .|    <= ''
+73EE .<= ''
+73EE .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+73EE .<= ''
+73EE .=> phpCAS::forceAuthentication() [cas.module:198]
+73EE .|    => CASClient::forceAuthentication() [CAS.php:1016]
+73EE .|    |    => CASClient::isAuthenticated() [client.php:953]
+73EE .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+73EE .|    |    |    |    user = `philippe.hubert' [client.php:1220]
+73EE .|    |    |    |    proxies = "" [client.php:1225]
+73EE .|    |    |    <= true
+73EE .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+73EE .|    |    <= true
+73EE .|    |    no need to authenticate [client.php:955]
+73EE .|    <= true
+73EE .|    no need to authenticate (user `philippe.hubert' is already authenticated) [CAS.php:1032]
+73EE .<= ''
+FD08 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+FD08 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+FD08 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+FD08 .|    <= ''
+FD08 .<= ''
+FD08 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+FD08 .<= ''
+FD08 .=> phpCAS::forceAuthentication() [cas.module:198]
+FD08 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+FD08 .|    |    => CASClient::isAuthenticated() [client.php:953]
+FD08 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+FD08 .|    |    |    |    no user found [client.php:1230]
+FD08 .|    |    |    <= false
+FD08 .|    |    |    no ticket found [client.php:1111]
+FD08 .|    |    <= false
+FD08 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+FD08 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+FD08 .|    |    |    |    => CASClient::getURL() [client.php:440]
+FD08 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+FD08 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+FD08 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+FD08 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+FD08 .|    |    |    exit()
+FD08 .|    |    |    -
+FD08 .|    |    -
+FD08 .|    -
+7539 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+7539 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+7539 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+7539 .|    |    ST or PT 'ST-13-p1yXaePcrNLzqOKx5Ftt-cas' found [client.php:767]
+7539 .|    <= ''
+7539 .<= ''
+7539 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+7539 .<= ''
+7539 .=> phpCAS::forceAuthentication() [cas.module:198]
+7539 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+7539 .|    |    => CASClient::isAuthenticated() [client.php:953]
+7539 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+7539 .|    |    |    |    no user found [client.php:1230]
+7539 .|    |    |    <= false
+7539 .|    |    |    PT `ST-13-p1yXaePcrNLzqOKx5Ftt-cas' is present [client.php:1084]
+7539 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+7539 .|    |    |    |     [client.php:2699]
+7539 .|    |    |    |    => CASClient::getURL() [client.php:551]
+7539 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+7539 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+7539 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+7539 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>philippe.hubert</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+7539 .|    |    |    |    <= true
+7539 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+7539 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+7539 .|    |    |    |    <= ''
+7539 .|    |    |    |    => CASClient::renameSession('ST-13-p1yXaePcrNLzqOKx5Ftt-cas') [client.php:2790]
+7539 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+7539 .|    |    |    |    <= ''
+7539 .|    |    |    <= true
+7539 .|    |    |    PT `ST-13-p1yXaePcrNLzqOKx5Ftt-cas' was validated [client.php:1086]
+7539 .|    |    |    => CASClient::getURL() [client.php:1137]
+7539 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+7539 .|    |    |    => CASClient::getURL() [client.php:1138]
+7539 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+7539 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+7539 .|    |    |    exit()
+7539 .|    |    |    -
+7539 .|    |    -
+7539 .|    -
+0A2C .START phpCAS-1.2.1 ****************** [CAS.php:473]
+0A2C .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+0A2C .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+0A2C .|    <= ''
+0A2C .<= ''
+0A2C .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+0A2C .<= ''
+0A2C .=> phpCAS::forceAuthentication() [cas.module:198]
+0A2C .|    => CASClient::forceAuthentication() [CAS.php:1016]
+0A2C .|    |    => CASClient::isAuthenticated() [client.php:953]
+0A2C .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+0A2C .|    |    |    |    user = `philippe.hubert' [client.php:1220]
+0A2C .|    |    |    |    proxies = "" [client.php:1225]
+0A2C .|    |    |    <= true
+0A2C .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+0A2C .|    |    <= true
+0A2C .|    |    no need to authenticate [client.php:955]
+0A2C .|    <= true
+0A2C .|    no need to authenticate (user `philippe.hubert' is already authenticated) [CAS.php:1032]
+0A2C .<= ''
+E27B .START phpCAS-1.2.1 ****************** [CAS.php:473]
+E27B .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+E27B .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+E27B .|    <= ''
+E27B .<= ''
+E27B .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+E27B .<= ''
+E27B .=> phpCAS::forceAuthentication() [cas.module:198]
+E27B .|    => CASClient::forceAuthentication() [CAS.php:1016]
+E27B .|    |    => CASClient::isAuthenticated() [client.php:953]
+E27B .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+E27B .|    |    |    |    no user found [client.php:1230]
+E27B .|    |    |    <= false
+E27B .|    |    |    no ticket found [client.php:1111]
+E27B .|    |    <= false
+E27B .|    |    => CASClient::redirectToCas(false) [client.php:962]
+E27B .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+E27B .|    |    |    |    => CASClient::getURL() [client.php:440]
+E27B .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+E27B .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+E27B .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+E27B .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+E27B .|    |    |    exit()
+E27B .|    |    |    -
+E27B .|    |    -
+E27B .|    -
+B32C .START phpCAS-1.2.1 ****************** [CAS.php:473]
+B32C .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+B32C .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+B32C .|    |    ST or PT 'ST-14-kvskiq7pJakeFI7f0Mmc-cas' found [client.php:767]
+B32C .|    <= ''
+B32C .<= ''
+B32C .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+B32C .<= ''
+B32C .=> phpCAS::forceAuthentication() [cas.module:198]
+B32C .|    => CASClient::forceAuthentication() [CAS.php:1016]
+B32C .|    |    => CASClient::isAuthenticated() [client.php:953]
+B32C .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+B32C .|    |    |    |    no user found [client.php:1230]
+B32C .|    |    |    <= false
+B32C .|    |    |    PT `ST-14-kvskiq7pJakeFI7f0Mmc-cas' is present [client.php:1084]
+B32C .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+B32C .|    |    |    |     [client.php:2699]
+B32C .|    |    |    |    => CASClient::getURL() [client.php:551]
+B32C .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+B32C .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+B32C .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+B32C .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+B32C .|    |    |    |    <= true
+B32C .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+B32C .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+B32C .|    |    |    |    <= ''
+B32C .|    |    |    |    => CASClient::renameSession('ST-14-kvskiq7pJakeFI7f0Mmc-cas') [client.php:2790]
+B32C .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+B32C .|    |    |    |    <= ''
+B32C .|    |    |    <= true
+B32C .|    |    |    PT `ST-14-kvskiq7pJakeFI7f0Mmc-cas' was validated [client.php:1086]
+B32C .|    |    |    => CASClient::getURL() [client.php:1137]
+B32C .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+B32C .|    |    |    => CASClient::getURL() [client.php:1138]
+B32C .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+B32C .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+B32C .|    |    |    exit()
+B32C .|    |    |    -
+B32C .|    |    -
+B32C .|    -
+95B4 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+95B4 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+95B4 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+95B4 .|    <= ''
+95B4 .<= ''
+95B4 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+95B4 .<= ''
+95B4 .=> phpCAS::forceAuthentication() [cas.module:198]
+95B4 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+95B4 .|    |    => CASClient::isAuthenticated() [client.php:953]
+95B4 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+95B4 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+95B4 .|    |    |    |    proxies = "" [client.php:1225]
+95B4 .|    |    |    <= true
+95B4 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+95B4 .|    |    <= true
+95B4 .|    |    no need to authenticate [client.php:955]
+95B4 .|    <= true
+95B4 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+95B4 .<= ''
+B093 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+B093 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+B093 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+B093 .|    <= ''
+B093 .<= ''
+B093 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+B093 .<= ''
+B093 .=> phpCAS::forceAuthentication() [cas.module:198]
+B093 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+B093 .|    |    => CASClient::isAuthenticated() [client.php:953]
+B093 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+B093 .|    |    |    |    no user found [client.php:1230]
+B093 .|    |    |    <= false
+B093 .|    |    |    no ticket found [client.php:1111]
+B093 .|    |    <= false
+B093 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+B093 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+B093 .|    |    |    |    => CASClient::getURL() [client.php:440]
+B093 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+B093 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+B093 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+B093 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+B093 .|    |    |    exit()
+B093 .|    |    |    -
+B093 .|    |    -
+B093 .|    -
+DAB7 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+DAB7 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+DAB7 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+DAB7 .|    |    ST or PT 'ST-15-es5pqRocZoblSymfYUhr-cas' found [client.php:767]
+DAB7 .|    <= ''
+DAB7 .<= ''
+DAB7 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+DAB7 .<= ''
+DAB7 .=> phpCAS::forceAuthentication() [cas.module:198]
+DAB7 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+DAB7 .|    |    => CASClient::isAuthenticated() [client.php:953]
+DAB7 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+DAB7 .|    |    |    |    no user found [client.php:1230]
+DAB7 .|    |    |    <= false
+DAB7 .|    |    |    PT `ST-15-es5pqRocZoblSymfYUhr-cas' is present [client.php:1084]
+DAB7 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+DAB7 .|    |    |    |     [client.php:2699]
+DAB7 .|    |    |    |    => CASClient::getURL() [client.php:551]
+DAB7 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+DAB7 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+DAB7 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+DAB7 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+DAB7 .|    |    |    |    <= true
+DAB7 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+DAB7 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+DAB7 .|    |    |    |    <= ''
+DAB7 .|    |    |    |    => CASClient::renameSession('ST-15-es5pqRocZoblSymfYUhr-cas') [client.php:2790]
+DAB7 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+DAB7 .|    |    |    |    <= ''
+DAB7 .|    |    |    <= true
+DAB7 .|    |    |    PT `ST-15-es5pqRocZoblSymfYUhr-cas' was validated [client.php:1086]
+DAB7 .|    |    |    => CASClient::getURL() [client.php:1137]
+DAB7 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+DAB7 .|    |    |    => CASClient::getURL() [client.php:1138]
+DAB7 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+DAB7 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+DAB7 .|    |    |    exit()
+DAB7 .|    |    |    -
+DAB7 .|    |    -
+DAB7 .|    -
+4549 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+4549 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+4549 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+4549 .|    <= ''
+4549 .<= ''
+4549 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+4549 .<= ''
+4549 .=> phpCAS::forceAuthentication() [cas.module:198]
+4549 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+4549 .|    |    => CASClient::isAuthenticated() [client.php:953]
+4549 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+4549 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+4549 .|    |    |    |    proxies = "" [client.php:1225]
+4549 .|    |    |    <= true
+4549 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+4549 .|    |    <= true
+4549 .|    |    no need to authenticate [client.php:955]
+4549 .|    <= true
+4549 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+4549 .<= ''
+540D .START phpCAS-1.2.1 ****************** [CAS.php:473]
+540D .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+540D .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+540D .|    <= ''
+540D .<= ''
+540D .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+540D .<= ''
+540D .=> phpCAS::forceAuthentication() [cas.module:198]
+540D .|    => CASClient::forceAuthentication() [CAS.php:1016]
+540D .|    |    => CASClient::isAuthenticated() [client.php:953]
+540D .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+540D .|    |    |    |    no user found [client.php:1230]
+540D .|    |    |    <= false
+540D .|    |    |    no ticket found [client.php:1111]
+540D .|    |    <= false
+540D .|    |    => CASClient::redirectToCas(false) [client.php:962]
+540D .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+540D .|    |    |    |    => CASClient::getURL() [client.php:440]
+540D .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+540D .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+540D .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+540D .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+540D .|    |    |    exit()
+540D .|    |    |    -
+540D .|    |    -
+540D .|    -
+E142 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+E142 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+E142 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+E142 .|    |    ST or PT 'ST-16-QWlC1gczbtvHOdvzsgdw-cas' found [client.php:767]
+E142 .|    <= ''
+E142 .<= ''
+E142 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+E142 .<= ''
+E142 .=> phpCAS::forceAuthentication() [cas.module:198]
+E142 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+E142 .|    |    => CASClient::isAuthenticated() [client.php:953]
+E142 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+E142 .|    |    |    |    no user found [client.php:1230]
+E142 .|    |    |    <= false
+E142 .|    |    |    PT `ST-16-QWlC1gczbtvHOdvzsgdw-cas' is present [client.php:1084]
+E142 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+E142 .|    |    |    |     [client.php:2699]
+E142 .|    |    |    |    => CASClient::getURL() [client.php:551]
+E142 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+E142 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+E142 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+E142 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+E142 .|    |    |    |    <= true
+E142 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+E142 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+E142 .|    |    |    |    <= ''
+E142 .|    |    |    |    => CASClient::renameSession('ST-16-QWlC1gczbtvHOdvzsgdw-cas') [client.php:2790]
+E142 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+E142 .|    |    |    |    <= ''
+E142 .|    |    |    <= true
+E142 .|    |    |    PT `ST-16-QWlC1gczbtvHOdvzsgdw-cas' was validated [client.php:1086]
+E142 .|    |    |    => CASClient::getURL() [client.php:1137]
+E142 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+E142 .|    |    |    => CASClient::getURL() [client.php:1138]
+E142 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+E142 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+E142 .|    |    |    exit()
+E142 .|    |    |    -
+E142 .|    |    -
+E142 .|    -
+8A44 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+8A44 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+8A44 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+8A44 .|    <= ''
+8A44 .<= ''
+8A44 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+8A44 .<= ''
+8A44 .=> phpCAS::forceAuthentication() [cas.module:198]
+8A44 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+8A44 .|    |    => CASClient::isAuthenticated() [client.php:953]
+8A44 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+8A44 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+8A44 .|    |    |    |    proxies = "" [client.php:1225]
+8A44 .|    |    |    <= true
+8A44 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+8A44 .|    |    <= true
+8A44 .|    |    no need to authenticate [client.php:955]
+8A44 .|    <= true
+8A44 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+8A44 .<= ''
+3B86 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+3B86 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+3B86 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+3B86 .|    <= ''
+3B86 .<= ''
+3B86 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+3B86 .<= ''
+3B86 .=> phpCAS::forceAuthentication() [cas.module:198]
+3B86 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+3B86 .|    |    => CASClient::isAuthenticated() [client.php:953]
+3B86 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+3B86 .|    |    |    |    no user found [client.php:1230]
+3B86 .|    |    |    <= false
+3B86 .|    |    |    no ticket found [client.php:1111]
+3B86 .|    |    <= false
+3B86 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+3B86 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+3B86 .|    |    |    |    => CASClient::getURL() [client.php:440]
+3B86 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+3B86 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+3B86 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+3B86 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+3B86 .|    |    |    exit()
+3B86 .|    |    |    -
+3B86 .|    |    -
+3B86 .|    -
+3C04 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+3C04 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+3C04 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+3C04 .|    |    ST or PT 'ST-17-6CSDmkTniyGF4gX3kph3-cas' found [client.php:767]
+3C04 .|    <= ''
+3C04 .<= ''
+3C04 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+3C04 .<= ''
+3C04 .=> phpCAS::forceAuthentication() [cas.module:198]
+3C04 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+3C04 .|    |    => CASClient::isAuthenticated() [client.php:953]
+3C04 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+3C04 .|    |    |    |    no user found [client.php:1230]
+3C04 .|    |    |    <= false
+3C04 .|    |    |    PT `ST-17-6CSDmkTniyGF4gX3kph3-cas' is present [client.php:1084]
+3C04 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+3C04 .|    |    |    |     [client.php:2699]
+3C04 .|    |    |    |    => CASClient::getURL() [client.php:551]
+3C04 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+3C04 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+3C04 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+3C04 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+3C04 .|    |    |    |    <= true
+3C04 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+3C04 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+3C04 .|    |    |    |    <= ''
+3C04 .|    |    |    |    => CASClient::renameSession('ST-17-6CSDmkTniyGF4gX3kph3-cas') [client.php:2790]
+3C04 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+3C04 .|    |    |    |    <= ''
+3C04 .|    |    |    <= true
+3C04 .|    |    |    PT `ST-17-6CSDmkTniyGF4gX3kph3-cas' was validated [client.php:1086]
+3C04 .|    |    |    => CASClient::getURL() [client.php:1137]
+3C04 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+3C04 .|    |    |    => CASClient::getURL() [client.php:1138]
+3C04 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+3C04 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+3C04 .|    |    |    exit()
+3C04 .|    |    |    -
+3C04 .|    |    -
+3C04 .|    -
+84B9 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+84B9 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+84B9 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+84B9 .|    <= ''
+84B9 .<= ''
+84B9 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+84B9 .<= ''
+84B9 .=> phpCAS::forceAuthentication() [cas.module:198]
+84B9 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+84B9 .|    |    => CASClient::isAuthenticated() [client.php:953]
+84B9 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+84B9 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+84B9 .|    |    |    |    proxies = "" [client.php:1225]
+84B9 .|    |    |    <= true
+84B9 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+84B9 .|    |    <= true
+84B9 .|    |    no need to authenticate [client.php:955]
+84B9 .|    <= true
+84B9 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+84B9 .<= ''
+87EB .START phpCAS-1.2.1 ****************** [CAS.php:473]
+87EB .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+87EB .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+87EB .|    <= ''
+87EB .<= ''
+87EB .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+87EB .<= ''
+87EB .=> phpCAS::forceAuthentication() [cas.module:198]
+87EB .|    => CASClient::forceAuthentication() [CAS.php:1016]
+87EB .|    |    => CASClient::isAuthenticated() [client.php:953]
+87EB .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+87EB .|    |    |    |    no user found [client.php:1230]
+87EB .|    |    |    <= false
+87EB .|    |    |    no ticket found [client.php:1111]
+87EB .|    |    <= false
+87EB .|    |    => CASClient::redirectToCas(false) [client.php:962]
+87EB .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+87EB .|    |    |    |    => CASClient::getURL() [client.php:440]
+87EB .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+87EB .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+87EB .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+87EB .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+87EB .|    |    |    exit()
+87EB .|    |    |    -
+87EB .|    |    -
+87EB .|    -
+1543 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+1543 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+1543 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+1543 .|    <= ''
+1543 .<= ''
+1543 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+1543 .<= ''
+1543 .=> phpCAS::forceAuthentication() [cas.module:198]
+1543 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+1543 .|    |    => CASClient::isAuthenticated() [client.php:953]
+1543 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+1543 .|    |    |    |    no user found [client.php:1230]
+1543 .|    |    |    <= false
+1543 .|    |    |    no ticket found [client.php:1111]
+1543 .|    |    <= false
+1543 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+1543 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+1543 .|    |    |    |    => CASClient::getURL() [client.php:440]
+1543 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+1543 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+1543 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+1543 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+1543 .|    |    |    exit()
+1543 .|    |    |    -
+1543 .|    |    -
+1543 .|    -
+7F3B .START phpCAS-1.2.1 ****************** [CAS.php:473]
+7F3B .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+7F3B .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+7F3B .|    |    ST or PT 'ST-18-4HLBbypXf10U65LiNkqx-cas' found [client.php:767]
+7F3B .|    <= ''
+7F3B .<= ''
+7F3B .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+7F3B .<= ''
+7F3B .=> phpCAS::forceAuthentication() [cas.module:198]
+7F3B .|    => CASClient::forceAuthentication() [CAS.php:1016]
+7F3B .|    |    => CASClient::isAuthenticated() [client.php:953]
+7F3B .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+7F3B .|    |    |    |    no user found [client.php:1230]
+7F3B .|    |    |    <= false
+7F3B .|    |    |    PT `ST-18-4HLBbypXf10U65LiNkqx-cas' is present [client.php:1084]
+7F3B .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+7F3B .|    |    |    |     [client.php:2699]
+7F3B .|    |    |    |    => CASClient::getURL() [client.php:551]
+7F3B .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+7F3B .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+7F3B .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+7F3B .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+7F3B .|    |    |    |    <= true
+7F3B .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+7F3B .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+7F3B .|    |    |    |    <= ''
+7F3B .|    |    |    |    => CASClient::renameSession('ST-18-4HLBbypXf10U65LiNkqx-cas') [client.php:2790]
+7F3B .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+7F3B .|    |    |    |    <= ''
+7F3B .|    |    |    <= true
+7F3B .|    |    |    PT `ST-18-4HLBbypXf10U65LiNkqx-cas' was validated [client.php:1086]
+7F3B .|    |    |    => CASClient::getURL() [client.php:1137]
+7F3B .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+7F3B .|    |    |    => CASClient::getURL() [client.php:1138]
+7F3B .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+7F3B .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+7F3B .|    |    |    exit()
+7F3B .|    |    |    -
+7F3B .|    |    -
+7F3B .|    -
+6E53 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+6E53 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+6E53 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+6E53 .|    <= ''
+6E53 .<= ''
+6E53 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+6E53 .<= ''
+6E53 .=> phpCAS::forceAuthentication() [cas.module:198]
+6E53 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+6E53 .|    |    => CASClient::isAuthenticated() [client.php:953]
+6E53 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+6E53 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+6E53 .|    |    |    |    proxies = "" [client.php:1225]
+6E53 .|    |    |    <= true
+6E53 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+6E53 .|    |    <= true
+6E53 .|    |    no need to authenticate [client.php:955]
+6E53 .|    <= true
+6E53 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+6E53 .<= ''
+EC12 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+EC12 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+EC12 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+EC12 .|    <= ''
+EC12 .<= ''
+EC12 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+EC12 .<= ''
+EC12 .=> phpCAS::forceAuthentication() [cas.module:198]
+EC12 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+EC12 .|    |    => CASClient::isAuthenticated() [client.php:953]
+EC12 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+EC12 .|    |    |    |    no user found [client.php:1230]
+EC12 .|    |    |    <= false
+EC12 .|    |    |    no ticket found [client.php:1111]
+EC12 .|    |    <= false
+EC12 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+EC12 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+EC12 .|    |    |    |    => CASClient::getURL() [client.php:440]
+EC12 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+EC12 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+EC12 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+EC12 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+EC12 .|    |    |    exit()
+EC12 .|    |    |    -
+EC12 .|    |    -
+EC12 .|    -
+E0F7 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+E0F7 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+E0F7 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+E0F7 .|    |    ST or PT 'ST-19-9GLkStXNOdGbFUe3YBpv-cas' found [client.php:767]
+E0F7 .|    <= ''
+E0F7 .<= ''
+E0F7 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+E0F7 .<= ''
+E0F7 .=> phpCAS::forceAuthentication() [cas.module:198]
+E0F7 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+E0F7 .|    |    => CASClient::isAuthenticated() [client.php:953]
+E0F7 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+E0F7 .|    |    |    |    no user found [client.php:1230]
+E0F7 .|    |    |    <= false
+E0F7 .|    |    |    PT `ST-19-9GLkStXNOdGbFUe3YBpv-cas' is present [client.php:1084]
+E0F7 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+E0F7 .|    |    |    |     [client.php:2699]
+E0F7 .|    |    |    |    => CASClient::getURL() [client.php:551]
+E0F7 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+E0F7 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+E0F7 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+E0F7 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+E0F7 .|    |    |    |    <= true
+E0F7 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+E0F7 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+E0F7 .|    |    |    |    <= ''
+E0F7 .|    |    |    |    => CASClient::renameSession('ST-19-9GLkStXNOdGbFUe3YBpv-cas') [client.php:2790]
+E0F7 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+E0F7 .|    |    |    |    <= ''
+E0F7 .|    |    |    <= true
+E0F7 .|    |    |    PT `ST-19-9GLkStXNOdGbFUe3YBpv-cas' was validated [client.php:1086]
+E0F7 .|    |    |    => CASClient::getURL() [client.php:1137]
+E0F7 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+E0F7 .|    |    |    => CASClient::getURL() [client.php:1138]
+E0F7 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+E0F7 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+E0F7 .|    |    |    exit()
+E0F7 .|    |    |    -
+E0F7 .|    |    -
+E0F7 .|    -
+B962 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+B962 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+B962 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+B962 .|    <= ''
+B962 .<= ''
+B962 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+B962 .<= ''
+B962 .=> phpCAS::forceAuthentication() [cas.module:198]
+B962 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+B962 .|    |    => CASClient::isAuthenticated() [client.php:953]
+B962 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+B962 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+B962 .|    |    |    |    proxies = "" [client.php:1225]
+B962 .|    |    |    <= true
+B962 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+B962 .|    |    <= true
+B962 .|    |    no need to authenticate [client.php:955]
+B962 .|    <= true
+B962 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+B962 .<= ''
+D9E5 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+D9E5 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+D9E5 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+D9E5 .|    <= ''
+D9E5 .<= ''
+D9E5 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+D9E5 .<= ''
+D9E5 .=> phpCAS::forceAuthentication() [cas.module:198]
+D9E5 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+D9E5 .|    |    => CASClient::isAuthenticated() [client.php:953]
+D9E5 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+D9E5 .|    |    |    |    no user found [client.php:1230]
+D9E5 .|    |    |    <= false
+D9E5 .|    |    |    no ticket found [client.php:1111]
+D9E5 .|    |    <= false
+D9E5 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+D9E5 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+D9E5 .|    |    |    |    => CASClient::getURL() [client.php:440]
+D9E5 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+D9E5 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+D9E5 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+D9E5 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+D9E5 .|    |    |    exit()
+D9E5 .|    |    |    -
+D9E5 .|    |    -
+D9E5 .|    -
+CC15 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+CC15 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+CC15 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+CC15 .|    |    ST or PT 'ST-20-cIj15RB9mBzoONAOttZk-cas' found [client.php:767]
+CC15 .|    <= ''
+CC15 .<= ''
+CC15 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+CC15 .<= ''
+CC15 .=> phpCAS::forceAuthentication() [cas.module:198]
+CC15 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+CC15 .|    |    => CASClient::isAuthenticated() [client.php:953]
+CC15 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+CC15 .|    |    |    |    no user found [client.php:1230]
+CC15 .|    |    |    <= false
+CC15 .|    |    |    PT `ST-20-cIj15RB9mBzoONAOttZk-cas' is present [client.php:1084]
+CC15 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+CC15 .|    |    |    |     [client.php:2699]
+CC15 .|    |    |    |    => CASClient::getURL() [client.php:551]
+CC15 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+CC15 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+CC15 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+CC15 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+CC15 .|    |    |    |    <= true
+CC15 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+CC15 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+CC15 .|    |    |    |    <= ''
+CC15 .|    |    |    |    => CASClient::renameSession('ST-20-cIj15RB9mBzoONAOttZk-cas') [client.php:2790]
+CC15 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+CC15 .|    |    |    |    <= ''
+CC15 .|    |    |    <= true
+CC15 .|    |    |    PT `ST-20-cIj15RB9mBzoONAOttZk-cas' was validated [client.php:1086]
+CC15 .|    |    |    => CASClient::getURL() [client.php:1137]
+CC15 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+CC15 .|    |    |    => CASClient::getURL() [client.php:1138]
+CC15 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+CC15 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+CC15 .|    |    |    exit()
+CC15 .|    |    |    -
+CC15 .|    |    -
+CC15 .|    -
+0A8C .START phpCAS-1.2.1 ****************** [CAS.php:473]
+0A8C .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+0A8C .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+0A8C .|    <= ''
+0A8C .<= ''
+0A8C .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+0A8C .<= ''
+0A8C .=> phpCAS::forceAuthentication() [cas.module:198]
+0A8C .|    => CASClient::forceAuthentication() [CAS.php:1016]
+0A8C .|    |    => CASClient::isAuthenticated() [client.php:953]
+0A8C .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+0A8C .|    |    |    |    user = `marc.lechien' [client.php:1220]
+0A8C .|    |    |    |    proxies = "" [client.php:1225]
+0A8C .|    |    |    <= true
+0A8C .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+0A8C .|    |    <= true
+0A8C .|    |    no need to authenticate [client.php:955]
+0A8C .|    <= true
+0A8C .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+0A8C .<= ''
+6B33 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+6B33 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+6B33 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+6B33 .|    <= ''
+6B33 .<= ''
+6B33 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+6B33 .<= ''
+6B33 .=> phpCAS::forceAuthentication() [cas.module:198]
+6B33 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+6B33 .|    |    => CASClient::isAuthenticated() [client.php:953]
+6B33 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+6B33 .|    |    |    |    no user found [client.php:1230]
+6B33 .|    |    |    <= false
+6B33 .|    |    |    no ticket found [client.php:1111]
+6B33 .|    |    <= false
+6B33 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+6B33 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+6B33 .|    |    |    |    => CASClient::getURL() [client.php:440]
+6B33 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+6B33 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+6B33 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+6B33 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+6B33 .|    |    |    exit()
+6B33 .|    |    |    -
+6B33 .|    |    -
+6B33 .|    -
+5E70 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+5E70 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+5E70 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+5E70 .|    |    ST or PT 'ST-22-Xxapvmzsa7FHjPdNcGPA-cas' found [client.php:767]
+5E70 .|    <= ''
+5E70 .<= ''
+5E70 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+5E70 .<= ''
+5E70 .=> phpCAS::forceAuthentication() [cas.module:198]
+5E70 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+5E70 .|    |    => CASClient::isAuthenticated() [client.php:953]
+5E70 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+5E70 .|    |    |    |    no user found [client.php:1230]
+5E70 .|    |    |    <= false
+5E70 .|    |    |    PT `ST-22-Xxapvmzsa7FHjPdNcGPA-cas' is present [client.php:1084]
+5E70 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+5E70 .|    |    |    |     [client.php:2699]
+5E70 .|    |    |    |    => CASClient::getURL() [client.php:551]
+5E70 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+5E70 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+5E70 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+5E70 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+5E70 .|    |    |    |    <= true
+5E70 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+5E70 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+5E70 .|    |    |    |    <= ''
+5E70 .|    |    |    |    => CASClient::renameSession('ST-22-Xxapvmzsa7FHjPdNcGPA-cas') [client.php:2790]
+5E70 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+5E70 .|    |    |    |    <= ''
+5E70 .|    |    |    <= true
+5E70 .|    |    |    PT `ST-22-Xxapvmzsa7FHjPdNcGPA-cas' was validated [client.php:1086]
+5E70 .|    |    |    => CASClient::getURL() [client.php:1137]
+5E70 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+5E70 .|    |    |    => CASClient::getURL() [client.php:1138]
+5E70 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+5E70 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+5E70 .|    |    |    exit()
+5E70 .|    |    |    -
+5E70 .|    |    -
+5E70 .|    -
+1B52 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+1B52 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+1B52 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+1B52 .|    <= ''
+1B52 .<= ''
+1B52 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+1B52 .<= ''
+1B52 .=> phpCAS::forceAuthentication() [cas.module:198]
+1B52 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+1B52 .|    |    => CASClient::isAuthenticated() [client.php:953]
+1B52 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+1B52 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+1B52 .|    |    |    |    proxies = "" [client.php:1225]
+1B52 .|    |    |    <= true
+1B52 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+1B52 .|    |    <= true
+1B52 .|    |    no need to authenticate [client.php:955]
+1B52 .|    <= true
+1B52 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+1B52 .<= ''
+D022 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+D022 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+D022 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+D022 .|    <= ''
+D022 .<= ''
+D022 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+D022 .<= ''
+D022 .=> phpCAS::forceAuthentication() [cas.module:198]
+D022 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+D022 .|    |    => CASClient::isAuthenticated() [client.php:953]
+D022 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+D022 .|    |    |    |    no user found [client.php:1230]
+D022 .|    |    |    <= false
+D022 .|    |    |    no ticket found [client.php:1111]
+D022 .|    |    <= false
+D022 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+D022 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+D022 .|    |    |    |    => CASClient::getURL() [client.php:440]
+D022 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+D022 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+D022 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+D022 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+D022 .|    |    |    exit()
+D022 .|    |    |    -
+D022 .|    |    -
+D022 .|    -
+FD47 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+FD47 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+FD47 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+FD47 .|    |    ST or PT 'ST-23-bjatme9c4rXC9tSsN3FP-cas' found [client.php:767]
+FD47 .|    <= ''
+FD47 .<= ''
+FD47 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+FD47 .<= ''
+FD47 .=> phpCAS::forceAuthentication() [cas.module:198]
+FD47 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+FD47 .|    |    => CASClient::isAuthenticated() [client.php:953]
+FD47 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+FD47 .|    |    |    |    no user found [client.php:1230]
+FD47 .|    |    |    <= false
+FD47 .|    |    |    PT `ST-23-bjatme9c4rXC9tSsN3FP-cas' is present [client.php:1084]
+FD47 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+FD47 .|    |    |    |     [client.php:2699]
+FD47 .|    |    |    |    => CASClient::getURL() [client.php:551]
+FD47 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+FD47 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+FD47 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+FD47 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+FD47 .|    |    |    |    <= true
+FD47 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+FD47 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+FD47 .|    |    |    |    <= ''
+FD47 .|    |    |    |    => CASClient::renameSession('ST-23-bjatme9c4rXC9tSsN3FP-cas') [client.php:2790]
+FD47 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+FD47 .|    |    |    |    <= ''
+FD47 .|    |    |    <= true
+FD47 .|    |    |    PT `ST-23-bjatme9c4rXC9tSsN3FP-cas' was validated [client.php:1086]
+FD47 .|    |    |    => CASClient::getURL() [client.php:1137]
+FD47 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+FD47 .|    |    |    => CASClient::getURL() [client.php:1138]
+FD47 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+FD47 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+FD47 .|    |    |    exit()
+FD47 .|    |    |    -
+FD47 .|    |    -
+FD47 .|    -
+1A50 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+1A50 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+1A50 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+1A50 .|    <= ''
+1A50 .<= ''
+1A50 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+1A50 .<= ''
+1A50 .=> phpCAS::forceAuthentication() [cas.module:198]
+1A50 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+1A50 .|    |    => CASClient::isAuthenticated() [client.php:953]
+1A50 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+1A50 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+1A50 .|    |    |    |    proxies = "" [client.php:1225]
+1A50 .|    |    |    <= true
+1A50 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+1A50 .|    |    <= true
+1A50 .|    |    no need to authenticate [client.php:955]
+1A50 .|    <= true
+1A50 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+1A50 .<= ''
+56FA .START phpCAS-1.2.1 ****************** [CAS.php:473]
+56FA .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+56FA .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+56FA .|    <= ''
+56FA .<= ''
+56FA .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+56FA .<= ''
+56FA .=> phpCAS::forceAuthentication() [cas.module:198]
+56FA .|    => CASClient::forceAuthentication() [CAS.php:1016]
+56FA .|    |    => CASClient::isAuthenticated() [client.php:953]
+56FA .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+56FA .|    |    |    |    no user found [client.php:1230]
+56FA .|    |    |    <= false
+56FA .|    |    |    no ticket found [client.php:1111]
+56FA .|    |    <= false
+56FA .|    |    => CASClient::redirectToCas(false) [client.php:962]
+56FA .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+56FA .|    |    |    |    => CASClient::getURL() [client.php:440]
+56FA .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+56FA .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+56FA .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+56FA .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+56FA .|    |    |    exit()
+56FA .|    |    |    -
+56FA .|    |    -
+56FA .|    -
+EA45 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+EA45 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+EA45 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+EA45 .|    |    ST or PT 'ST-24-pPLoWzUOZvrbLx1bNTTi-cas' found [client.php:767]
+EA45 .|    <= ''
+EA45 .<= ''
+EA45 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+EA45 .<= ''
+EA45 .=> phpCAS::forceAuthentication() [cas.module:198]
+EA45 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+EA45 .|    |    => CASClient::isAuthenticated() [client.php:953]
+EA45 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+EA45 .|    |    |    |    no user found [client.php:1230]
+EA45 .|    |    |    <= false
+EA45 .|    |    |    PT `ST-24-pPLoWzUOZvrbLx1bNTTi-cas' is present [client.php:1084]
+EA45 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+EA45 .|    |    |    |     [client.php:2699]
+EA45 .|    |    |    |    => CASClient::getURL() [client.php:551]
+EA45 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+EA45 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+EA45 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+EA45 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+EA45 .|    |    |    |    <= true
+EA45 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+EA45 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+EA45 .|    |    |    |    <= ''
+EA45 .|    |    |    |    => CASClient::renameSession('ST-24-pPLoWzUOZvrbLx1bNTTi-cas') [client.php:2790]
+EA45 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+EA45 .|    |    |    |    <= ''
+EA45 .|    |    |    <= true
+EA45 .|    |    |    PT `ST-24-pPLoWzUOZvrbLx1bNTTi-cas' was validated [client.php:1086]
+EA45 .|    |    |    => CASClient::getURL() [client.php:1137]
+EA45 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+EA45 .|    |    |    => CASClient::getURL() [client.php:1138]
+EA45 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+EA45 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+EA45 .|    |    |    exit()
+EA45 .|    |    |    -
+EA45 .|    |    -
+EA45 .|    -
+B573 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+B573 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+B573 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+B573 .|    <= ''
+B573 .<= ''
+B573 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+B573 .<= ''
+B573 .=> phpCAS::forceAuthentication() [cas.module:198]
+B573 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+B573 .|    |    => CASClient::isAuthenticated() [client.php:953]
+B573 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+B573 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+B573 .|    |    |    |    proxies = "" [client.php:1225]
+B573 .|    |    |    <= true
+B573 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+B573 .|    |    <= true
+B573 .|    |    no need to authenticate [client.php:955]
+B573 .|    <= true
+B573 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+B573 .<= ''
+2D43 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+2D43 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+2D43 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+2D43 .|    <= ''
+2D43 .<= ''
+2D43 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+2D43 .<= ''
+2D43 .=> phpCAS::forceAuthentication() [cas.module:198]
+2D43 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+2D43 .|    |    => CASClient::isAuthenticated() [client.php:953]
+2D43 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+2D43 .|    |    |    |    no user found [client.php:1230]
+2D43 .|    |    |    <= false
+2D43 .|    |    |    no ticket found [client.php:1111]
+2D43 .|    |    <= false
+2D43 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+2D43 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+2D43 .|    |    |    |    => CASClient::getURL() [client.php:440]
+2D43 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+2D43 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+2D43 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+2D43 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+2D43 .|    |    |    exit()
+2D43 .|    |    |    -
+2D43 .|    |    -
+2D43 .|    -
+6A00 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+6A00 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+6A00 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+6A00 .|    |    ST or PT 'ST-25-o6LIkyyK2Geu3LTZG3ht-cas' found [client.php:767]
+6A00 .|    <= ''
+6A00 .<= ''
+6A00 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+6A00 .<= ''
+6A00 .=> phpCAS::forceAuthentication() [cas.module:198]
+6A00 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+6A00 .|    |    => CASClient::isAuthenticated() [client.php:953]
+6A00 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+6A00 .|    |    |    |    no user found [client.php:1230]
+6A00 .|    |    |    <= false
+6A00 .|    |    |    PT `ST-25-o6LIkyyK2Geu3LTZG3ht-cas' is present [client.php:1084]
+6A00 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+6A00 .|    |    |    |     [client.php:2699]
+6A00 .|    |    |    |    => CASClient::getURL() [client.php:551]
+6A00 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+6A00 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+6A00 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+6A00 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+6A00 .|    |    |    |    <= true
+6A00 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+6A00 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+6A00 .|    |    |    |    <= ''
+6A00 .|    |    |    |    => CASClient::renameSession('ST-25-o6LIkyyK2Geu3LTZG3ht-cas') [client.php:2790]
+6A00 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+6A00 .|    |    |    |    <= ''
+6A00 .|    |    |    <= true
+6A00 .|    |    |    PT `ST-25-o6LIkyyK2Geu3LTZG3ht-cas' was validated [client.php:1086]
+6A00 .|    |    |    => CASClient::getURL() [client.php:1137]
+6A00 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+6A00 .|    |    |    => CASClient::getURL() [client.php:1138]
+6A00 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+6A00 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+6A00 .|    |    |    exit()
+6A00 .|    |    |    -
+6A00 .|    |    -
+6A00 .|    -
+521A .START phpCAS-1.2.1 ****************** [CAS.php:473]
+521A .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+521A .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+521A .|    <= ''
+521A .<= ''
+521A .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+521A .<= ''
+521A .=> phpCAS::forceAuthentication() [cas.module:198]
+521A .|    => CASClient::forceAuthentication() [CAS.php:1016]
+521A .|    |    => CASClient::isAuthenticated() [client.php:953]
+521A .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+521A .|    |    |    |    user = `marc.lechien' [client.php:1220]
+521A .|    |    |    |    proxies = "" [client.php:1225]
+521A .|    |    |    <= true
+521A .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+521A .|    |    <= true
+521A .|    |    no need to authenticate [client.php:955]
+521A .|    <= true
+521A .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+521A .<= ''
+21C3 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+21C3 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+21C3 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+21C3 .|    <= ''
+21C3 .<= ''
+21C3 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+21C3 .<= ''
+21C3 .=> phpCAS::forceAuthentication() [cas.module:198]
+21C3 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+21C3 .|    |    => CASClient::isAuthenticated() [client.php:953]
+21C3 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+21C3 .|    |    |    |    no user found [client.php:1230]
+21C3 .|    |    |    <= false
+21C3 .|    |    |    no ticket found [client.php:1111]
+21C3 .|    |    <= false
+21C3 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+21C3 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+21C3 .|    |    |    |    => CASClient::getURL() [client.php:440]
+21C3 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+21C3 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+21C3 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+21C3 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+21C3 .|    |    |    exit()
+21C3 .|    |    |    -
+21C3 .|    |    -
+21C3 .|    -
+4A22 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+4A22 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+4A22 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+4A22 .|    |    ST or PT 'ST-26-4GDbAvTFoaSxdNTOwOpM-cas' found [client.php:767]
+4A22 .|    <= ''
+4A22 .<= ''
+4A22 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+4A22 .<= ''
+4A22 .=> phpCAS::forceAuthentication() [cas.module:198]
+4A22 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+4A22 .|    |    => CASClient::isAuthenticated() [client.php:953]
+4A22 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+4A22 .|    |    |    |    no user found [client.php:1230]
+4A22 .|    |    |    <= false
+4A22 .|    |    |    PT `ST-26-4GDbAvTFoaSxdNTOwOpM-cas' is present [client.php:1084]
+4A22 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+4A22 .|    |    |    |     [client.php:2699]
+4A22 .|    |    |    |    => CASClient::getURL() [client.php:551]
+4A22 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+4A22 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+4A22 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+4A22 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>marc.lechien</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+4A22 .|    |    |    |    <= true
+4A22 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+4A22 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+4A22 .|    |    |    |    <= ''
+4A22 .|    |    |    |    => CASClient::renameSession('ST-26-4GDbAvTFoaSxdNTOwOpM-cas') [client.php:2790]
+4A22 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+4A22 .|    |    |    |    <= ''
+4A22 .|    |    |    <= true
+4A22 .|    |    |    PT `ST-26-4GDbAvTFoaSxdNTOwOpM-cas' was validated [client.php:1086]
+4A22 .|    |    |    => CASClient::getURL() [client.php:1137]
+4A22 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+4A22 .|    |    |    => CASClient::getURL() [client.php:1138]
+4A22 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+4A22 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+4A22 .|    |    |    exit()
+4A22 .|    |    |    -
+4A22 .|    |    -
+4A22 .|    -
+27F8 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+27F8 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+27F8 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+27F8 .|    <= ''
+27F8 .<= ''
+27F8 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+27F8 .<= ''
+27F8 .=> phpCAS::forceAuthentication() [cas.module:198]
+27F8 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+27F8 .|    |    => CASClient::isAuthenticated() [client.php:953]
+27F8 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+27F8 .|    |    |    |    user = `marc.lechien' [client.php:1220]
+27F8 .|    |    |    |    proxies = "" [client.php:1225]
+27F8 .|    |    |    <= true
+27F8 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+27F8 .|    |    <= true
+27F8 .|    |    no need to authenticate [client.php:955]
+27F8 .|    <= true
+27F8 .|    no need to authenticate (user `marc.lechien' is already authenticated) [CAS.php:1032]
+27F8 .<= ''
+EF4B .START phpCAS-1.2.1 ****************** [CAS.php:473]
+EF4B .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+EF4B .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+EF4B .|    <= ''
+EF4B .<= ''
+EF4B .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+EF4B .<= ''
+EF4B .=> phpCAS::forceAuthentication() [cas.module:198]
+EF4B .|    => CASClient::forceAuthentication() [CAS.php:1016]
+EF4B .|    |    => CASClient::isAuthenticated() [client.php:953]
+EF4B .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+EF4B .|    |    |    |    no user found [client.php:1230]
+EF4B .|    |    |    <= false
+EF4B .|    |    |    no ticket found [client.php:1111]
+EF4B .|    |    <= false
+EF4B .|    |    => CASClient::redirectToCas(false) [client.php:962]
+EF4B .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+EF4B .|    |    |    |    => CASClient::getURL() [client.php:440]
+EF4B .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+EF4B .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+EF4B .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+EF4B .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+EF4B .|    |    |    exit()
+EF4B .|    |    |    -
+EF4B .|    |    -
+EF4B .|    -
+9812 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+9812 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+9812 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+9812 .|    |    ST or PT 'ST-27-hvjBcGXUXIyuXnfDMUlw-cas' found [client.php:767]
+9812 .|    <= ''
+9812 .<= ''
+9812 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+9812 .<= ''
+9812 .=> phpCAS::forceAuthentication() [cas.module:198]
+9812 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+9812 .|    |    => CASClient::isAuthenticated() [client.php:953]
+9812 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+9812 .|    |    |    |    no user found [client.php:1230]
+9812 .|    |    |    <= false
+9812 .|    |    |    PT `ST-27-hvjBcGXUXIyuXnfDMUlw-cas' is present [client.php:1084]
+9812 .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+9812 .|    |    |    |     [client.php:2699]
+9812 .|    |    |    |    => CASClient::getURL() [client.php:551]
+9812 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+9812 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+9812 .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+9812 .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>sophie.ezmiro</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+9812 .|    |    |    |    <= true
+9812 .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+9812 .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+9812 .|    |    |    |    <= ''
+9812 .|    |    |    |    => CASClient::renameSession('ST-27-hvjBcGXUXIyuXnfDMUlw-cas') [client.php:2790]
+9812 .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+9812 .|    |    |    |    <= ''
+9812 .|    |    |    <= true
+9812 .|    |    |    PT `ST-27-hvjBcGXUXIyuXnfDMUlw-cas' was validated [client.php:1086]
+9812 .|    |    |    => CASClient::getURL() [client.php:1137]
+9812 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+9812 .|    |    |    => CASClient::getURL() [client.php:1138]
+9812 .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+9812 .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+9812 .|    |    |    exit()
+9812 .|    |    |    -
+9812 .|    |    -
+9812 .|    -
+0AAF .START phpCAS-1.2.1 ****************** [CAS.php:473]
+0AAF .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+0AAF .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+0AAF .|    <= ''
+0AAF .<= ''
+0AAF .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+0AAF .<= ''
+0AAF .=> phpCAS::forceAuthentication() [cas.module:198]
+0AAF .|    => CASClient::forceAuthentication() [CAS.php:1016]
+0AAF .|    |    => CASClient::isAuthenticated() [client.php:953]
+0AAF .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+0AAF .|    |    |    |    user = `sophie.ezmiro' [client.php:1220]
+0AAF .|    |    |    |    proxies = "" [client.php:1225]
+0AAF .|    |    |    <= true
+0AAF .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+0AAF .|    |    <= true
+0AAF .|    |    no need to authenticate [client.php:955]
+0AAF .|    <= true
+0AAF .|    no need to authenticate (user `sophie.ezmiro' is already authenticated) [CAS.php:1032]
+0AAF .<= ''
+BBCF .START phpCAS-1.2.1 ****************** [CAS.php:473]
+BBCF .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+BBCF .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+BBCF .|    <= ''
+BBCF .<= ''
+BBCF .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+BBCF .<= ''
+BBCF .=> phpCAS::forceAuthentication() [cas.module:198]
+BBCF .|    => CASClient::forceAuthentication() [CAS.php:1016]
+BBCF .|    |    => CASClient::isAuthenticated() [client.php:953]
+BBCF .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+BBCF .|    |    |    |    no user found [client.php:1230]
+BBCF .|    |    |    <= false
+BBCF .|    |    |    no ticket found [client.php:1111]
+BBCF .|    |    <= false
+BBCF .|    |    => CASClient::redirectToCas(false) [client.php:962]
+BBCF .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+BBCF .|    |    |    |    => CASClient::getURL() [client.php:440]
+BBCF .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+BBCF .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+BBCF .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+BBCF .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+BBCF .|    |    |    exit()
+BBCF .|    |    |    -
+BBCF .|    |    -
+BBCF .|    -
+CEAD .START phpCAS-1.2.1 ****************** [CAS.php:473]
+CEAD .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+CEAD .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+CEAD .|    |    ST or PT 'ST-28-h3tIYhNuo6KuS5PCeEUM-cas' found [client.php:767]
+CEAD .|    <= ''
+CEAD .<= ''
+CEAD .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+CEAD .<= ''
+CEAD .=> phpCAS::forceAuthentication() [cas.module:198]
+CEAD .|    => CASClient::forceAuthentication() [CAS.php:1016]
+CEAD .|    |    => CASClient::isAuthenticated() [client.php:953]
+CEAD .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+CEAD .|    |    |    |    no user found [client.php:1230]
+CEAD .|    |    |    <= false
+CEAD .|    |    |    PT `ST-28-h3tIYhNuo6KuS5PCeEUM-cas' is present [client.php:1084]
+CEAD .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+CEAD .|    |    |    |     [client.php:2699]
+CEAD .|    |    |    |    => CASClient::getURL() [client.php:551]
+CEAD .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+CEAD .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+CEAD .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+CEAD .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>stephane.auzanneau</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+CEAD .|    |    |    |    <= true
+CEAD .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+CEAD .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+CEAD .|    |    |    |    <= ''
+CEAD .|    |    |    |    => CASClient::renameSession('ST-28-h3tIYhNuo6KuS5PCeEUM-cas') [client.php:2790]
+CEAD .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+CEAD .|    |    |    |    <= ''
+CEAD .|    |    |    <= true
+CEAD .|    |    |    PT `ST-28-h3tIYhNuo6KuS5PCeEUM-cas' was validated [client.php:1086]
+CEAD .|    |    |    => CASClient::getURL() [client.php:1137]
+CEAD .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+CEAD .|    |    |    => CASClient::getURL() [client.php:1138]
+CEAD .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+CEAD .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+CEAD .|    |    |    exit()
+CEAD .|    |    |    -
+CEAD .|    |    -
+CEAD .|    -
+7819 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+7819 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+7819 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+7819 .|    <= ''
+7819 .<= ''
+7819 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+7819 .<= ''
+7819 .=> phpCAS::forceAuthentication() [cas.module:198]
+7819 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+7819 .|    |    => CASClient::isAuthenticated() [client.php:953]
+7819 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+7819 .|    |    |    |    user = `stephane.auzanneau' [client.php:1220]
+7819 .|    |    |    |    proxies = "" [client.php:1225]
+7819 .|    |    |    <= true
+7819 .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+7819 .|    |    <= true
+7819 .|    |    no need to authenticate [client.php:955]
+7819 .|    <= true
+7819 .|    no need to authenticate (user `stephane.auzanneau' is already authenticated) [CAS.php:1032]
+7819 .<= ''
+3C9F .START phpCAS-1.2.1 ****************** [CAS.php:473]
+3C9F .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+3C9F .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+3C9F .|    <= ''
+3C9F .<= ''
+3C9F .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+3C9F .<= ''
+3C9F .=> phpCAS::forceAuthentication() [cas.module:198]
+3C9F .|    => CASClient::forceAuthentication() [CAS.php:1016]
+3C9F .|    |    => CASClient::isAuthenticated() [client.php:953]
+3C9F .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+3C9F .|    |    |    |    no user found [client.php:1230]
+3C9F .|    |    |    <= false
+3C9F .|    |    |    no ticket found [client.php:1111]
+3C9F .|    |    <= false
+3C9F .|    |    => CASClient::redirectToCas(false) [client.php:962]
+3C9F .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+3C9F .|    |    |    |    => CASClient::getURL() [client.php:440]
+3C9F .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+3C9F .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+3C9F .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+3C9F .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+3C9F .|    |    |    exit()
+3C9F .|    |    |    -
+3C9F .|    |    -
+3C9F .|    -
+D380 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+D380 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+D380 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+D380 .|    <= ''
+D380 .<= ''
+D380 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+D380 .<= ''
+D380 .=> phpCAS::forceAuthentication() [cas.module:198]
+D380 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+D380 .|    |    => CASClient::isAuthenticated() [client.php:953]
+D380 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+D380 .|    |    |    |    no user found [client.php:1230]
+D380 .|    |    |    <= false
+D380 .|    |    |    no ticket found [client.php:1111]
+D380 .|    |    <= false
+D380 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+D380 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+D380 .|    |    |    |    => CASClient::getURL() [client.php:440]
+D380 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+D380 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+D380 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+D380 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+D380 .|    |    |    exit()
+D380 .|    |    |    -
+D380 .|    |    -
+D380 .|    -
+83DD .START phpCAS-1.2.1 ****************** [CAS.php:473]
+83DD .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+83DD .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+83DD .|    |    ST or PT 'ST-29-STg39OObsNHp2J9UhvKj-cas' found [client.php:767]
+83DD .|    <= ''
+83DD .<= ''
+83DD .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+83DD .<= ''
+83DD .=> phpCAS::forceAuthentication() [cas.module:198]
+83DD .|    => CASClient::forceAuthentication() [CAS.php:1016]
+83DD .|    |    => CASClient::isAuthenticated() [client.php:953]
+83DD .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+83DD .|    |    |    |    no user found [client.php:1230]
+83DD .|    |    |    <= false
+83DD .|    |    |    PT `ST-29-STg39OObsNHp2J9UhvKj-cas' is present [client.php:1084]
+83DD .|    |    |    => CASClient::validatePT('', NULL, NULL) [client.php:1085]
+83DD .|    |    |    |     [client.php:2699]
+83DD .|    |    |    |    => CASClient::getURL() [client.php:551]
+83DD .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+83DD .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+83DD .|    |    |    |    => CAS_CurlRequest::_sendRequest() [AbstractRequest.php:188]
+83DD .|    |    |    |    |    Response Body: 
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+	<cas:authenticationSuccess>
+		<cas:user>philippe.hubert</cas:user>
+
+
+	</cas:authenticationSuccess>
+</cas:serviceResponse>
+
+ [CurlRequest.php:129]
+83DD .|    |    |    |    <= true
+83DD .|    |    |    |    => CASClient::readExtraAttributesCas20(DOMNodeList::__set_state(array())) [client.php:2761]
+83DD .|    |    |    |    |    Testing for rubycas style attributes [client.php:1654]
+83DD .|    |    |    |    <= ''
+83DD .|    |    |    |    => CASClient::renameSession('ST-29-STg39OObsNHp2J9UhvKj-cas') [client.php:2790]
+83DD .|    |    |    |    |    Skipping session rename since phpCAS is not handling the session. [client.php:837]
+83DD .|    |    |    |    <= ''
+83DD .|    |    |    <= true
+83DD .|    |    |    PT `ST-29-STg39OObsNHp2J9UhvKj-cas' was validated [client.php:1086]
+83DD .|    |    |    => CASClient::getURL() [client.php:1137]
+83DD .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+83DD .|    |    |    => CASClient::getURL() [client.php:1138]
+83DD .|    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+83DD .|    |    |    Prepare redirect to : http://devl-kit2site.sciencespo.fr/cas [client.php:1138]
+83DD .|    |    |    exit()
+83DD .|    |    |    -
+83DD .|    |    -
+83DD .|    -
+5AEF .START phpCAS-1.2.1 ****************** [CAS.php:473]
+5AEF .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+5AEF .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+5AEF .|    <= ''
+5AEF .<= ''
+5AEF .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+5AEF .<= ''
+5AEF .=> phpCAS::forceAuthentication() [cas.module:198]
+5AEF .|    => CASClient::forceAuthentication() [CAS.php:1016]
+5AEF .|    |    => CASClient::isAuthenticated() [client.php:953]
+5AEF .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+5AEF .|    |    |    |    user = `philippe.hubert' [client.php:1220]
+5AEF .|    |    |    |    proxies = "" [client.php:1225]
+5AEF .|    |    |    <= true
+5AEF .|    |    |    user was already authenticated, no need to look for tickets [client.php:1060]
+5AEF .|    |    <= true
+5AEF .|    |    no need to authenticate [client.php:955]
+5AEF .|    <= true
+5AEF .|    no need to authenticate (user `philippe.hubert' is already authenticated) [CAS.php:1032]
+5AEF .<= ''
+92F4 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+92F4 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+92F4 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+92F4 .|    <= ''
+92F4 .<= ''
+92F4 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+92F4 .<= ''
+92F4 .=> phpCAS::forceAuthentication() [cas.module:198]
+92F4 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+92F4 .|    |    => CASClient::isAuthenticated() [client.php:953]
+92F4 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+92F4 .|    |    |    |    no user found [client.php:1230]
+92F4 .|    |    |    <= false
+92F4 .|    |    |    no ticket found [client.php:1111]
+92F4 .|    |    <= false
+92F4 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+92F4 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+92F4 .|    |    |    |    => CASClient::getURL() [client.php:440]
+92F4 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+92F4 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+92F4 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+92F4 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+92F4 .|    |    |    exit()
+92F4 .|    |    |    -
+92F4 .|    |    -
+92F4 .|    -
+1A00 .START phpCAS-1.2.1 ****************** [CAS.php:473]
+1A00 .=> phpCAS::client('2.0', 'federation-test.sciences-po.fr', 443, 'cas', false) [cas.module:159]
+1A00 .|    => CASClient::CASClient('2.0', false, 'federation-test.sciences-po.fr', 443, 'cas', false) [CAS.php:374]
+1A00 .|    <= ''
+1A00 .<= ''
+1A00 .=> phpCAS::setNoCasServerValidation() [cas.module:167]
+1A00 .<= ''
+1A00 .=> phpCAS::forceAuthentication() [cas.module:198]
+1A00 .|    => CASClient::forceAuthentication() [CAS.php:1016]
+1A00 .|    |    => CASClient::isAuthenticated() [client.php:953]
+1A00 .|    |    |    => CASClient::wasPreviouslyAuthenticated() [client.php:1049]
+1A00 .|    |    |    |    no user found [client.php:1230]
+1A00 .|    |    |    <= false
+1A00 .|    |    |    no ticket found [client.php:1111]
+1A00 .|    |    <= false
+1A00 .|    |    => CASClient::redirectToCas(false) [client.php:962]
+1A00 .|    |    |    => CASClient::getServerLoginURL(false, false) [client.php:1246]
+1A00 .|    |    |    |    => CASClient::getURL() [client.php:440]
+1A00 .|    |    |    |    |    Final URI: http://devl-kit2site.sciencespo.fr/cas [client.php:2851]
+1A00 .|    |    |    |    <= 'http://devl-kit2site.sciencespo.fr/cas'
+1A00 .|    |    |    <= 'http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas'
+1A00 .|    |    |    Redirect to : http://federation-test.sciences-po.fr/cas/login?service=http%3A%2F%2Fdevl-kit2site.sciencespo.fr%2Fcas [client.php:1248]
+1A00 .|    |    |    exit()
+1A00 .|    |    |    -
+1A00 .|    |    -
+1A00 .|    -

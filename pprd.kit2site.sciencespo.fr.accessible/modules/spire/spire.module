@@ -1,0 +1,548 @@
+<?php
+
+module_load_include('module', 'jsonrpc_client');
+
+
+function spire_init(){
+	drupal_add_css(drupal_get_path('module', 'spire') . '/spire.css');
+	
+}
+
+function spire_perm(){
+  return array('access spire', 'settings server spire');
+}
+
+function spire_menu() {
+	
+	$items['admin/content/spire'] = array(
+	  'title' => 'Spire',
+	  'description' => 'Settings pour le module SPIRE',
+	  'page callback' => 'spire_admin',
+	  // 'page arguments' => array('spire_admin'),
+	  'access arguments' => array('settings server spire'),
+	);
+
+
+	$items['spire-orgunits-import'] = array(
+		'title' => 'Spire data import',
+		'page callback' => 'spire_call_orgunits_import',
+		'file' => 'spire.import.inc',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	$items['spire-chercheurs-import'] = array(
+		'title' => 'Spire data import',
+		'page callback' => 'spire_call_chercheurs_import',
+		'file' => 'spire.import.inc',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	$items['spire-publications-import'] = array(
+		'title' => 'Spire data import',
+		'page callback' => 'spire_call_publications_import',
+		'file' => 'spire.import.inc',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	$items['spire-list'] = array(
+		'title' => t('Spire Basic View'),
+		'page callback' => 'spire_view',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	$items['spire-publications'] = array(
+		'title' => t('Publications'),
+		'page callback' => 'spire_pub_view',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	$items['degage-tout'] = array(
+		'page callback' => 'degage_tout',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	$items['charge-tout'] = array(
+		'page callback' => 'spire_data_import',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+
+	return $items;
+}
+
+function spire_admin() {
+	
+	$content = drupal_get_form('spire_url_form');
+	$content .= '<hr />';
+	$content .= drupal_get_form('spire_form');
+	$content .= '<hr />';
+	$content .= drupal_get_form('spire_chercheurs_enplus_form');
+	$content .= '<hr />';
+	$content .= '<p>'.l(t("Importer les organisations depuis Spire"), "spire-orgunits-import", array('attributes' => array('html' => true))).'</p>';
+	// $content .= '<p>'.l(t("Importer les chercheurs depuis Spire"), "spire-chercheurs-import", array('attributes' => array('html' => true))).'</p>';
+	// $content .= '<p>'.l(t("Importer les publications depuis Spire"), "spire-publications-import", array('attributes' => array('html' => true))).'</p>';
+
+	$content .= '<p>'.l(t("Voir la vue des chercheurs"), "spire-list", array('attributes' => array('html' => true))).'</p>';
+
+	return $content;
+	
+}
+
+function spire_data_import(){
+
+	$path = getcwd().'/'.drupal_get_path('module', 'spire').'/';
+	$r = exec('sh '.$path.'spire.sh');
+
+	if($r == 0) {
+		drupal_set_message('Importation terminée !');
+	}else{
+		drupal_set_message('Importation : y\'a une couille !');
+	}
+	drupal_goto('admin/content/spire');
+
+}
+
+function spire_url_form() {
+
+	$default = variable_get('spire_url', '');
+	
+	$form['spire_url'] = array(
+		'#type' => 'textfield', 
+		'#title' => t('Spire Import Url'), 
+		'#default_value' => $default,
+	);
+	$form['spire_url_submit'] = array(
+	  '#type' => 'submit',
+	  '#value' => t('Save'),
+	);
+	return $form;
+	
+}
+
+function spire_url_form_submit($form, &$form_state) {
+
+	variable_set('spire_url', $form_state['values']['spire_url']);
+}
+
+function spire_form() {
+	$sql = "SELECT nid FROM {node} WHERE type LIKE '%s'";
+	$result = db_query($sql, 'spire_orgunit_type');
+	while ($row = db_fetch_object($result)) {
+		$o = node_load(array('nid' => $row->nid));
+		$orgunits[$row->nid] = ucfirst($o->title).' ('.$o->field_spor_name[0]['value'].')';
+	}
+	
+	$default = variable_get('orgunits', array());
+
+	if(!$orgunits){
+		$orgunits = array();
+	}
+	asort($orgunits);
+		
+	$form['orgunits'] = array(
+		'#type' => 'checkboxes', 
+		'#title' => t('Centres &agrave; importer de SPIRE'), 
+		'#default_value' => $default,
+		'#options' => $orgunits,
+		'#description' => t('Tous les chercheurs et leurs publications seront importés pour les centres sélectionnés'),
+    );
+	$form['orgunits_submit'] = array(
+	  '#type' => 'submit',
+	  '#value' => t('Save'),
+	);
+	
+	return $form;
+}
+
+function spire_form_submit($form, &$form_state) {
+	
+	variable_set('orgunits', $form_state['values']['orgunits']);
+}
+
+function spire_chercheurs_enplus_form() {
+
+	$cs = variable_get('orgunits', array());
+	if(empty($cs)){
+		return '';
+	}
+	foreach ($cs as $nid => $value) {
+		if($value == 0){
+			unset($centres[$nid]);
+		}else{
+			$centres[] = $nid;
+		}
+	}
+
+	$params = requete_chercheurs($centres, 'sauf', '2000-01-01');
+	
+	$url = variable_get('spire_url', '');
+	$client = new JsonRpcClient($url);
+	$result = $client->call('search', $params);
+	
+	if($result['result']['records']){
+		foreach ($result['result']['records'] as $id => $r) {
+			$tri[$r['name_family']] = $r['rec_id'];
+			$c[$r['rec_id']] = $r['name_given'].' '.$r['name_family'];
+		}
+		ksort($tri);
+		foreach($tri as $nom => $recid) {
+			$chercheurs[$recid] = $c[$recid];
+		}
+	}
+	
+	$default = variable_get('chercheurs_en_plus', array());
+	$deja = array();
+	
+	foreach($default as $recid => $name){
+		$deja[] = $c[$recid];
+	}
+
+	$form['chercheurs_enplus_titre'] = array(
+		'#value' => '<h2>Importer des chercheurs qui ne sont pas affili&eacute;s aux centre(s) s&eacute;lectionn&eacute;(s)</h2>',
+	);
+	$form['chercheurs_enplus_mk'] = array(
+		'#value' => 'Chercheurs actuellement import&eacute;s : '.implode(', ', $deja),
+	);
+
+	if(!$chercheurs){
+		$chercheurs = array();
+	}
+	$form['chercheurs_enplus'] = array(
+		'#type' => 'select', 
+		'#multiple' => true,
+		'#title' => t("Chercheurs affili&eacute;s &agrave; d&#x27;autres centres &agrave; ajouter &agrave; l&#x27;importation"), 
+		'#default_value' => $default,
+		'#options' => $chercheurs,
+		'#size' => 20,
+	);
+	$form['chercheurs_enplus_submit'] = array(
+	  '#type' => 'submit',
+	  '#value' => t('Save'),
+	);
+	
+	return $form;
+}
+
+function spire_chercheurs_enplus_form_submit($form, &$form_state) {
+	variable_set('chercheurs_en_plus', $form_state['values']['chercheurs_enplus']);
+}
+
+function spire_filter($what) {
+	global $language;
+	$return['all'] = t('All');
+	switch ($what) {
+		case 'status':
+			$q = 'SELECT distinct ctsct.field_spch_statut_value FROM content_type_spire_chercheur_type ctsct LEFT JOIN node n ON n.nid=ctsct.nid  WHERE n.language LIKE "%s" ORDER BY field_spch_statut_value';
+			$result = db_query($q, array($language->language));
+			while ($row = db_fetch_object($result)) {
+				$statuts_existants[] = $row->field_spch_statut_value;
+			}
+			if(!empty($statuts_existants)) {
+				$type = content_types('spire_chercheur_type');
+				$options = explode("\n", $type['fields']['field_spch_statut']['allowed_values']);
+			
+				foreach($options as $i => $v){
+					$vv = explode('|', $v);
+				
+					if(in_array($vv[0], $statuts_existants)){
+						$return[$vv[0]] = $vv[1];
+					}
+				}
+			}
+			break;
+		
+		case 'themes':
+			$q = 'SELECT distinct ctsct.field_spch_research_cov_keyword_value FROM content_field_spch_research_cov_keyword ctsct LEFT JOIN node n ON n.nid=ctsct.nid  WHERE n.language LIKE "%s" ORDER BY field_spch_research_cov_keyword_value';
+			$result = db_query($q, array($language->language));
+			while ($row = db_fetch_object($result)) {
+				if(!empty($row->field_spch_research_cov_keyword_value)){
+					$return[$row->field_spch_research_cov_keyword_value] = $row->field_spch_research_cov_keyword_value;
+				}
+			}
+			break;
+	}
+	return $return;
+
+}
+
+function spire_block_form() {
+	
+	$default_stat = $_GET['stat'] ? $_GET['stat'] : 'all';
+	$default_theme = $_GET['theme'] ? $_GET['theme'] : 'all';
+	
+	$form['stat'] = array(
+		'#type' => 'select', 
+		'#title' => t('Status'), 
+		'#default_value' => $default_stat,
+		'#options' => spire_filter('status'),
+	);
+	$form['theme'] = array(
+		'#type' => 'select', 
+		'#title' => t('Research Theme'), 
+		'#default_value' => $default_theme,
+		'#options' => spire_filter('themes'),
+	);
+	$form['filter_submit'] = array(
+	  '#type' => 'submit',
+	  '#value' => t('Filter'),
+	);
+	
+	return $form;
+
+}
+
+function spire_block_form_submit($form, &$form_state) {
+	$v = $form_state['values'];
+	$query = array();
+	$no = array('op','filter_submit','form_build_id','form_token','form_id');
+	foreach($v as $field => $value){
+		if(!in_array($field, $no)){
+			$query[] = $field.'='.$value;
+		}
+	}
+	$q = implode('&', $query);
+	drupal_goto('spire-list', $q);
+}
+
+function spire_block($op = 'list', $delta = 0, $edit = array()){
+	global $language;
+
+	switch ($op) {
+		case 'list':
+		  $blocks['spire_filters'] = array(
+				'title' => t('Filter'),
+		    'info' => 'Filtres pour liste Spire',
+		    'status' => 1,
+		    'region' => 'sidebar_second',
+		  );
+			return $blocks;
+		break;
+		
+		case 'view':
+			switch ($delta) {
+				case 'spire_filters':
+					$block['subject'] = t('Filters');
+					$block['content'] = drupal_get_form('spire_block_form');
+					return $block;
+				break;
+			}
+		break;
+			
+	}	
+}
+
+function spire_view() {
+	
+	global $language;
+	$arg = arg();
+	$alpha = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z");
+	$letter = $arg[count($arg) - 1];
+
+	$f = '';
+	if($_GET['stat'] && $_GET['stat'] != 'all'){
+		
+		$f .= ' AND ctsct.field_spch_statut_value LIKE "'.$_GET['stat'].'"';
+
+	}
+	if($_GET['theme'] && $_GET['theme'] != 'all'){
+
+		$f .= ' AND cfsrck.field_spch_research_cov_keyword_value LIKE "'.mysql_real_escape_string(urldecode($_GET['theme'])).'"';
+
+	}
+	//si filtre, pas d'alpha
+	if(!empty($f)){
+		$q = 'SELECT distinct ctsct.nid FROM content_type_spire_chercheur_type ctsct LEFT JOIN node n ON n.nid=ctsct.nid  LEFT JOIN content_field_spch_research_cov_keyword cfsrck ON cfsrck.nid=ctsct.nid WHERE n.language LIKE "%s"';
+		$letter = 'filtre';
+	}else{
+		$q = 'SELECT distinct ctsct.nid FROM content_type_spire_chercheur_type ctsct LEFT JOIN node n ON n.nid=ctsct.nid WHERE n.language LIKE "%s" AND LOWER(LEFT(field_spch_nom_value, 1)) LIKE "%s"';
+	}
+
+	$q .= $f;
+	$q .=  ' ORDER BY field_spch_nom_value';
+
+	if(!empty($f)){
+		$result = db_query($q, array($language->language));
+	}else{
+		if(!in_array($letter, $alpha)){
+			foreach($alpha as $i => $l){
+				$result = db_query($q, array($language->language, $l));
+				if($result->num_rows){
+					$letter = $l;
+					break;
+				}
+			}
+		}else{
+			$result = db_query($q, array($language->language, $letter));
+		}
+	}
+	
+
+	while ($row = db_fetch_object($result)) {
+		$chercheurs[] = $row->nid;
+	}
+	$content = array();
+	if($chercheurs){
+		foreach($chercheurs as $i => $nid){
+			$c = node_load(array('nid' => $nid));
+			$c->has_pub = false;
+			$q = 'select nid from content_field_sppu_auteurs where field_sppu_auteurs_nid = %d;';
+			$r = db_query($q, $nid);
+			if($r->num_rows){
+				$c->has_pub = true;
+			}
+			$content[] = $c;
+		}
+	}
+
+	$page_content = theme('spire-list', $content, $letter);
+	return $page_content;
+}
+
+function spire_pub_view(){
+
+	global $language;
+	$arg = arg();
+	$cid = $arg[count($arg) - 1];
+	$c = node_load(array('nid' => $cid));
+	
+	$q = 'SELECT cfsa.nid AS nid, ctspt.field_sppu_date_issued_value AS date FROM content_field_sppu_auteurs cfsa LEFT JOIN content_type_spire_publication_type ctspt ON ctspt.nid=cfsa.nid LEFT JOIN node n ON n.nid=cfsa.nid WHERE n.language LIKE "%s" AND field_sppu_auteurs_nid = %d ORDER BY date DESC';
+	$r = db_query($q, array($language->language, $cid));
+	while ($row = db_fetch_object($r)) {
+		$pubs[] = $row->nid;
+	}
+	
+	$content = array();
+	if($pubs){
+		foreach($pubs as $i => $nid){
+			$p = node_load(array('nid' => $nid));
+			$content[] = $p;
+		}
+	}
+	$page_content = theme('spire-pub', $content, $c->title);
+	return $page_content;
+	
+}
+
+function spire_theme(){
+	return array(
+		'spire-list' => array(
+			'template' => 'spire-list',
+			'arguments' => array('content' => NULL, 'letter' => NULL, 'has_pub' => NULL),
+		),
+		'spire-pub' => array(
+			'template' => 'spire-pub',
+			'arguments' => array('content' => NULL, 'name' => NULL),
+		),
+	);	
+}
+
+function requete_chercheurs($centres, $what, $time){
+	$search_terms = array();
+	$count = count($centres);
+
+	if($what == 'tous'){
+		$egal = "=";
+		$op = "or";
+	}
+	if($what == 'sauf'){
+		$egal = '<>';
+		$op = "and";
+	}
+
+	if($count == 1) {
+		$o = node_load(array('nid' => $centres[0]));
+
+		$a = array('index' => "affiliation_id", 'operator' => $egal, 'value' => $o->field_spor_rec_id[0]['value']);
+		$search_terms = $a;
+	} else if ($count > 1) {
+		if($count == 2) {
+			$o = node_load(array('nid' => $centres[0]));
+			$a = array('index' => "affiliation_id", 'operator' => $egal, 'value' => $o->field_spor_rec_id[0]['value']);
+			$search_terms['left'] = $a;
+			$search_terms['operator'] = $op;
+			$o = node_load(array('nid' => $centres[1]));
+			$a = array('index' => "affiliation_id", 'operator' => $egal, 'value' => $o->field_spor_rec_id[0]['value']);
+			$search_terms['right'] = $a;
+		}
+		if($count > 2) {
+			$keys = array_keys($centres);
+			for ($i=0; $i < $count; $i++) {
+				$o = node_load(array('nid' => $centres[$keys[$i]]));
+				
+				$a = array('index' => 'affiliation_id', 'operator' => $egal, 'value' => $o->field_spor_rec_id[0]['value']);
+				// determiner pour quel $i on doit afficher left right etc...
+				$r = "['right']";
+				$s = "";
+				for($j=0; $j < $i; $j++){
+					$s .= $r;
+				}
+				if($i % 2 == 0){
+					if($i == $count - 1) {//dernier item
+						$sl = $s;
+						eval("\$search_terms$sl = \$a;");
+					} else {
+						$sl = $s."['left']";
+						$so = $s."['operator'] = '$op'";
+						eval("\$search_terms$sl = \$a;");
+						eval("\$search_terms$so;");
+					}
+				} else {
+					if($i == $count - 1) {//dernier item
+						$sr = $s;
+						eval("\$search_terms$sr = \$a;");
+					} else {
+						$sr = $s."['left']";
+						$sl = $s."['left']";
+						$so = $s."['operator'] = '$op'";
+						eval("\$search_terms$sl = \$a;");
+						eval("\$search_terms$so;");
+						eval("\$search_terms$sr = \$a;");
+					}
+				}
+			}
+		}
+	}
+
+	
+	$params = array(
+		"kit2site",
+		array (
+			"filter_class" => "Person",
+			"search_terms" => $search_terms,
+			"result_batch_size" => 6000,
+		),
+	);
+	
+	if($time){
+		$params[1]["filter_date_modified_begin"] = $time;
+	}
+
+	return $params;
+	
+}
+
+function degage_tout(){
+
+	$q = "SELECT nid FROM node WHERE type IN ('spire_orgunit_type', 'spire_chercheur_type', 'spire_publication_type', 'spire_teaching_type', 'spire_relationship_type', 'spire_auteur_type', 'spire_degree_type')";
+
+	$r = db_query($q);
+	while ($row = db_fetch_object($r)) {
+		node_delete($row->nid);
+	}	
+   variable_del('orgunits');
+   variable_del('chercheurs_en_plus');
+  
+  drupal_flush_all_caches();
+
+	drupal_set_message('Nettoyage terminé !');
+	drupal_goto('admin/content/spire');
+	
+}
+
+
+
+
+

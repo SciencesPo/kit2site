@@ -1,0 +1,57 @@
+<?php
+// ; $Id: utilitaires.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+// function utilitaires_menu_alter(&$items) {
+//   
+//        unset($items['user']);
+// 
+// }
+
+
+
+
+function utilitaires_menu() 
+{
+   $items = array();    
+
+  return $items; 
+}
+
+// function utilitaires_cas() {
+//    global $base_url;
+//    $url = $base_url.'/cas';
+//    $url = urlencode($url);
+//    $cas = variable_get('cas_server', null);
+//    drupal_goto('http://'.$cas.'/cas/login?service='.$url);
+// }
+
+
+function utilitaires_form_alter(&$form, &$form_state, $form_id) {
+   
+   global $base_url;
+   $url = $base_url.'/cas';
+   $url = urlencode($url);
+   $cas = variable_get('cas_server', null);
+   
+      if($form_id == 'user_login') {
+         $arg = arg();
+         if(count($arg) == 1) {
+            drupal_goto('http://'.$cas.'/cas/login?service='.$url);
+          }else{
+            $form['avertissement'] = array(
+                 '#value' => '<h1 style="text-align:center">Cette page est exclusivement r&eacute;serv&eacute;e aux techniciens du site. <p><a href="http://'.$cas.'/cas/login?service='.$url.'">Cliquez sur ce lien si vous &ecirc;tes administrateur du contenu du site.</a></h1><p>&nbsp;</p>',
+                 '#weight' => -700,
+            );
+            return $form;
+         }
+      }
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,5 @@
+; $Id: pdf.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = PDF à télécharger
+description = "Permet d'ajouter un PDF à télécharger"
+package = Sciences-Po
+core = 6.x

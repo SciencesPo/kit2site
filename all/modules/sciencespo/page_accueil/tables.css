@@ -1,0 +1,17 @@
+table.template-table {
+	display: inline;
+	border-collapse: separate;
+}
+
+table.template-table td {
+	background-color: #999999;
+	color: #ffffff;
+	font-weight: bold !important;
+	text-align: center;
+	vertical-align: middle;
+}
+
+table.template-table td select {
+	width: 175px;
+}
+

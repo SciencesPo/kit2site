@@ -1,0 +1,18 @@
+
+#edit-cas-identifier {
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+html #user-login-form li.cas-link,
+html.js #user-login li.cas-link {
+  display: none;
+}
+html #user-login-form li.uncas-link,
+html #user-login li.uncas-link {
+  display: none;
+}
+html.js #user-login-form li.cas-link,
+html.js #user-login li.cas-link {
+  list-style: none;
+}

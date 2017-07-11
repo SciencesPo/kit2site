@@ -1,0 +1,46 @@
+RELEASE NOTE - core Kite2Site - V:2.4.0.0
+créé le 02/05/2012 par DSI-EED-MLE
+
+mise en pprd le 03/07/2012
+
+
+1-Le rôle ADMIN est à présent dévolu uniquement à l'administration des rôles sur 
+l'application Peplum. un nouveau rôle (ADMKS) remplace ADMIN pour ce qui est de l'utilisation du kit2site.
+					
+2-Les menus de niveau 1 sont à présent cliquables
+Seuls les utilisateurs ADMIN et EXPERT peuvent activer cette fonctionnalité (qui n'est pas obligatoire)
+
+3-Plusieurs menus de parents différents peuvent dorénavant pointer vers la même page tout en conservant 
+la fonction du parent de couleur blanche lorsque le menu est actif.
+
+4-Les menus, quelques soient leurs niveaux peuvent pointer sur des liens externes.
+Seuls les utilisateurs ADMIN et EXPERT ont accès à cette fonctionnalité
+					
+5-Newsletter :
+Les utilisateurs ADMIN et EXPERT ont la possibilité de gérer une(des) newsletter(s). 
+					
+6-La taille de carrousel est réduite sur la page "actualités"
+					
+7-Suppression du lien ENGLISH / FRANÇAIS dans le « pour en savoir plus »
+					
+
+8-Debuggage : 
+- Résolu un problème de chemin spécifique à la version prod (www en trop) dans les blocs Flux RSS du footer 
+et de la page actus.
+
+9-Carrousels de blocs : 
+Les carrousels "Sciences po on the web" et "Dernières publications" peuvent maintenant afficher plus de deux lignes. 
+Le nombre de lignes est paramétrable dans le bloc lui-même.
+										
+10-Image de fond :
+Nouvelle dimension tolérée pour le téléchargement de l'image de fond : 1024x768 - 400K, plus adaptée à la 
+déformation de l'image pour remplir les écrans larges. 
+
+
+
+CORRECTIONS FAITES CONCERNANT L’ACCESSIBILITÉ
+1) LotB - Ajouter un title indiquant « en cours » sur les liens dans les <li> qui ont la class="active-menu"
+1) LotA - Rendre le menu utilisable au clavier en ajoutant le support du focus/blur via javascript.
+2) LotA - Rendre le menu utilisable javascript désactivé
+4) LotB - Modifier le title pour indiquer l'ouverture dans nouvelle fenêtre sur le lien "Drupal"
+

@@ -1,0 +1,324 @@
+<?php
+// ; $Id: reseaux_sociaux.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute les réseaux sociaux
+ */
+
+/**
+ * Implementation of hook_perm().
+ */
+function reseaux_sociaux_perm()
+{
+	return array('access reseaux sociaux');
+}
+
+/*
+* Implementation of hook_menu
+*/
+function reseaux_sociaux_menu()
+{
+	global $language;
+	$items = array();
+	$reseaux_sociaux = variable_get('reseaux_sociaux_titre', array('fr' => 'Réseaux sociaux', 'en' => 'Social Network'));
+
+	$items['reseaux_sociaux'] = array(
+		'title' => $reseaux_sociaux[$language->language],
+		'page callback' => 'reseaux_sociaux_liste_des_reseaux_sociaux',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	return $items;
+}
+
+/*
+ * Implementation of hook_form_alter
+ * Cache le titre des blocs reseaux_sociaux (remplacé par le champ $form['reseaux_sociaux'])
+ */
+function reseaux_sociaux_form_alter(&$form, &$form_state, $form_id)
+{
+	global $user;
+	switch ($form_id) {
+		case 'block_admin_configure':
+			if($form['delta']['#value'] == 'reseaux_sociaux') {
+				unset($form['block_settings']['title']);				
+			}
+		break;
+		case 'reseaux_sociaux_node_form':
+			global $base_url;
+			
+			$dossier = explode('/', $base_url);
+			
+			$dir_name = './sites/'.str_replace('www.', '', $dossier[count($dossier)-2]).'.'.$dossier[count($dossier)-1].'/files/icons';			
+			$dir = opendir($dir_name);
+			$files = array('any' => t('Any'));
+			
+			$script = '
+				$(document).ready(function() {
+					$("input#edit-field-icone-reseaux-sociaux-0-upload").click(function(){
+						$("select#edit-icon").find("option[value=\'any\']").attr("selected", "selected");
+					});
+				});
+			';
+			
+			drupal_add_js($script, 'inline');
+			
+			while($element = readdir($dir)) {
+				if (is_file($dir_name.'/'.$element) && $element != '.' && $element != '..') {
+					if (strpos($element, '.png') !== false || strpos($element, '.gif') !== false) {
+						$name = explode('_', $element);
+						$files['sites/'.str_replace('www.', '', $dossier[count($dossier)-2]).'.'.$dossier[count($dossier)-1].'/files/icons/'.$element] = ucfirst($name[0]);
+					}
+				}
+			}
+			
+			$form['icon'] = array(
+				'#title' => t('Original Icon'),
+				'#type' => 'select',
+				'#options' => $files,
+				'#description' => t("The icon is mandatory. If no icon from this list is selected, please download your own image in the box below. The image should be 32x32 sized and be transparent. Prefer .gif or better .png (24 bits) image formats."),
+				'#weight' => -100,
+			);
+					
+			if(!in_array('admin', $user->roles) && !in_array('expert', $user->roles) && !($user->uid == 1)) {
+				unset($form['field_oblig_reseaux_sociaux']);
+			}
+		break;
+	}
+}
+
+/*
+ * Implementation of hook_nodeapi
+ */
+function reseaux_sociaux_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL)
+{
+	switch($op) {		
+		case 'presave':
+			if ($node->type == 'reseaux_sociaux') {		
+				if ($node->icon != 'any') {
+					if (strpos($node->icon, '.gif') !== false) {
+						$filemime = 'image/gif';
+					}
+					
+					if (strpos($node->icon, '.png') !== false) {
+						$filemime = 'image/png';
+					}
+					
+					global $base_url;
+					$sous_site = explode('/', $base_url);
+					$length = count($sous_site) - 1;
+					
+					$filename = preg_replace('%sites\/'.$_SERVER[SERVER_NAME].'.'.$sous_site[$length].'\/files\/icons\/(.*)%', '$1', $node->icon);
+					
+					//On insère à la volée l'image dans la table files
+					$q = "INSERT INTO files SET uid = %d, filename = '%s', filepath = '%s', filemime = '%s', filesize = %d, status = %d, timestamp = %d";
+					$options_q = array ($node->uid, $filename, $node->icon, $filemime, 0, 1, time());
+					$r = db_query($q, $options_q);
+					$mysql_insert_id = db_last_insert_id('files', 'fid');
+					
+					//On renseigne le tableau du champ correspondant, pour que l'image lui soit automatiquement associé
+					$node->field_icone_reseaux_sociaux[0]['fid'] = $mysql_insert_id;
+					$node->field_icone_reseaux_sociaux[0]['list'] = 1;
+					$node->field_icone_reseaux_sociaux[0]['uid'] = $node->uid;
+					$node->field_icone_reseaux_sociaux[0]['filepath'] = $node->icon;
+					$node->field_icone_reseaux_sociaux[0]['filename'] = $filename;
+					$node->field_icone_reseaux_sociaux[0]['filemime'] = $filemime;
+					$node->field_icone_reseaux_sociaux[0]['filesize'] = 0;
+					$node->field_icone_reseaux_sociaux[0]['status'] = 1;
+					$node->field_icone_reseaux_sociaux[0]['data']['alt'] = $node->title;
+					$node->field_icone_reseaux_sociaux[0]['data']['title'] = $node->title;
+				}
+			}
+		break;
+	}
+}
+
+/*
+ * Implementation of hook_block
+ */
+function reseaux_sociaux_block($op = 'list', $delta = 0, $edit = array())
+{
+	global $base_url;
+	global $language;
+	
+    switch ($op) {
+		case 'list':
+			$blocks['reseaux_sociaux'] = array(
+				'info' => t('Social Network'),
+				'status' => 0,
+			);
+			return $blocks;
+		break;
+		
+		case 'configure':
+			$reseaux_sociaux = variable_get('reseaux_sociaux_titre', array());
+			$form['reseaux_sociaux_fr'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in french'),
+				'#default_value' => $reseaux_sociaux['fr'], 
+			);
+			$form['reseaux_sociaux_en'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in english'),
+				'#default_value' => $reseaux_sociaux['en'],
+			);
+			return $form;
+			
+		break;
+		
+		case 'save':
+			$reseaux_sociaux = array();
+			$reseaux_sociaux['fr'] = $edit['reseaux_sociaux_fr'];
+			$reseaux_sociaux['en'] = $edit['reseaux_sociaux_en'];
+			variable_set('reseaux_sociaux_titre', $reseaux_sociaux);
+		break;
+		
+		case 'view':
+			switch ($delta) {
+				case 'reseaux_sociaux':
+				
+					global $language;
+				
+					$reseaux_sociaux = variable_get('reseaux_sociaux_titre', array('fr' => 'Réseaux sociaux', 'en' => 'Social Network'));
+					$subject = $reseaux_sociaux[$language->language];
+					
+					$sql = "	SELECT count(N.nid)
+								FROM {node} AS N, {content_type_reseaux_sociaux} AS CTP 
+								WHERE N.type = '%s'
+									AND CTP.field_bloc_reseaux_sociaux_value = '%s'
+									AND N.nid = CTP.nid
+									AND CTP.field_oblig_reseaux_sociaux_value = '%s'
+									AND N.status = %d
+									AND (N.language = '' OR N.language = '%s') 
+									ORDER BY N.sticky DESC ";
+								
+					$res = db_query($sql, array('reseaux_sociaux', 'oui', 'non', 1, $language->language));
+					
+					db_result($res) > 0 ? $oblig = 'non' : $oblig = 'oui';
+					
+					$q = "	SELECT N.nid 
+							FROM {node} AS N, {content_type_reseaux_sociaux} AS CTP 
+							WHERE N.type = '%s'
+								AND CTP.field_bloc_reseaux_sociaux_value = '%s'
+								AND N.nid = CTP.nid
+								AND CTP.field_oblig_reseaux_sociaux_value = '%s'
+								AND N.status = %d 
+								AND (N.language = '' OR N.language = '%s') 
+								ORDER BY N.sticky DESC LIMIT %d ";
+									
+					$r = db_query($q, array('reseaux_sociaux', 'oui', $oblig, 1, $language->language, 5));
+					
+
+					while ($reseaux_sociaux = db_fetch_array($r)) {
+					
+						$c = node_load(array('nid' => $reseaux_sociaux['nid']));
+						$path_reseaux = $c->field_lien_reseaux_sociaux[0]['value'];
+						$text_reseaux = theme_image($c->field_icone_reseaux_sociaux[0]['filepath'], $c->field_icone_reseaux_sociaux[0]['data']['alt'], $c->field_icone_reseaux_sociaux[0]['data']['title'], NULL, false);
+						
+						$options_reseaux = array(
+							'attributes' => array('target' => '_blank'),
+							'html' => true
+						);
+						
+						$items[] = l($text_reseaux, $path_reseaux, $options_reseaux);
+						
+					}
+					
+					$content = theme_item_list($items, NULL, $type = 'ul');
+
+					if($base_url == 'http://www.sciencespo.fr/ressources-numeriques'){
+						$content .= '<div class="all">'.l(t('See all'), 'http://www.sciencespo.fr/ressources-numeriques/content/sciences-po-sur-les-reseaux-et-mobiles').'</div>';
+					}else{
+						$content .= '<div class="all">'.l(t('See all'), 'reseaux_sociaux').'</div>';
+					}
+					
+					$block['subject'] = $subject;
+					$block['content'] =	$content;
+ 
+				break;
+			}
+			return $block;
+
+		break;
+	}
+}
+
+/**
+* Construit la liste des réseaux sociaux
+*/
+function reseaux_sociaux_liste_des_reseaux_sociaux()
+{
+	global $language;
+	menu_cache_clear('primary');
+	
+	$reseaux_sociaux = variable_get('reseaux_sociaux_titre', array('fr' => 'Réseaux sociaux', 'en' => 'Social Network'));
+	$title = $reseaux_sociaux[$language->language];
+
+	$sql = "	SELECT count(N.nid)
+				FROM {node} AS N, {content_type_reseaux_sociaux} AS CTP 
+				WHERE N.type = '%s'
+					AND N.nid = CTP.nid
+					AND CTP.field_oblig_reseaux_sociaux_value = '%s'
+					AND N.status = %d
+					AND (N.language = '' OR N.language = '%s') 
+					ORDER BY N.sticky DESC ";
+				
+	$res = db_query($sql, array('reseaux_sociaux', 'non', 1, $language->language));
+	
+	db_result($res) > 0 ? $oblig = 'non' : $oblig = 'oui';
+	
+	$q = "	SELECT N.nid 
+			FROM {node} AS N, {content_type_reseaux_sociaux} AS CTP 
+			WHERE N.type = '%s'
+				AND N.nid = CTP.nid
+				AND CTP.field_oblig_reseaux_sociaux_value = '%s'
+				AND N.status = %d 
+				AND (N.language = '' OR N.language = '%s') 
+				ORDER BY N.sticky DESC ";
+					
+	$r = db_query($q, array('reseaux_sociaux', $oblig, 1, $language->language));
+	
+	$items = array();
+	$count = 0;
+	
+	while ($reseaux_sociaux = db_fetch_array($r)) {
+		// print_r($reseaux_sociaux);
+		// print '<br>';
+		$c = node_load(array('nid' => $reseaux_sociaux['nid']));
+		$l = '<div class="link">
+			<a title="'.$c->title.'" target="_blank" href="'.$c->field_lien_reseaux_sociaux[0]['value'].'">
+				'.theme_image($c->field_icone_reseaux_sociaux[0]['filepath'], $c->field_icone_reseaux_sociaux[0]['data']['alt'], $c->field_icone_reseaux_sociaux[0]['data']['title'], $c->title, false).'
+				<span>'.$c->title.'</span>
+			</a>
+		</div>';
+		$d = '<div class="content">'.$c->body.'</div>';
+		if ($count%2 == 0) {
+			$items[] = array( 'data' => $l.$d, 'class' => 'even publication clearfix' );
+		}else{
+			$items[] = array( 'data' => $l.$d, 'class' => 'odd publication clearfix' );
+		}
+		$count++;
+	}
+// exit;	
+	$content = theme_item_list($items, NULL, $type = 'ul');
+	
+
+	$page_content = theme('liste_des_reseaux_sociaux', $content, $title);
+	
+	return $page_content;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function reseaux_sociaux_theme($existing, $type, $theme, $path) {
+	return array(
+		'liste_des_reseaux_sociaux' => array(
+			'template' => 'liste-des-reseaux-sociaux',
+			'arguments' => array('content' => NULL, 'title' => NULL)
+		)
+	);
+}
+

@@ -1,0 +1,6 @@
+; $Id: droits_admin.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = droits_admin
+description = "Permet d'afiner les droits dans l'admin des contenus
+"
+package = Sciences-Po
+core = 6.x

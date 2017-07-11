@@ -1,0 +1,68 @@
+RELEASE NOTE - core Kite2Site - V:2.5.0.0
+créée le 27/08/2012 par DSI-EED-PHU
+
+mise en pprd le 27/08/2012
+
+ZONE « MENU DE NAVIGATION »
+- Ajouté un title indiquant « en cours » sur les liens dans les <li> qui ont la class="active-menu"
+- Rendu le menu utilisable au clavier en ajoutant le support du focus/blur via javascript.
+- Rendu le menu utilisable javascript désactivé
+- Modifié le title pour indiquer l'ouverture dans nouvelle fenêtre sur le lien
+
+ZONE DU HEADER
+- Ajouté un attribut alt vide sur l'image de fond
+- Ajouté un attribut alt sur le logo
+- Ajouté des alt="" sur les images de déco dans <div class="region region- header">
+- Ajouté des liens d'accès rapide après <body>
+- Ajouté <a href="#"> </a> autour de « login 
+- Rendu le style des items des menus « français », « login », « wikipédia » cachés pour les rendre atteignables au clavier en sens inverse de tabulation « shift tab ».
+- Modifié le script qui gère le déroulement des menus « français », « login », « wikipédia »
+- Ajouté lang="en" dans les liens sur « login » et « English »
+- Ajouté un title pour indiquer l'ouverture dans nouvelle fenêtre des items dans « login »
+- Supprimé le label <label for="edit-search-block-form-1">Search this site&nbsp;: </label>
+- Ajouté un title="Rechercher sur le site" sur l'input <input id="edit-search-block- form-1" ... />
+- Ajouté un title="Valider la recherche sur le site sur l'input <input id="edit- submit" .../>
+
+ZONE DU FOOTER
+- Ajouté l'indication ouverture nouvelle fenetre + poids + format dans un title sur les liens vers .pdf
+- Ajouté l'indication ouverture nouvelle fenetre des liens externes avec target blank
+- Modifié l'attribut alt de l'icone RSS sortant
+
+ZONE DU CARROUSEL DES ACTUALITÉS
+- Ajouté un h1 masqué en dehors de l'écran
+- Remplacé les h1 dans la zone par des h2
+- Mise en pause du carrousel lorsqu'un lien dans les <li class="li- scpoeditocarousel first"...> reçoit le focus
+- Mis par défaut un attribut alt="" sur les images de fond des différentes actus
+- Ajouté l'indication ouverture nouvelle fenêtre des liens externes avec target blank dans les actus
+- Utilisé des p plutôt que des div pour les sous-titres de bloc
+- Remplacé les span <span class="prev"> et <span class="next"> par des liens avec des images
+- Remplacé les span dans <div class="nav-item"> par des liens avec des images
+- Ajouté un bouton pour mettre en pause le carrousel
+- Mis à disposition la transcription textuelle, le sous titrage et l'audiodescription. Ajouté balise title dans iframe
+
+FORMULAIRES
+- Installé module Captcha et reCaptcha
+
+CONTENU
+- Supprimé le <h1 class="title">Don Giovanni - Acte 1</h1>
+- Ajouté les éléments de citations q et blockquote dans l'éditeur wysiwyg
+- Ajouté l'indication ouverture nouvelle fenêtre + poids + format dans un title sur les liens vers .pdf
+- Ajouté lang="en" dans le lien « English »
+- Ajouté l'indication ouverture nouvelle fenêtre des liens externes avec target blank
+- Remplacé la table dans <div class="share-bar"> par une liste ul li
+- Ajouté un alt sur les icones pdf, imprimer et mail du bloc « Add this »
+- Complété le alt sur les images de type « graphique »
+- Ajouté lang="en" à « Tags »
+- Utilisé un title sur les liens des tags pour donner leur fonction
+
+ZONE BLOC DE DROITE PAGE D'ACCUEIL
+- Carrousel dans <div id="carousel_scpo_on_the_web"> et <div id="carousel_dernieres_publications"> même modifs que carrousel accueil sauf h1 qui deviennent h3
+- Modifié le alt des icones réseaux sociaux et les mettre dans un liste ul li
+- Créé page « Accessibilité »
+
+ZONE BLOC DÉPLIANT
+- Remplacé les fieldset par des div
+- Remplacé les legend par des niveaux de titre hx en fonction de leur niveau
+- Utilisé un title pour donner l'état du bloc (ouvert/fermé)
+- Utilisé une liste de définition et des paragraphes pour baliser le contenu de chaque bloc
+- Ajouté un title indiquant « en cours » sur les liens avec les class="active" dans les <li> du <ul class="menu"> de la colonne de droite

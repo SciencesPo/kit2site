@@ -1,0 +1,10 @@
+; $Id: spire.info,v 1 2013/11/20 02:04:11 sun Exp $
+name = Spire
+description = "Intégration de SPIRE dans le kit de site"
+dependency = jsonrpc_client
+package = Sciences-Po
+core = 6.x
+dependencies[] = jsonrpc_client
+dependencies[] = content_profile
+dependencies[] = content
+dependencies[] = content_copy

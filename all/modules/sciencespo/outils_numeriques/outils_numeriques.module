@@ -1,0 +1,292 @@
+<?php
+// ; $Id: outils_numeriques.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute la liste des services et outils numériques
+ */
+
+/**
+ * Implementation of hook_perm().
+ */
+function outils_numeriques_perm() {
+  return array('access services et outils numeriques');
+}
+
+/*
+ * Implementation of hook_menu
+ */
+function outils_numeriques_menu() {
+	global $language;
+  $items = array();
+
+  $outils = variable_get('outils_titre', array('fr' => 'Services et outils numériques', 'en' => 'Online Tools And Services'));
+
+  $items['outils'] = array(
+	'title' => $outils[$language->language],
+    'page callback' => 'outils_numeriques_liste_des_outils',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/*
+ * Implementation of hook_form_alter
+ * Cache le titre des blocs outils (remplacé par le champ $form['outils'])
+ */
+function outils_numeriques_form_alter(&$form, &$form_state, $form_id) {
+	switch ($form_id) {
+		case 'block_admin_configure':
+			if($form['delta']['#value'] == 'outils') {
+				unset($form['block_settings']['title']);				
+			}
+		break;
+	}
+}
+
+/*
+ * Implementation of hook_block
+ */
+function outils_numeriques_block($op = 'list', $delta = 0, $edit = array()) {
+
+	global $language;
+
+    switch ($op) {
+		case 'list':
+			$blocks['outils'] = array(
+				'info' => t('Online Tools And Services'),
+				'status' => 1,
+				'region' => 'footer',
+			);
+			return $blocks;
+		break;
+		
+		case 'configure':
+			$outils = variable_get('outils_titre', array());
+			$form['outils_fr'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in french'),
+				'#default_value' => $outils['fr'],
+			);
+			$form['outils_en'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in english'),
+				'#default_value' => $outils['en'],
+			);
+			return $form;
+			
+		break;
+		
+		case 'save':
+			$outils = array();
+			$outils['fr'] = $edit['outils_fr'];
+			$outils['en'] = $edit['outils_en'];
+			variable_set('outils_titre', $outils);
+		break;
+		
+		case 'view':
+			switch ($delta) {
+				case 'outils':
+								
+					global $language;
+								
+					$outils = variable_get('outils_titre', array('fr' => 'Services et outils numériques', 'en' => 'Online Tools And Services'));
+								
+					$subject = l($outils[$language->language], 'outils');
+					
+					$q = "	SELECT N.nid 
+							FROM {node} AS N, {content_type_outil_numerique} AS CTON 
+							WHERE N.type = '%s'
+								AND CTON.field_pied_de_page_outil_num_value = '%s'
+								AND N.nid = CTON.nid
+								AND N.status = %d 
+								AND (N.language = '' OR N.language = '%s' )
+								ORDER BY N.sticky DESC LIMIT %d ";
+							
+					$footerMaxLignes = variable_get('footerMaxLignes', 5);
+					$r = db_query($q, array('outil_numerique', 'oui', 1, $language->language, $footerMaxLignes));
+					
+					$items = array();
+					
+					while ($outil_numerique = db_fetch_array($r)) {
+						$c = node_load(array('nid' => $outil_numerique['nid']));
+						$options = array();
+						if ($c->field_nouvel_onglet_outil_num[0]['value'] == 'oui') {
+							$options['attributes'] = array('target' => '_blank', 'title' => $c->title.' - '.t('open in new window'));
+						}
+						$items[] = l($c->title, $c->field_lien_outil_num[0]['value'], $options);
+					}
+					
+					$content = theme_item_list($items, $title = NULL, $type = 'ul');
+										
+					$block['subject'] = $subject;
+					$block['content'] =	$content;
+ 
+				break;
+			}
+			return $block;
+
+		break;
+	}
+}
+
+/**
+* Construit l'arbre de taxonomie
+*/
+function outils_numeriques_constructTax($tree = array(), $parent = 0, $tree_temp = array()) 
+{
+	global $language;
+	
+	if ($language->language == 'fr') {
+		$id_taxo = 8;
+	} else {
+		$id_taxo = 18;
+	}
+
+	if (!$tree) {
+		$tree = taxonomy_get_tree($id_taxo, $parent = 0, $depth = -1, $max_depth = NULL);
+	}
+	
+	$terms = array();
+
+	foreach ($tree as $term) {
+		if ($term->parents[0] == $parent) {
+		
+			$terms[$term->tid] = array(
+				'name' => $term->name,
+				'outils' => array(),
+				'list' => '',
+				'count' => 0
+			);
+			
+			$q = ' SELECT N.nid 
+					FROM {term_node} AS TN, {node} AS N
+					WHERE N.nid = TN.nid
+						AND N.status = %d
+						AND TN.tid = %d 
+						ORDER BY N.sticky DESC ';
+			$r = db_query($q, 1, $term->tid);
+			
+			while($row = db_fetch_array($r)){
+				$terms[$term->tid]['outils'][] = $row['nid'];
+			}
+			
+			/* On intègre les thèmes directement ici */
+			if(count($terms[$term->tid]['outils']) > 0) {
+				$items = array();
+				$count = 0;
+				foreach ($terms[$term->tid]['outils'] as $nid) {
+					$c  = node_load(array('nid' => $nid));
+					$options = array();
+					if ($c->field_nouvel_onglet_outil_num[0]['value'] == 'oui') {
+						$options['attributes'] = array('target' => '_blank', 'class' => 'couleur-principale');
+					} else {
+						$options['attributes'] = array('class' => 'couleur-principale');
+					}
+					$t = '<div class="outil-titre">'.l($c->title, $c->field_lien_outil_num[0]['value'], $options).'</div>';
+					$d = '<div class="outil-description">'.$c->body.'</div>';
+					if($count%2 == 0){
+						$items[] = array( 'data' => $t.$d, 'class' => 'even outil clearfix');
+					}else{
+						$items[] = array( 'data' => $t.$d, 'class' => 'odd outil clearfix');
+					}
+					$count++;
+				}
+				$list = theme_item_list($items, $title = NULL, $type = 'ul');
+				$terms[$term->tid]['list'] = $list;
+				$terms[$term->tid]['count'] = $count;
+			}
+			
+		} else {
+			$tree_temp[$term->parents[0]][$term->tid] = $term;
+		}
+	}
+	
+	if (is_array($terms)) {
+		foreach ($terms as $tid => &$term) {
+			if (isset($tree_temp[$tid])) {
+				$term['children'] = outils_numeriques_constructTax($tree_temp[$tid], $tid, $tree_temp);
+			}
+		}
+	}
+	
+	if ($parent) {
+		return $terms;
+	}
+	
+	return $terms;
+}
+
+/**
+* Construit la liste des services et outils numériques
+*/
+function outils_numeriques_liste_des_outils() 
+{
+	global $language;
+	menu_cache_clear('primary');
+	drupal_add_js("misc/collapse.js", 'core');
+
+	$taxContent = outils_numeriques_constructTax();
+	
+	foreach($taxContent as $value) {
+		$inter = theme_liste_outil($value);
+		$content .= $inter['content'];
+	}
+	
+	$outils = variable_get('outils_titre', array('fr' => 'Services et outils numériques', 'en' => 'Online Tools And Services'));
+	$title = $outils[$language->language];
+	$page_content = theme('liste_des_outils', $content, $title);
+	
+	return $page_content;	
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function outils_numeriques_theme($existing, $type, $theme, $path) {
+	return array(
+		'liste_des_outils' => array(
+			'template' => 'liste-des-outils',
+			'arguments' => array('content' => NULL, 'title' => NULL)
+		)
+	);
+}
+
+/**
+*Génère le thème pour  "outils" 
+*/
+function theme_liste_outil($value, $niv = 1)
+{
+	//fieldset Value
+	if(count($value['children'])) {
+		foreach($value['children'] as $children) {
+			$inter = theme_liste_outil($children, $niv + 1);
+			$theme .= $inter['content'];
+			$value['count'] += $inter['count'];
+		}
+		$fieldsetValue = $value['list'].$theme;
+	} else {
+		$fieldsetValue = $value['list'];
+	}
+
+	//fieldset Name
+	if($value['count'] > 0) {
+		$number = '&nbsp;('.$value['count'].' ';
+		$value['count'] > 1 ? $number .= t('items').')' : $number .= t('item').')';
+		$fieldsetTitle = $value['name'].$number;
+	} else {
+		$fieldsetTitle = $value['name'];
+		return;
+	}
+	
+	$h = $niv + 1;
+	$content = '<div class="niveau'.$niv.' listesp collapsible collapsed clearfix">';
+   $content .= '<h'.$h.'>'.$value['name'].$number.'</h'.$h.'>';
+	$content .= $fieldsetValue;
+	$content .= '</div>';
+
+	return array('content' => $content, 'count' => $value['count']);
+}
+

@@ -1,0 +1,5 @@
+; $Id: doc.info,v 1 2011/04/01 02:04:11 sun Exp $
+name = doc
+description = "Gestion des releases et de la doc"
+package = Sciences-Po
+core = 6.x

@@ -1,0 +1,227 @@
+<?php
+// ; $Id: scpo_on_the_web.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute Sciences Po on the web
+ */
+
+/**
+ * Implementation of hook_perm().
+ */
+function scpo_on_the_web_perm()
+{
+  return array('access sciences po on the web');
+}
+
+/*
+* Implementation of hook_menu
+*/
+function scpo_on_the_web_menu()
+{
+	global $language;
+	$items = array();
+	$scpo_on_the_web = variable_get('scpo_on_the_web_titre', array('fr' => 'Sciences Po sur le Web', 'en' => 'Sciences Po On The Web'));
+
+	$items['scpo_web'] = array(
+		'title' => $scpo_on_the_web[$language->language],
+		'page callback' => 'scpo_on_the_web_liste_scpo_web',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+
+	return $items;
+}
+
+/*
+ * Implementation of hook_form_alter
+ * Cache le titre des blocs scpo_on_the_web (remplacé par le champ $form['scpo_on_the_web'])
+ */
+function scpo_on_the_web_form_alter(&$form, &$form_state, $form_id)
+{
+	switch ($form_id) {
+		case 'block_admin_configure':
+			if($form['delta']['#value'] == 'scpo_on_the_web') {
+				unset($form['block_settings']['title']);				
+			}
+		break;
+	}
+}
+
+/*
+ * Implementation of hook_block
+ */
+function scpo_on_the_web_block($op = 'list', $delta = 0, $edit = array()) {
+
+	global $base_url;
+	global $language;
+	
+    switch ($op) {
+		case 'list':
+			$blocks['scpo_on_the_web'] = array(
+				'info' => t('Sciences Po On The Web'),
+				'status' => 0,
+			);
+			return $blocks;
+		break;
+		
+		case 'configure':
+			$scpo_on_the_web = variable_get('scpo_on_the_web_titre', array());
+			$form['scpo_on_the_web_fr'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in french'),
+				'#default_value' => $scpo_on_the_web['fr'], 
+			);
+			$form['scpo_on_the_web_en'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Block title in english'),
+				'#default_value' => $scpo_on_the_web['en'],
+			);
+			$form['scpo_on_the_web_nb'] = array(
+				'#type' => 'textfield',
+				'#title' => t('Vertical image number'),
+				'#default_value' => $scpo_on_the_web['nb'],
+			);
+			return $form;
+			
+		break;
+		
+		case 'save':
+			$scpo_on_the_web = array();
+			$scpo_on_the_web['fr'] = $edit['scpo_on_the_web_fr'];
+			$scpo_on_the_web['en'] = $edit['scpo_on_the_web_en'];
+			$scpo_on_the_web['nb'] = $edit['scpo_on_the_web_nb'];
+			variable_set('scpo_on_the_web_titre', $scpo_on_the_web);
+		break;
+		
+		case 'view':
+			switch ($delta) {
+				case 'scpo_on_the_web':
+				
+					global $language;
+				
+					$scpo_on_the_web = variable_get('scpo_on_the_web_titre', array('nb' => 2, 'fr' => 'Sciences Po sur le Web', 'en' => 'Sciences Po On The Web'));
+					$subject = $scpo_on_the_web[$language->language];
+					
+					/* Il nous faut le nombre de résultats */
+					$sql = "	SELECT count(N.nid) AS nb
+								FROM {node} AS N
+								WHERE N.type = '%s'
+									AND N.status = %d
+									AND (N.language = '' OR N.language = '%s') ";
+								
+					$res = db_query($sql, array('scpo_on_the_web', 1, $language->language));
+					
+					$sotw = db_fetch_array($res);
+					$n = $sotw['nb'];
+					$nb = $scpo_on_the_web['nb'];
+
+					/* Puis on effectue la requête */
+					$q = "	SELECT N.nid
+								FROM {node} AS N
+								WHERE N.type = '%s'
+									AND N.status = %d
+									AND (N.language = '' OR N.language = '%s')
+									ORDER BY N.sticky DESC ";
+								
+					$r = db_query($q, array('scpo_on_the_web', 1, $language->language));
+					
+					$items = array();
+					$temp = '';
+					$count = 0;
+					
+					while ($scpo_on_the_web = db_fetch_array($r)) {
+						$c = node_load(array('nid' => $scpo_on_the_web['nid']));
+
+						$temp .= '
+							<div class="scpo_on_the_web">
+								<div>'.theme_image($c->field_image_scpo_on_the_web[0]['filepath'], trim($c->field_image_scpo_on_the_web[0]['data']['alt']), $c->field_image_scpo_on_the_web[0]['data']['title'], '', false).'</div>
+								<h3>'.l($c->title, $c->field_lien_scpo_on_the_web[0]['value'], array('attributes' => array('target' => '_blank'))).'</h3>
+							</div>
+						';
+						$count++;
+
+						if ($count%$nb == 0) {
+							$items[] = $temp;
+							$temp = '';
+						}else if ($count == $n){
+							$items[] = $temp;
+							$temp = '';
+						}
+					}
+					$content = '
+						<div id="carousel_scpo_on_the_web">'.theme_carousel('#carousel_scpo_on_the_web', $items).'</div>
+						<div class="all">'.l(t('See all sites'), 'scpo_web').'</div>
+					';
+					
+					$block['subject'] = $subject;
+					$block['content'] =	$content;
+ 
+				break;
+			}
+			return $block;
+
+		break;
+	}
+}
+
+/**
+* Construit la liste de siences po on the web
+*/
+function scpo_on_the_web_liste_scpo_web()
+{
+	global $language;
+	menu_cache_clear('primary');
+
+	$scpo_on_the_web = variable_get('scpo_on_the_web_titre', array('fr' => 'Dernières publications', 'en' => 'Last Publications'));
+	$title = $scpo_on_the_web[$language->language];
+
+	$q = "	SELECT N.nid
+				FROM {node} AS N
+				WHERE N.type = '%s'
+					AND N.status = %d
+					AND (N.language = '' OR N.language = '%s')
+					ORDER BY N.sticky desc";
+				
+	$r = db_query($q, array('scpo_on_the_web', 1, $language->language));
+	
+	$items = array();
+	$count = 0;
+	
+	while ($scpo_on_the_web = db_fetch_array($r)) {
+		$c = node_load(array('nid' => $scpo_on_the_web['nid']));
+		$i = '<div class="image">
+			<a href="'.$c->field_lien_scpo_on_the_web[0]['value'].'" target="_blank">
+				'.theme_image($c->field_image_scpo_on_the_web[0]['filepath'], trim($c->field_image_scpo_on_the_web[0]['data']['alt']), $c->field_image_scpo_on_the_web[0]['data']['title'], array('width' => '156', 'height' => '60'), false).'
+			</a>
+		</div>';
+		$d = '<div class="content">
+			<h3>'.l($c->title, $c->field_lien_scpo_on_the_web[0]['value'], array('attributes' => array('target' => '_blank'))).'</h3>
+		</div>';
+		if ($count%2 == 0) {
+			$items[] = array( 'data' => $i.$d, 'class' => 'even clearfix' );
+		}else{
+			$items[] = array( 'data' => $i.$d, 'class' => 'odd clearfix' );
+		}
+		$count++;
+	}
+	
+	$content = theme_item_list($items, NULL, $type = 'ul');
+	
+	$page_content = theme('liste_scpo_web', $content, $title);
+	
+	return $page_content;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function scpo_on_the_web_theme($existing, $type, $theme, $path) {
+	return array(
+		'liste_scpo_web' => array(
+			'template' => 'liste-scpo-web',
+			'arguments' => array('content' => NULL, 'title' => NULL)
+		)
+	);
+}
+

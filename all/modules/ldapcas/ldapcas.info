@@ -1,0 +1,9 @@
+; $Id$
+name = CAS Fetch
+package = LDAP integration
+description = This module fetches user data from an LDAP directory when a user logs in via CAS.
+core = 6.x
+version = "6.x-0.1-alpha1"
+
+dependencies[] = ldapauth
+dependencies[] = cas

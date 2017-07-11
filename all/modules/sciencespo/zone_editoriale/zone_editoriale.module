@@ -1,0 +1,630 @@
+<?php
+// ; $Id: zone_editoriale.info,v 1 2011/04/01 02:04:11 sun Exp $
+
+/**
+ * @file
+ * Ajoute la zone éditoriale
+ */
+
+/**
+* Implementation of hook_init().
+*/
+function zone_editoriale_init()
+{
+	drupal_add_css(drupal_get_path('module', 'zone_editoriale').'/scpoeditocarousel.css', $type = 'module', $media = 'all', $preprocess = TRUE);
+	drupal_add_css(drupal_get_path('module', 'zone_editoriale').'/zone_editoriale.css', $type = 'module', $media = 'all', $preprocess = TRUE);
+	jquery_ui_add('effects.core');
+	jquery_ui_add('effects.slide');
+	drupal_add_js(drupal_get_path('module', 'zone_editoriale').'/jquery.timers-1.2.js');
+	drupal_add_js(drupal_get_path('module', 'zone_editoriale').'/scpoeditocarousel.js');
+	drupal_add_js(drupal_get_path('module', 'zone_editoriale').'/scpofeed.js');
+		
+	//préparation de la variable avec les différents gabarits
+	$zone_editoriale = array(
+		'gabarit_1' => array(
+			'bloc1' => array('priority' => 1, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p1_958_240'),
+		),
+		'gabarit_2' => array(
+			'bloc1' => array('priority' => 1, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p1_478_240'),
+			'bloc2' => array('priority' => 1, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p1_478_240'),
+		),
+		'gabarit_3' => array(
+			'bloc1' => array('priority' => 1, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p1_531_240'),
+			'bloc2' => array('priority' => 2, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p2_425_240'),
+		),
+		'gabarit_4' => array(
+			'bloc1' => array('priority' => 1, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p1_425_240'),
+			'bloc2' => array('priority' => 2, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p2_318_240'),
+			'bloc3' => array('priority' => 3, 'id' => '', 'useimage' => true, 'usevideo' => false, 'champ' => 'field_actualite_p3_213_240'),
+		),
+		'gabarit_5' => array(
+			'bloc1' => array('priority' => 1, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p1_425_240'),
+			'bloc2' => array('priority' => 2, 'id' => '', 'useimage' => true, 'usevideo' => false, 'champ' => 'field_actualite_p2_249_240'),
+			'bloc3' => array('priority' => 3, 'id' => '', 'useimage' => false, 'usevideo' => false, 'champ' => null),
+			'bloc4' => array('priority' => 3, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p3_282_160'),
+		),
+		'gabarit_6' => array(
+			'bloc1' => array('priority' => 1, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p1_425_240'),
+			'bloc2' => array('priority' => 2, 'id' => '', 'useimage' => true, 'usevideo' => true, 'champ' => 'field_actualite_p2_318_240'),
+			'bloc3' => array('priority' => 3, 'id' => '', 'useimage' => false, 'usevideo' => false, 'champ' => null),
+			'bloc4' => array('priority' => 3, 'id' => '', 'useimage' => false, 'usevideo' => false, 'champ' => null),
+		),
+	);
+	
+	variable_set('zone_editoriale', $zone_editoriale);
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function zone_editoriale_perm()
+{
+	return array('access zone editoriale');
+}
+
+/*
+ * Implementation of hook_menu
+ */
+function zone_editoriale_menu()
+{
+	$items = array();
+
+	$items['admin/help/edito'] = array(
+		'title' => 'Edito',
+		'page callback' => 'help_edito',
+		'access callback' => TRUE,
+		'type' => MENU_LOCAL_TASK,
+	);
+	
+	return $items;
+}
+
+/*
+ * Page d'aide pour l'édito
+*/
+function help_edito()
+{
+	$content = '
+		<p>
+			La zone éditoriale est composée 6 gabarits s\'affichant les uns après les autres.<br/><br/>
+			Chaque gabarit est découpé en 1 à 4 zones distinctes.<br/><br/>
+			Chaque zones est prévue pour recevoir un contenu de type actualité.<br/><br/>
+			Un contenu de type actualité se voit attribué une priorité (noté de 1 à 3), c’est ce niveau de priorité qui permet d\'afficher le contenu dans une zone plutôt qu\'une autre.
+		</p>
+		<p class="underline">Les 6 gabarits et les niveaux de priorités des zones :</p>
+		<p>'.theme_image(drupal_get_path('module', 'zone_editoriale').'/image/aide_zone_edito.jpg').'</p>
+	';
+	
+	return $content;
+}
+
+/**
+* Implementation of hook_form_alter().
+*/
+function zone_editoriale_form_alter(&$form, &$form_state, $form_id)
+{
+	switch ($form_id) {
+		case 'actualite_node_form' :
+			
+			$c = node_load($form['nid']['#value']);
+			
+			if (count($c->field_image_actualite)) {
+				foreach ($c->field_image_actualite as $image) {
+					$form['#field_info']['field_selected_image_actualite']['allowed_values'] .= $image['fid'].'|'.$image['filename']."\n\r";
+				}
+			}
+			if (count($c->field_video_actualite)) {
+				foreach ($c->field_video_actualite as  $video) {
+               $vdo = explode("<!--break-->", $video['value']);
+					$form['#field_info']['field_selected_video_actualite']['allowed_values'] .= htmlentities($vdo[0])."\n\r";
+				}
+			}
+			
+			$form['field_selected_video_actualite']['submit'] = array(
+				'#type' => 'submit',
+				'#value' => 'Enregistrer et rafraichir la page afin de remplir les boites déroulantes',
+				'#weight' => 100,
+				'#submit' => array('zone_editoriale_submit'),
+			);
+
+			//IMPORTANT
+			//Pour le kit2site, on coche par défaut la taxonomie "Home".
+			//L'id du vocabulaire associé est "3", l'id du terme "Home" est 203.
+			//A virer dans le portail
+			$form['taxonomy'][3]['#default_value'] = array(203);
+			
+			//On gère l'affichage des différents champs de crop
+			$champ_tab = array(
+				'field_actualite_p1_958_240',
+				'field_actualite_p1_531_240',
+				'field_actualite_p1_478_240',
+				'field_actualite_p1_425_240',
+				'field_actualite_p2_425_240',
+				'field_actualite_p2_318_240',
+				'field_actualite_p2_249_240',
+				'field_actualite_p3_282_160',
+				'field_actualite_p3_213_240'
+			);
+			
+			$priority = 'p'.$form['field_priorite_actualite']['#default_value'][0]['value'];
+			
+			foreach($champ_tab as $champ) {
+				if ($form['field_image_actualite'][0]['#default_value']['fid'] == 0) {
+					$form[$champ]['#type'] = 'hidden';
+				} else if (!strstr($champ, $priority)) {
+					$form[$champ]['#type'] = 'hidden';
+				}
+			}
+			
+			$form['field_priorite_actualite']['submit'] = array(
+				'#type' => 'submit',
+				'#value' => 'Enregistrer et rafraichir la page afin d\'afficher les recadrages d\'images en fonction de la priorité',
+				'#weight' => 1,
+				'#submit' => array('zone_editoriale_submit'),
+			);
+			
+			$txt_important = '
+				Compte tenu du nombre important d\'image qu\'il est possible de télécharger sur cette page ainsi que des images qui en découlent,
+				il peut arriver qu\'une page blanche s\'affiche si le traitement est trop long.<br/>
+				Ce problème n\'a pas de conséquence sur la mise à jour des données.<br/>
+				Il suffit de rafraichir la page pour voir apparaitre vos modifications. 
+			';
+			
+			$form['important'] = array(
+				'#type' => 'fieldset',
+				'#title' => 'Important :',
+				'#description' => $txt_important,
+				'#weight' => -100,
+				'#attributes' => array('class' => 'important'),
+			);
+			
+			$options_txt_aide = array('attributes' => array('target' => '_blank', 'title' => 'Aide à la saisie des gabarits.'));
+			$txt_aide = l('Cliquez-ici pour une aide à la saisie des gabarits.', 'admin/help/edito', $options_txt_aide); 
+			
+			$form['aide'] = array(
+				'#type' => 'fieldset',
+				'#title' => 'Aide :',
+				'#description' => $txt_aide,
+				'#weight' => -99,
+				'#attributes' => array('class' => 'important'),
+			);
+						
+			break;
+	}
+}
+
+/**
+ * Implementation of hook_submit().
+ */
+function zone_editoriale_submit($form, &$form_state)
+{
+	//node_form_submit($form, $form_state); Voir fonction ci-dessous
+	global $user;
+
+	$node = node_form_submit_build_node($form, $form_state);
+	$insert = empty($node->nid);
+	node_save($node);
+	$node_link = l(t('view'), 'node/' . $node->nid);
+	$watchdog_args = array(
+		'@type' => $node->type,
+		'%title' => $node->title,
+	);
+	$t_args = array(
+		'@type' => node_get_types('name', $node),
+		'%title' => $node->title,
+	);
+
+	if ($insert) {
+		watchdog('content', '@type: added %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
+		drupal_set_message(t('@type %title has been created.', $t_args));
+	}
+	else {
+		watchdog('content', '@type: updated %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
+		drupal_set_message(t('@type %title has been updated.', $t_args));
+	}
+	if ($node->nid) {
+		unset($form_state['rebuild']);
+		$form_state['nid'] = $node->nid;
+		$form_state['redirect'] = 'node/'.$node->nid.'/edit';
+	}
+	else {
+		// In the unlikely case something went wrong on save, the node will be
+		// rebuilt and node form redisplayed the same way as in preview.
+		drupal_set_message(t('The post could not be saved.'), 'error');
+	}
+}
+
+/*
+ * Implementation of hook_block
+ */
+function zone_editoriale_block($op = 'list', $delta = 0, $edit = array())
+{
+    switch ($op) {
+		case 'list':
+			$blocks['zone_editoriale'] = array(
+				'info' => t('Editorial Area'),
+				'status' => 0,
+			);
+			return $blocks;
+		break;
+		case 'view':
+			switch ($delta) {
+				case 'zone_editoriale':
+					
+					global $language, $user;
+					
+					//Dans le portail, il faudra développer le code qui récupère la section
+					//$m = menu_tree_all_data($menu_name = 'primary-links');  =======================  on obtiendra le menu actif, avec sa taxonomie associé
+					//Pour l'instant on défini a "Home" vu qu'il y a qu'une seule section sur le kit2site
+					$terms = array('Home');
+					
+					//La boucle "FOR" est utilisé pour récupérer les actualités de priorité 1, 2 et 3
+					//Dans le portail, il faudra développer : récupérer les actualités de la section sur laquelle on est puis sur Home direct après.
+					for ($i=1; $i<4; $i++) {
+										
+						$sql_actu[$i] = " SELECT N.nid 
+											FROM {node} AS N, {content_type_actualite} AS A
+											WHERE N.type = '%s'
+												AND N.status = %d
+												AND N.nid = A.nid
+												AND N.vid = A.vid
+												AND (N.language = '' OR N.language = '".$language->language."' )
+												AND A.field_priorite_actualite_value = %d
+												AND (	
+														(UNIX_TIMESTAMP() >= A.field_date_publication_edito_value AND A.field_date_fin_publication_edito_value IS NULL)
+														OR 
+														(UNIX_TIMESTAMP() >= A.field_date_publication_edito_value AND UNIX_TIMESTAMP() <= A.field_date_fin_publication_edito_value 
+															AND A.field_date_fin_publication_edito_value IS NOT NULL)
+													)
+												ORDER BY N.created DESC, A.field_date_publication_edito_value DESC ";
+						
+						$res_actu[$i] = db_query($sql_actu[$i], array('actualite', 1, $i));
+						
+						$tableau_actu[$i] = array();
+						
+						while ($actu[$i] = db_fetch_array($res_actu[$i])) {
+							$c = node_load($actu[$i]['nid']);
+							$taxo_actu[$i] = taxonomy_node_get_terms($c);
+							$add_in_tab = false;
+							foreach ($taxo_actu[$i] as $term) {
+								if (in_array($term->name, $terms)) {
+									$add_in_tab = true;
+								}
+							}			
+							if ($add_in_tab) {
+								$tableau_actu[$i][]['nid'] = $c->nid;
+								$count = count($tableau_actu[$i]);
+								$tableau_actu[$i][$count - 1]['section'] = $terms[0];
+							}
+						}
+					
+					}
+										
+					$items = array();
+										
+					//On construit dynamiquement le carrousel.
+					//On a maintenant le choix sur le nombre de gabarit
+					$ordre = array();
+					for ($i=1; $i<=6; $i++) {
+						$cle = variable_get('ordre_gabarit_'.$i, $i);
+						$ordre['gabarit_'.$i] = $cle;
+					}
+					asort($ordre);
+					
+					$zone_editoriale = variable_get('zone_editoriale', array());
+					
+					//On construit les gabarits
+					foreach ($ordre as $gabarit => $k) {
+						//On vérifie que la gabarit ait bien été séléctionné
+						$isGabaritUsed = variable_get('selection_'.$gabarit, 0);
+						if ($isGabaritUsed == 1) {
+						
+							$nb_gabarit = substr($gabarit, 8);
+						
+							$str = '<div class="gabarit'.$nb_gabarit.' gabarit">';
+							$nb_bloc = 1;
+							
+							//On construit les blocs 
+							foreach($zone_editoriale[$gabarit] as $bloc) {
+								
+								//Si on est dans un gabarit avec 4 blocs, on rajoute une div supplémentaire autour du bloc 3 et 4.
+								if (count($zone_editoriale[$gabarit]) == 4 && $nb_bloc == 3) {
+									$str .= '<div class="bloc34">';
+								}
+								$nb_bloc == 4 ? $close_div = 1 : $close_div = 0;
+								
+								$node = array_shift($tableau_actu[$bloc['priority']]);
+								
+								$c = node_load($node['nid']);
+								$section = $node['section'];
+								
+								$str .= '<div class="bloc'.$nb_bloc.' bloc">';
+								
+								//Infos à envoyer à la requête AJAX pour les STATS
+								$info = $c->nid.';'.$bloc['priority'].';'.$section;
+								$str .= '<input class="TEST" type="hidden" name="info" value="'.$info.'"/>';
+								
+								//On vérifie si on doit afficher l'image
+								if ($bloc['useimage'] == true && isset($c->field_selected_image_actualite[0]['value'])) {
+
+									$fid_tab = variable_get('fid_tab', array());
+									$fid_image_champ = $fid_tab[$bloc['champ']][$c->field_selected_image_actualite[0]['value']];
+								
+									$sql_image = " SELECT I.".$bloc['champ']."_data, F.filepath
+														FROM {content_".$bloc['champ']."} AS I, {files} AS F
+															WHERE F.fid = I.".$bloc['champ']."_fid
+																AND I.".$bloc['champ']."_fid = '%d' ";
+														
+									$res_image = db_query($sql_image, array($fid_image_champ));
+									$selectImage = db_fetch_array($res_image);
+									$field_image_actualite_data = unserialize($selectImage[$bloc['champ'].'_data']);
+																	
+									$str .= theme_image($selectImage['filepath'], '', $field_image_actualite_data['title'], '', false);
+									
+								}
+								
+								if ($c->field_url_actualite[0]['value'] != '') {
+									$title_url = $c->field_url_actualite[0]['value'];
+									$options = array('attributes' => array('target' => '_blank', 'onfocus' => 'stop_time_handler()', 'title' => $c->title));
+								} else {
+									$title_url = $c->path;
+									$options = array('attributes' => array('onfocus' => 'stop_time_handler()'));
+								}
+								
+								//Le titre est toujours présent	
+								$str .= '<div class="titre">
+									<h2>'.l($c->title, $title_url, $options).'</h2>
+								';
+								
+								if ($c->field_sous_titre_actualite[0]['value'] != '') {
+									$str .= '<p class="sous-titre">'.l($c->field_sous_titre_actualite[0]['value'], $title_url, $options).'</p>';
+								}
+								
+								if ($c->field_soustitre2_actualite[0]['value'] != '') {
+									$str .= '<p class="sous-titre-2">'.l($c->field_soustitre2_actualite[0]['value'], $title_url, $options).'</p>';
+								}
+
+								$str .= '</div>';
+								
+								//On vérifie si on doit afficher la vidéo
+								if ($bloc['usevideo'] && isset($c->field_selected_video_actualite[0]['value'])) {
+									$video = preg_replace('/(.*)<iframe(.*)>(.*)<\/iframe>(.*)/', '<iframe$2>$3</iframe>', html_entity_decode($c->field_selected_video_actualite[0]['value']));
+									
+									preg_match('/src="([^"]*)"/', $video, $matches); 
+									
+									if (strpos($matches[1], '?') !== false) {
+										$replace = 'src="$1&autoplay=1"';
+									} else {
+										$replace = 'src="$1?autoplay=1"';
+									}
+									
+									// $video = preg_replace('/src="([^"]*)"/', $replace, $video);
+								
+									$str .= '<div class="voirVideo">'.l(t('Play video'), drupal_get_path_alias('node/'.$c->nid, $language->language)).'</div>
+									<div class="video">
+										'.$video.'
+									</div>';
+								}
+								
+								$str .= '</div>';
+								
+								//$close_div indique la fermeture d'une div supplémentaire.
+								if ($close_div) {
+									$str .= '</div>';
+								}
+								
+								$nb_bloc++;
+								
+							}
+							
+							$str .= '</div>';
+							$items[] = $str;
+						
+						}
+					}
+
+					$content = '<h1 class="outscreen">'.t('Actualités à la une').'</h1>';					
+					$content .= '<div id="zone_editoriale">'.theme_editocarousel('#zone_editoriale', $items).'</div>';			
+
+					$lien_tout = variable_get('lien_tout', array('fr' => "Toute l'actu", 'en' => 'All news'));
+					if ($language->language == 'fr') {
+						$path_view = 'news-fr/'.$lien_tout['fr'];
+					} else {
+						$path_view = 'news-en/'.$lien_tout['en'];
+					}
+					
+					$content .= '<div class="all-news">'.l($lien_tout[$language->language], $path_view).'</div>';
+					
+					$result = db_query("	SELECT n.title AS title_feed, f.link AS host, fni.url AS link , no.title AS title, fi.filepath AS icon  
+											FROM {node} n 
+												LEFT JOIN {feedapi} f ON f.nid=n.nid
+												LEFT JOIN {feedapi_node_item_feed} fanif ON fanif.feed_nid=n.nid
+												LEFT JOIN {feedapi_node_item} fni ON fni.nid=fanif.feed_item_nid
+												LEFT JOIN {node} no ON no.nid=fanif.feed_item_nid 
+												LEFT JOIN {content_field_icon} cfi ON cfi.nid=n.nid 
+												LEFT JOIN {files} fi ON fi.fid=cfi.field_icon_fid 
+											WHERE n.type = 'feed' 
+											AND n.status = 1 
+											ORDER BY fni.timestamp DESC
+										");
+											
+				
+					$feeds = array();
+					$options = array('attributes' => array('target' => '_blank'), 'html' => true);
+					
+					while ($feed = db_fetch_object($result)) {
+						if(strlen($feed->title) > 80){
+							$feed->title = substr($feed->title, 0, 80).' ...';
+						}
+						if(!$feed->icon || $feed->icon == ''){
+							global $base_url;
+							$dossier = explode('/', $base_url);
+							$feed->icon = 'sites/'.$dossier[count($dossier)-2].'.'.$dossier[count($dossier)-1].'/files/imagefield_default_images/icone-rss.png';
+							$feed->icon = str_replace("www.", "", $feed->icon);
+						}
+						$feeds[] = '<span class="edito-feed-icon">'.l(theme_image($feed->icon, t('Sciences Po aggregator'), t($feed->title_feed.' Sciences Po aggregator'), NULL, false), $feed->host, $options).'</span>
+						<span class="edito-feed-title">'.l($feed->title_feed, $feed->host, $options).'</span> : '.l($feed->title, $feed->link, $options);
+					}
+					if(!empty($feeds)){
+   					$content .= '<div class="edito-feed">
+   						<div class="rss-item">'.theme_feed('.rss-item', $feeds).'</div>
+   						<div class="rss-right">'.theme_image(drupal_get_path('theme', 'sciencespo').'/images/fond_rss_right.gif', '', '', NULL, false).'</div>
+   					</div>';
+					}
+					
+					$content .= '<div style="clear:both;"></div>';
+					
+					$block['content'] =	$content;
+					
+				break;
+			}
+			return $block;
+
+		break;
+	}
+}
+
+/**
+ * DOCSCIENCESPO
+ * Implementation of hook_nodeapi().
+ * Si le node est de type actualite, on met les vidéos dans le champs image pour le carrousel
+ * Voir content-field-field_image_actualite-actualite.tpl.php
+ *
+ * On duplique les images dans les différents champs de crop
+ */
+function zone_editoriale_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL)
+{
+	switch($op) {
+		case 'view':
+			if ($node->type == 'actualite') {							
+				foreach($node->content['field_video_actualite']['field']['items'] as $v) {
+					$node->content['field_image_actualite']['field']['items'][] = $v;
+				}
+				unset ($node->content['field_video_actualite']);
+			}
+		break;
+		
+		case 'presave':
+			if ($node->type == 'actualite') {
+				$champ_tab = array(
+					'field_actualite_p1_958_240' => array('width' => '958', 'height' => '240', 'name' => 'p1_958_240'),
+					'field_actualite_p1_531_240' => array('width' => '531', 'height' => '240', 'name' => 'p1_531_240'),
+					'field_actualite_p1_478_240' => array('width' => '478', 'height' => '240', 'name' => 'p1_478_240'),
+					'field_actualite_p1_425_240' => array('width' => '425', 'height' => '240', 'name' => 'p1_425_240'),
+					'field_actualite_p2_425_240' => array('width' => '425', 'height' => '240', 'name' => 'p2_425_240'),
+					'field_actualite_p2_318_240' => array('width' => '318', 'height' => '240', 'name' => 'p2_318_240'),
+					'field_actualite_p2_249_240' => array('width' => '249', 'height' => '240', 'name' => 'p2_249_240'),
+					'field_actualite_p3_282_160' => array('width' => '282', 'height' => '160', 'name' => 'p3_282_160'),
+					'field_actualite_p3_213_240' => array('width' => '213', 'height' => '240', 'name' => 'p3_213_240')
+				);
+							
+				//Liste des fid pour le champ image principale
+				$main_fid_list = array();
+				foreach ($node->field_image_actualite as $image_main) {
+					if (!in_array($image_main['fid'], $main_fid_list)) {
+						$main_fid_list[] = $image_main['fid'];
+					}
+				}
+				
+				$fid_tab = variable_get('fid_tab', array('field_actualite_p1_958_240', 'field_actualite_p1_531_240', 'field_actualite_p1_478_240', 'field_actualite_p1_425_240', 'field_actualite_p2_425_240', 'field_actualite_p2_318_240', 'field_actualite_p2_249_240', 'field_actualite_p3_282_160', 'field_actualite_p3_213_240'));
+				
+				foreach ($champ_tab as $k_champ => $champ) {
+					
+					//On vérifie si une image a été supprimée
+					foreach ($node->$k_champ as $k => $image_champ) {
+						$ID = array_search($image_champ['fid'], $fid_tab[$k_champ]);
+						if ($ID) {
+							if (!in_array($ID, $main_fid_list)) {
+								unset($node->{$k_champ}[$k]);
+								unset($fid_tab[$k_champ][$ID]);
+							}
+						}
+					}
+							
+					//On copie les nouvelles images
+					foreach ($node->field_image_actualite as $k => $image_actualite) {
+					
+						if ($image_actualite['fid'] !== NULL) {
+							//Si il n'y a pas de correspondance c'est que l'image n'existe pas
+							if (!$fid_tab[$k_champ][$image_actualite['fid']]) {
+							
+								//On duplique l'image en 2 exemplaires pour le crop
+								$new_path = $image_actualite['filepath'].'.'.$champ['name'].'.jpg';
+								$display_imagefield_crop = $image_actualite['filepath'].'.crop_display.jpg';
+								file_copy($display_imagefield_crop, $new_path);
+								file_copy($display_imagefield_crop, $new_path.'.crop_display.jpg');
+								
+								//On insère à la volée l'image dans la table files
+								$q = "INSERT INTO files SET uid = %d, filename = '%s', filepath = '%s', filemime = '%s', filesize = %d, status = %d, timestamp = %d";
+								$options_q = array ($image_actualite['uid'], $image_actualite['filename'], $new_path, $image_actualite['filemime'], $image_actualite['filesize'], $image_actualite['status'], $image_actualite['timestamp']);
+								$r = db_query($q, $options_q);
+								$mysql_insert_id = db_last_insert_id('files', 'fid');
+											
+								//On renseigne le tableau du champ correspondant, pour que l'image lui soit automatiquement associé
+								$node->{$k_champ}[] = $image_actualite;
+								$index = count($node->$k_champ) - 1;
+								$node->{$k_champ}[$index]['fid'] = $mysql_insert_id;
+								$node->{$k_champ}[$index]['filepath'] = $new_path;
+								$node->{$k_champ}[$index]['data']['crop']['x'] = 0;
+								$node->{$k_champ}[$index]['data']['crop']['y'] = 0;
+								$node->{$k_champ}[$index]['data']['crop']['width'] = $champ['width'];
+								$node->{$k_champ}[$index]['data']['crop']['height'] = $champ['height'];
+
+								//On complète le tableau de correspondance des fid
+								$fid_tab[$k_champ][$image_actualite['fid']] = $mysql_insert_id;
+							}
+						}
+					}
+				}
+				variable_set('fid_tab', $fid_tab);
+			}
+		break;
+	}
+}
+
+/**
+* Génère le thème du carousel de la zone éditoriale 
+* @id : l'identifiant de la div dont on applique le carousel
+* @items : le tableau contenant le contenu de chaque li
+*/
+function theme_editocarousel($id, $items = array())
+{
+	global $base_url;
+	$isDevl = strstr($base_url, "devl");
+	
+	$isDevl != false ? $isDevl = 1 : $isDevl = 0;
+	
+	$script = '$(document).ready(function() {
+		$("'.$id.'").scpoeditocarousel({isDevl: '.$isDevl.'});
+	});';
+	
+	drupal_add_js($script, 'inline');
+
+	/* Rajout d'une class sur les ul/li pour éviter d'appliquer un carousel aux ul/li intèrieur */
+	$newitems = array();
+	foreach ($items as $item) {
+		$item = html_entity_decode($item);
+		$newitems[] = array( 'data' => $item, 'class' => 'li-scpoeditocarousel' );
+	}
+	
+	$list = theme_item_list($newitems, $title = NULL, $type = 'ul', array('class' => 'ul-scpoeditocarousel'));
+	return $list;
+}
+
+/**
+* Génère le thème des flux rss de la zone éditoriale 
+* @id : l'identifiant de la div dont on applique le swap
+* @items : le tableau contenant le contenu de chaque li
+*/
+function theme_feed($id, $items = array())
+{
+	$script = '$(document).ready(function() {
+		$("'.$id.'").scpofeed();
+	});';
+	
+	drupal_add_js($script, 'inline');
+	
+	$list = theme_item_list($items, $title = NULL, $type = 'ul', array('class' => 'ul-feed'));
+	return $list;
+}
+
